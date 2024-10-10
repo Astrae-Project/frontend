@@ -1,0 +1,79 @@
+.contenedor-mensajes {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* Alinea el textarea al final del contenedor */
+    width: 95%;
+    margin: 0 auto; 
+    margin-bottom: 20px; /* Margen inferior para separación */
+  }
+    
+  .mensajes {
+    position: relative;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+    display: block;
+    background-color: #151522;
+    border: 1px solid #1E202F;
+    color: #e9e9e9;
+    width: 100%;
+    height: 118px;
+    outline: none;
+    padding-left: 4%;
+    padding-right: 7%;
+    padding-top: 3%;
+    padding-bottom: 9%;
+    font-size: 15px;
+    resize: none;
+    overflow-y: hidden;
+  }
+    
+  .mensajes::placeholder {
+    background-color: transparent;
+    color: #b0b0b0;
+    opacity: 0.8;
+  }
+
+  .contenedor-social {
+    position: absolute;
+    display: flex;
+    border: none;
+    right: 89%;
+    bottom: 1.75%;
+    margin-bottom: .25%;
+  }
+  
+  .btn-social{
+    position: relative;
+    margin-right: 27%;
+    margin-bottom: 2.5%;
+  }
+
+  .icon2{
+    color: #b0b0b0;
+  }
+
+  .contenedor-enviar {
+    position: absolute;
+    display: flex;
+    border: none; /* Sin borde */
+    left: 72.5%;
+    bottom: 1.5%;
+    margin-bottom: .25%;
+  }
+
+  .btn-enviar{
+    position: relative;
+    width: 75px;
+    height: 30px;
+    margin-right: 10px;
+    background-color: #1C1C29;
+    border: 1px solid #1E202F;
+    border-radius: 5px;
+    font-size: 13px;
+    padding-top: 1.8%;
+  }
+
+  #enviar{
+    background-color: #573688;
+  }

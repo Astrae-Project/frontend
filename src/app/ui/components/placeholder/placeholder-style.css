@@ -1,0 +1,41 @@
+.placeholder-container {
+    position: absolute;
+    border-radius: 30px;
+    color: #e9e9e9;
+    padding-top: 0.3%;
+    background-color: #10101A;
+    width: 317px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    font-variation-settings: "slnt" 0, "wght" 400;
+    z-index: 10;
+    right: 118px;
+    top: 30px;
+}
+
+.placeholder{
+    width: 83%;
+    margin-top: -0.3%;
+    margin-left: 7%;
+    font-size: inherit;
+    font-variation-settings: inherit;
+    background-color: transparent;
+}
+
+.placeholder:focus-visible{
+    outline: none;
+}
+  
+.submit-btn{
+    position: relative;
+    margin-top: -1.7%;
+    width: 18px;
+    height: 18px;
+}
+
+.icono1{
+    width: 20px;
+    height: 20px;
+}

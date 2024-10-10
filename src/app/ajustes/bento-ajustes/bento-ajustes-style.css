@@ -1,0 +1,86 @@
+body {
+    overflow: hidden;
+    height: 100%;
+    margin: 0; /* Eliminar márgenes */
+  }
+  
+  .contenedor1 {
+    position: relative;
+    display: flex;
+    height: 825px;
+    width: 96.6%;
+    padding-top: 25px;
+    padding-left: 132px;
+    padding-bottom: 21px;
+  }
+  
+  .bento1 {
+    position: relative;
+    display: grid;
+    height: 100%; /* Esto ahora debería funcionar */
+    width: 100%;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 16px;
+    border-radius: 8px;
+  }
+  
+  .apartado1 {
+    position: relative;
+    border-radius: 18px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #10101A;
+    border: 1px solid #151522;
+    overflow: hidden; /* Evita que el contenido desborde */
+    text-align: center;
+    width: 100%;
+    height: 100%; /* Asegúrate de que esto esté aquí */
+    flex-wrap: nowrap;
+    flex: 1; /* Esto hará que cada sección ocupe el espacio disponible */
+  }
+  
+  .bento1 button:nth-child(1) {
+    grid-column: 1 / 2;
+    grid-row: 1 / 1;
+    width: 150%;
+  }
+  
+  .bento1 button:nth-child(2) {
+    grid-column: 2 / 4;
+    grid-row: 1 / 1;
+    width: 75%;
+    left: 25%;
+  }
+  
+  .bento1 button:nth-child(3) {
+    grid-column: 1 / 2;
+    grid-row: 2 / 2;
+  }
+  
+  .bento1 button:nth-child(4) {
+    position: relative;
+    grid-column: 2 / 3;
+    grid-row: 2 / 2;
+  }
+  
+  .bento1 button:nth-child(5) {
+    position: relative;
+    grid-column: 3 / 4;
+    grid-row: 2 / 2;
+  }
+  
+  .bento1 button:nth-child(6) {
+    grid-column: 1 / 2;
+    grid-row: 3 / 3;
+    width: 150%;
+  }
+  
+  .bento1 button:nth-child(7) {
+    grid-column: 2 / 4; /* Ocupar dos columnas */
+    grid-row: 3 / 3;
+    width: 75%;
+    left: 25%;
+  }
