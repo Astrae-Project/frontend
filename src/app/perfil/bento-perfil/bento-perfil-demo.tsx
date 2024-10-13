@@ -8,7 +8,7 @@ import { MiniChips } from "../mini-chips/mini-chips";
  
 export function BentoGridPerfil() {
   return (
-    <div className="container">
+    <div className="contenedor4">
         <div className="grid">
             <div className="seccion">
                 <Chips></Chips>
