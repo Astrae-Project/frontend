@@ -1,5 +1,3 @@
-'use client'
-
 import React from "react";
 import "./bento-portfolio-style.css"
 import { StartupsSeguidas } from "../startups-seguidas/startups-seguidas";

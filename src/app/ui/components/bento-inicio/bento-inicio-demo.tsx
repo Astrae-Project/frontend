@@ -1,5 +1,3 @@
-'use client'
-
 import React from "react";
 import "./bento-inicio-style.css"
 import { Placeholder } from "../placeholder/placeholder-demo";

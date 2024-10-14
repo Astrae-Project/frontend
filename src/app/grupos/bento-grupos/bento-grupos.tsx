@@ -1,5 +1,3 @@
-"use client"
-
 import React from "react";
 import { IconDots, IconPin } from "@tabler/icons-react";
 import "./bento-grupos-style.css"
