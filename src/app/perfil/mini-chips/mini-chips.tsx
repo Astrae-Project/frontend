@@ -1,7 +1,7 @@
 "use client"
 
 import {Chip} from "@nextui-org/react";
-import './mini-chips-style.css'
+import './mini-chips-style.modules.css'
 
 interface MiniChipsProps {
     label: string;

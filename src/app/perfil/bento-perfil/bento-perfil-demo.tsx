@@ -5,6 +5,7 @@ import { Botones } from "../boton/boton-demo";
 import { Chips } from "../chip/chip-demo";
 import { MiniChips } from "../mini-chips/mini-chips";
 import './bento-perfil-style.css';
+import { IconStarFilled } from "@tabler/icons-react";
 
 export function BentoGridPerfil() {
   const [inversor, setInversor] = useState(null);
@@ -119,27 +120,29 @@ export function BentoGridPerfil() {
           <p id="nombre">{inversor?.nombre || "Nombre del inversor"}</p>
           <p id="creacion">
             Invirtiendo en Astrae desde{" "}
-            <span className="morado">{inversor?.usuario.fecha_creacion || "Fecha"}</span>
+            <span className="morado">{inversor?.usuario.fecha_creacion
+                ? new Date(inversor.usuario.fecha_creacion).getFullYear()
+                : "Fecha"}
+</span>
           </p>
-          <span className="rankear"></span>
+          <button className="rankear"><IconStarFilled id="estrella"></IconStarFilled></button>
           <span className="contenedor-ancho">
-            <MiniChips label={`Ubicación: ${inversor?.ubicacion || "Desconocida"}`} />
-            <MiniChips label={`Tipo: ${inversor?.perfil_inversion || "Desconocido"}`} />
-            <MiniChips label={`Sector: ${inversor?.sector_favorito || "Desconocido"}`} />
-            <MiniChips label={`Reseñas: ${inversor?.reseñas || 0}`} />
-            <MiniChips label={`Inversiones Exitosas: ${inversor?.inversionesExitosas || 0}`} />
+            <MiniChips label={`${inversor?.ubicacion || "Desconocida"}`} />
+            <MiniChips label={`${inversor?.perfil_inversion || "Desconocido"}`} />
+            <MiniChips label={`${inversor?.sector_favorito || "Desconocido"}`} />
+            <MiniChips label={`${inversor?.reseñas || 0}`} />
+            <MiniChips label={`Inversiones Existosas: ${inversor?.inversionesExitosas || 0}`} />
             <MiniChips label={`Retorno Promedio: ${inversor?.retornoPromedio || 0}%`} />
           </span>
           <Botones />
         </div>
 
-        <div className="seccion">
-          <p>Portfolio</p>
+        <div className="seccion" id="portfolio-perfil">
           {portfolio.length > 0 ? (
             <ul>
               {portfolio.map((inversion, index) => (
                 <li key={index}>
-                  {inversion.startup.nombre}: {inversion.porcentaje_adquirido}% - ${inversion.valor_real}
+                  {inversion.startup.nombre}: {inversion.porcentaje_adquirido}% - ${inversion.valor}
                 </li>
               ))}
             </ul>
@@ -148,41 +151,80 @@ export function BentoGridPerfil() {
           )}
         </div>
 
-        <div className="seccion">
-          <p>Inversiones Previas</p>
+        <div className="seccion" id="reciente">
           {inversionesPrevias.length > 0 ? (
-            <ul>
-              {inversionesPrevias.map((inversion, index) => (
-                <li key={index}>
-                  {inversion.startup.nombre} - ${inversion.monto_invertido} - {inversion.fecha}
-                </li>
-              ))}
+            <ul className="contenedor-inversiones">
+              {inversionesPrevias.map((inversion, index, evento) => {
+                let fechaFormateada;
+
+                // Verificar si es una inversión
+                if (inversion.tipo_movimiento === 'inversion') {
+                  fechaFormateada = new Date(inversion.fecha).toLocaleDateString('es-ES', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                  });
+                  return (
+                    <li key={index}>
+                      {inversion.startup.nombre} - ${inversion.monto_invertido} - {fechaFormateada}
+                    </li>
+                  );
+                }
+
+                // Verificar si es una oferta
+                if (inversion.tipo_movimiento === 'oferta') {
+                  fechaFormateada = new Date(inversion.fecha_creacion).toLocaleDateString('es-ES', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                  });
+                  const avatarUrl = inversion.startup?.usuario?.avatar; 
+
+                  return (
+                    <li key={index} className="movimiento-item">
+                      <div className="movimiento-contenedor">
+                        <div className="movimiento-icono">
+                          <img src={avatarUrl} className="avatar-imagen" />
+                        </div>
+                        <div className="movimiento-detalles">
+                          {/* Mostrar el contenido del movimiento */}
+                          <p>{inversion.startup.nombre} - ${inversion.monto_invertido} - {fechaFormateada}</p>
+                        </div>
+                      </div>
+                    </li>
+                  );
+                }
+
+                return null; // Devuelve null si no coincide con ningún tipo
+              })}
             </ul>
           ) : (
-            <p>No hay inversiones previas.</p>
+            <p>No hay movimientos recientes.</p>
           )}
         </div>
 
         <div className="seccion" id="grid1">
+          <p className="numeros">{seguidores}</p>
           <section className="datos">
-            <p>Seguidores: {seguidores}</p>
+            <p>Seguidores</p>
           </section>
         </div>
 
         <div className="seccion" id="grid2">
+          <p className="numeros">{suscriptores}</p>
           <section className="datos">
-            <p>Suscriptores: {suscriptores}</p>
+            <p>Suscriptores</p>
           </section>
         </div>
 
         <div className="seccion" id="grid3">
+          <p className="numeros">{inversionesRealizadas}</p>
           <section className="datos">
-            <p>Inversiones Realizadas: {inversionesRealizadas}</p>
+            <p>Inversiones</p>
           </section>
         </div>
 
         <div className="seccion">
-          <p>Eventos</p>
           {eventos.length > 0 ? (
             <ul>
               {eventos.map((evento, index) => (
@@ -197,7 +239,6 @@ export function BentoGridPerfil() {
         </div>
 
         <div className="seccion">
-          <p>Grupos</p>
           {grupos.length > 0 ? (
             <ul>
               {grupos.map((grupo, index) => (
@@ -210,11 +251,13 @@ export function BentoGridPerfil() {
         </div>
 
         <div className="seccion">
-          <p>Contacto</p>
           {contacto ? (
             <div>
-              <p>Email: {contacto.email}</p>
-              <p>Teléfono: {contacto.telefono}</p>
+              {contacto.correo && <p>Email: {contacto.correo}</p>}
+              {contacto.twitter && <p>Twitter: {contacto.twitter}</p>}
+              {contacto.linkedin && <p>LinkedIn: {contacto.linkedin}</p>}
+              {contacto.facebook && <p>Facebook: {contacto.facebook}</p>}
+              {contacto.instagram && <p>Instagram: {contacto.instagram}</p>}
             </div>
           ) : (
             <p>No hay información de contacto.</p>

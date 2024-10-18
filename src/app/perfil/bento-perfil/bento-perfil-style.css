@@ -59,6 +59,11 @@
   background-color: #151522;
 }
 
+#estrella{
+  margin: 0 auto;
+  opacity: 0.9;
+}
+
 .morado {
   color: #9561e3;
   text-shadow: 0 0 5px #9561e3;
@@ -98,6 +103,45 @@
   width: 100%;
   height: 100%;
   flex-wrap: nowrap;
+  overflow-y: auto;
+}
+
+.seccion::-webkit-scrollbar {
+  display: none; /* Safari, Chrome y otros navegadores basados en WebKit */
+}
+
+#portfolio-perfil{
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-bottom: 12px;
+}
+
+#reciente{
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-bottom: 12px;
+}
+
+ul{
+  width: 100%;
+}
+
+li{
+  width: 100%;
+  height: 50px;
+  background-color: #151522;
+  margin-top: 20px;
+  border-radius: 8px;
+}
+
+.numeros{
+  position: absolute;
+  font-size: 40px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #fff 30%, #6B6B71 70%);
+  -webkit-background-clip: text;
+  color: transparent;
+  background-clip: text;
+  margin-bottom: 6%;
 }
 
 .datos{
