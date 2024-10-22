@@ -22,18 +22,17 @@
   color: #e9e9e9;
   position: absolute;
   top: 70px;
-  left: 152px;
+  left: 157px;
   font-size: 22px;
   letter-spacing: 0.25px;
   font-variation-settings: "slnt" 0, "wght" 600;
-  
 }
 
 #creacion{
   color: #e9e9e9;
   position: absolute;
   top: 110px;
-  left: 152px;
+  left: 157px;
   font-size: 12px;
   letter-spacing: 0.5px;
   font-variation-settings: "slnt" 0, "wght" 400;
@@ -42,10 +41,10 @@
 .avatar{
   position: absolute;
   width: 110px;
-  height: 120px;
+  height: 110px;
   border-radius: 16px;
   background-color: #151522;
-  top: 20px;
+  top: 25px;
   left: 20px;
 }
 
@@ -116,22 +115,100 @@
   padding-bottom: 12px;
 }
 
-#reciente{
-  padding-left: 12px;
-  padding-right: 12px;
-  padding-bottom: 12px;
-}
-
-ul{
+.avatar-imagen{
+  position: relative;
   width: 100%;
+  height: 100%;
+  border-radius: 8px;
 }
 
-li{
+.movimiento-icono{
+  position: relative;
+  height: 35px;
+  width: 35px;
+  background-color: #1C1C29;
+  border-radius: 8px;
+}
+
+.portfolio-info {
+  display: flex;
+  width: 100%;
+  align-items: center; /* Alinea verticalmente al centro */
+}
+
+.startup-nombre {
+  position: relative;
+  margin-left: 8px;
+  font-size: 11px;
+  color: #ffffff; /* Blanco para resaltar */
+  top: -4.5px;
+  font-variation-settings: "slnt" 0, "wght" 400;
+
+}
+
+.startup-username {
+  position: relative;
+  width: 70px;
+  font-size: 8px;
+  color: #888888; /* Un gris claro */
+  top: 12px;
+  margin-left: -29px;
+  text-overflow: ellipsis;
+  white-space: nowrap; /* Evita saltos de línea */
+  overflow: hidden;
+  text-align: left;
+  font-variation-settings: "slnt" 0, "wght" 400;
+}
+
+.mini-titulo{
+  position: relative;
+  width: 45px;
+  font-size: 8px;
+  color: #888888; 
+  top: -7px;
+  text-align: left;
+  font-variation-settings: "slnt" 0, "wght" 400;
+  left: 52px;
+}
+
+.porcentaje, .valor, .variacion {
+  position: relative;
+  margin-left: 8px;
+  font-size: 11px;
+  color: #ffffff; /* Blanco para resaltar */
+  top: 10.5px;
+  font-variation-settings: "slnt" 0, "wght" 500;
+}
+
+.porcentaje {
+  color: green; /* Verde por defecto */
+}
+
+.valor {
+  color: #ffffff; /* Blanco para que sea consistente */
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  background-color: #151522; /* Fondo oscuro */
+  border-radius: 10px;
+  margin-top: 16px;
   width: 100%;
   height: 50px;
-  background-color: #151522;
-  margin-top: 20px;
-  border-radius: 8px;
 }
 
 .numeros{
