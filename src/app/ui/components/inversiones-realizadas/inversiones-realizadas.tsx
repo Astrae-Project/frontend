@@ -22,14 +22,12 @@ const InversionesRealizadas = () => {
   }, []);
 
   return (
-    <div>
-      <div className="seccion" id="grid1">
+      <div className="seccion" id="grid3">
         <p className="numeros">{inversionesRealizadas}</p>
         <section className="datos">
           <p>Inversiones</p>
         </section>
       </div>
-    </div>
   );
 };
 

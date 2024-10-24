@@ -2,6 +2,8 @@ import React from "react";
 import "./bento-inicio-style.css"
 import { Placeholder } from "../placeholder/placeholder-demo";
 import { StartupsRecomendadas } from "../startups-recomendadas/startup-recomendadas-demo";
+import TablaPortfolio from "../tabla-portfolio/tabla-portfolio";
+import InversionesPrevias from "../movimientos-recientes/movimientos-recientes";
 
 export function BentoGridInicio() {
   return (
@@ -12,10 +14,10 @@ export function BentoGridInicio() {
         <button id="pequeño2" className="apartado"></button>
         <div className="bento">
             <div className="apartado">
-                <p>Resumen Portfolio</p>
+                <TablaPortfolio></TablaPortfolio>
             </div>
             <div className="apartado">
-                <p>Actividad Reciente</p>
+                <InversionesPrevias></InversionesPrevias>
             </div>
             <div className="apartado">
                 <p>Calendario</p>

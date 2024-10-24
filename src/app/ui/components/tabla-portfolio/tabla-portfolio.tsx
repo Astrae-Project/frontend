@@ -3,7 +3,6 @@
 import '../../../perfil/bento-perfil/bento-perfil-style.css';
 import React, { useState, useEffect } from "react";
 
-
 const TablaPortfolio = () => {
   const [portfolio, setPortfolio] = useState([]);
 
@@ -24,27 +23,56 @@ const TablaPortfolio = () => {
     fetchPortfolio();
   }, []);
 
+  // Función para formatear el cambio porcentual
+  const formatCambioPorcentual = (cambio) => {
+    if (cambio > 0) {
+      return {
+        text: `+${Math.floor(cambio)}`, // Formato entero y añade +
+        color: 'variacion-positiva', // Color verde para positivo
+        glowClass: 'variacion-positiva', // Clase CSS para el resplandor positivo
+      };
+    } else if (cambio < 0) {
+      return {
+        text: `${Math.floor(cambio)}`, // Solo muestra el número negativo
+        color: 'variacion-negativa', // Color rojo para negativo
+        glowClass: 'variacion-negativa', // Clase CSS para el resplandor negativo
+      };
+    }
+    return {
+      text: '0', // Sin signo para cero
+      color: 'variacion-neutral', // Color gris para cero
+      glowClass: 'variacion-neutral', // Clase CSS para variación neutra (sin resplandor)
+    };
+  };
+
   return (
     <div className="seccion" id="portfolio-perfil">
+      <p className='titulo-portfolio'>Portfolio</p>
       {portfolio.length > 0 ? (
         <ul>
-          {portfolio.map((inversion, index) => (
-            <li key={index}>
-              <div className="movimiento-icono">
-                <img src={inversion.startup.usuario.avatar} className="avatar-imagen" />
-              </div>
-              <div className="portfolio-info">
-                <p className="startup-nombre">{inversion.startup.nombre}</p>
-                <p className="startup-username">{inversion.startup.username}</p>
-                <p className='mini-titulo'>Porcentaje</p>
-                <p className="porcentaje">{inversion.porcentaje_adquirido}%</p>
-                <p className='mini-titulo'>Variación</p>
-                <p className="variacion">-24.39%</p>
-                <p className='mini-titulo'>Valor</p>
-                <p className="valor">{inversion.valor}€</p>
-              </div>            
-            </li>
-          ))}
+          {portfolio.map((inversion, index) => {
+            const cambioPorcentualInfo = formatCambioPorcentual(inversion.cambio_porcentual);
+            return (
+              <li key={index}>
+                <div className="movimiento-icono">
+                  <img src={inversion.startup.usuario.avatar} className="avatar-imagen" />
+                </div>
+                <div className="portfolio-info">
+                  <p className="startup-nombre">{inversion.startup.nombre}</p>
+                  <p className="startup-username">{inversion.startup.username}</p>
+                  <p className='mini-titulo' id='titulo-porcentaje'>Porcentaje</p>
+                  <p className="porcentaje">{inversion.porcentaje_adquirido}%</p>
+                  <p className='mini-titulo' id='titulo-variacion'>Variación</p>
+                  <p className={`variacion ${cambioPorcentualInfo.glowClass}`} 
+                    style={{ color: cambioPorcentualInfo.color }}>
+                    {cambioPorcentualInfo.text}%
+                  </p>
+                  <p className='mini-titulo' id='titulo-valor'>Valor</p>
+                  <p className="valor">{inversion.valor}€</p>
+                </div>            
+              </li>
+            );
+          })}
         </ul>
       ) : (
         <p>No hay inversiones en el portfolio.</p>

@@ -1,6 +1,7 @@
 import React from "react";
 import "./bento-portfolio-style.css"
 import { StartupsSeguidas } from "../startups-seguidas/startups-seguidas";
+import TablaPortfolio from "@/app/ui/components/tabla-portfolio/tabla-portfolio";
 
 export function BentoGridPortfolio() {
   return (
@@ -17,7 +18,7 @@ export function BentoGridPortfolio() {
                 <p>4</p>
             </div>
             <div className="apartado3">
-                <p>5</p>
+                <TablaPortfolio></TablaPortfolio>
             </div>
             <div className="apartado3">
                 <p>6</p>

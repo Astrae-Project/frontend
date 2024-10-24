@@ -42,14 +42,14 @@ body {
   flex: 1; /* Esto hará que cada sección ocupe el espacio disponible */
 }
 
-.bento3 div:nth-child(1) {
+.bento3 .apartado3:nth-child(1) {
   grid-column: 1 / 1;
   grid-row: 1 / 1;
   height: 80%;
   width: 82.5%;
 }
 
-.bento3 button:nth-child(2) {
+.bento3 .apartado3:nth-child(2) {
   grid-column: 1 / 1;
   grid-row: 1 / 1;
   width: 10%;
@@ -58,12 +58,12 @@ body {
   height: 80%;
 }
 
-.bento3 div:nth-child(3){
+.bento3 .apartado3:nth-child(3){
   grid-column: 2 / 4; /* Ocupar dos columnas */
   grid-row: 1 / 1;
 }
 
-.bento3 div:nth-child(4) {
+.bento3 .apartado3:nth-child(4) {
   grid-column: 1 / 3; /* Ocupar dos columnas */
   grid-row: 2 / 2;
   width: 93%;
@@ -71,7 +71,7 @@ body {
   bottom: 20%;
 }
 
-.bento3 div:nth-child(5) {
+.bento3 .apartado3:nth-child(5) {
   grid-column: 3/ 4; /* Ocupar dos columnas */
   grid-row: 2 / 4;
   width: 114%;
@@ -80,7 +80,7 @@ body {
   bottom: 10%;
 }
 
-.bento3 div:nth-child(6) {
+.bento3 .apartado3:nth-child(6) {
   grid-column: 1 / 3; /* Ocupar dos columnas */
   grid-row: 3 / 3; /* Solo ocupar la última fila */
   width: 93%;

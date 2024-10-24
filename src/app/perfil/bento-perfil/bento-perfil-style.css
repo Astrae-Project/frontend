@@ -43,7 +43,6 @@
   width: 110px;
   height: 110px;
   border-radius: 16px;
-  background-color: #151522;
   top: 25px;
   left: 20px;
 }
@@ -55,7 +54,7 @@
   border-radius: 7px;
   width: 35px;
   height: 35px;
-  background-color: #151522;
+  background-color: #14141f;
 }
 
 #estrella{
@@ -74,7 +73,7 @@
   display: flex;
   width: 94.5%;
   height: 33%;
-  background-color: #151522;
+  background-color: #14141f;
   border-radius: 10px;
   margin-bottom: -67px;
   text-align: initial;
@@ -110,9 +109,11 @@
 }
 
 #portfolio-perfil{
-  padding-left: 12px;
-  padding-right: 12px;
   padding-bottom: 12px;
+  padding-top: 11%;
+  padding-left: 2%;
+  padding-right: 2%;
+  border: none;
 }
 
 .avatar-imagen{
@@ -120,6 +121,14 @@
   width: 100%;
   height: 100%;
   border-radius: 8px;
+}
+
+.titulo-portfolio{
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-variation-settings: "slnt" 0, "wght" 550;
+  z-index: 10;
 }
 
 .movimiento-icono{
@@ -132,6 +141,7 @@
 
 .portfolio-info {
   display: flex;
+  height: 100%;
   width: 100%;
   align-items: center; /* Alinea verticalmente al centro */
 }
@@ -139,17 +149,16 @@
 .startup-nombre {
   position: relative;
   margin-left: 8px;
-  font-size: 11px;
-  color: #ffffff; /* Blanco para resaltar */
+  font-size: 0.7rem;
+  color: #e9e9e9; /* Blanco para resaltar */
   top: -4.5px;
-  font-variation-settings: "slnt" 0, "wght" 400;
-
+  font-variation-settings: "slnt" 0, "wght" 500;
 }
 
 .startup-username {
   position: relative;
   width: 70px;
-  font-size: 8px;
+  font-size: 9px;
   color: #888888; /* Un gris claro */
   top: 12px;
   margin-left: -29px;
@@ -162,30 +171,55 @@
 
 .mini-titulo{
   position: relative;
-  width: 45px;
-  font-size: 8px;
+  width: 1px;
+  font-size: 8.5px;
   color: #888888; 
   top: -7px;
   text-align: left;
   font-variation-settings: "slnt" 0, "wght" 400;
-  left: 52px;
+  margin-left: 10%;
 }
 
 .porcentaje, .valor, .variacion {
   position: relative;
-  margin-left: 8px;
-  font-size: 11px;
-  color: #ffffff; /* Blanco para resaltar */
+  font-size: 0.75rem;
+  color: #e9e9e9; /* Blanco para resaltar */
   top: 10.5px;
   font-variation-settings: "slnt" 0, "wght" 500;
+  text-align: left;
+  width: 10px;
+}
+
+#titulo-variacion{
+  margin-left: 25%;
+}
+
+#titulo-valor{
+  margin-left: 25%;
 }
 
 .porcentaje {
-  color: green; /* Verde por defecto */
+  color: #ffffff; /* Blanco para que sea consistente */
 }
 
 .valor {
   color: #ffffff; /* Blanco para que sea consistente */
+}
+
+/* Resplandor para variaciones positivas (verde) */
+.variacion-positiva {
+  color: rgb(67, 222, 67);
+}
+
+/* Resplandor para variaciones negativas (rojo) */
+.variacion-negativa {
+  color:rgba(222, 67, 67)
+}
+
+/* Sin resplandor (para variaciones neutras o cero) */
+.variacion-neutral {
+  text-shadow: none;
+  color: #888888;
 }
 
 ul {
@@ -200,15 +234,16 @@ li {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  background-color: #151522; /* Fondo oscuro */
-  border-radius: 10px;
-  margin-top: 16px;
+  padding: 8px 10px;
   width: 100%;
   height: 50px;
+  background-color: #14141f;
+  margin-top: 3%;  
+  border-radius: 8px;
+}
+
+ul :first-child{
+  margin-top: 0%;
 }
 
 .numeros{
@@ -229,7 +264,7 @@ li {
   padding-bottom: 3px;
   display: flex;
   justify-content: center;
-  background-color: #151522;
+  background-color: #14141f;
   width: 85%;
   flex-wrap: nowrap;
 }
@@ -243,7 +278,7 @@ li {
 }
 
 /* Perfil */
-.grid div:nth-child(1) {
+.grid .seccion:nth-child(1) {
   grid-column-start: 1;
   grid-column-end: 7;
   grid-row-start: 1;
@@ -251,7 +286,7 @@ li {
 }
 
 /* Portfolio */
-.grid div:nth-child(2) {
+.grid .seccion:nth-child(2) {
   grid-column-start: 7;
   grid-column-end: 11;
   grid-row-start: 1;
@@ -259,7 +294,7 @@ li {
 }
 
 /* Inversiones Previas */
-.grid div:nth-child(3) {
+.grid .seccion:nth-child(3) {
   grid-column-start: 11;
   grid-column-end: 13;
   grid-row-start: 1;
@@ -267,7 +302,7 @@ li {
 }
 
 /* Dato 1 */
-.grid div:nth-child(4) {
+.grid .seccion:nth-child(4) {
   grid-column-start: 1;
   grid-column-end: 3;
   grid-row-start: 6;
@@ -277,10 +312,10 @@ li {
 #grid1{
   width: 85%;
   height: 115%;
-}
+ }
 
 /* Dato 2 */
-.grid div:nth-child(5) {
+.grid .seccion:nth-child(5) {
   grid-column-start: 3;
   grid-column-end: 5;
   grid-row-start: 6;
@@ -295,7 +330,7 @@ li {
 }
 
 /* Dato 3 */
-.grid div:nth-child(6) {
+.grid .seccion:nth-child(6) {
   grid-column-start: 5;
   grid-column-end: 7;
   grid-row-start: 6;
@@ -310,7 +345,7 @@ li {
 }
 
 /* Mapa calor inversiones */
-.grid div:nth-child(7) {
+.grid .seccion:nth-child(7) {
   grid-column-start: 1;
   grid-column-end: 7;
   grid-row-start: 8;
@@ -321,7 +356,7 @@ li {
 }
 
 /* Grupos */
-.grid div:nth-child(8) {
+.grid .seccion:nth-child(8) {
   grid-column-start: 7;
   grid-column-end: 10;
   grid-row-start: 7;
@@ -329,7 +364,7 @@ li {
 }
 
 /* Contacto */
-.grid div:nth-child(9) {
+.grid .seccion:nth-child(9) {
   grid-column-start: 10;
   grid-column-end: 13;
   grid-row-start: 7;

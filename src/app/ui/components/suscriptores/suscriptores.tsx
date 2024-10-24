@@ -22,14 +22,12 @@ const Suscriptores = () => {
   }, []);
 
   return (
-    <div>
-      <div className="seccion" id="grid1">
+      <div className="seccion" id="grid2">
         <p className="numeros">{suscriptores}</p>
         <section className="datos">
           <p>Suscriptores</p>
         </section>
       </div>
-    </div>
   );
 };
 

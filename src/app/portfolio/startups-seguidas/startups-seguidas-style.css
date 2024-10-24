@@ -2,7 +2,7 @@
     position: relative;
     display: block;  /* Cambiar a flex para asegurar que el scroll funcione correctamente */
     height: 80%;
-    width: 103%;  /* Ajusta el ancho al 100% del contenedor */
+    width: 206.5%;  /* Ajusta el ancho al 100% del contenedor */
     overflow: hidden;
     white-space: nowrap;  /* Evita el salto de línea de las tarjetas */
     scroll-behavior: smooth;  /* Desplazamiento suave */

@@ -22,14 +22,12 @@ const Seguidores = () => {
   }, []);
 
   return (
-    <div>
       <div className="seccion" id="grid1">
         <p className="numeros">{seguidores}</p>
         <section className="datos">
           <p>Seguidores</p>
         </section>
       </div>
-    </div>
   );
 };
 
