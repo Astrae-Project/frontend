@@ -4,6 +4,7 @@ import '../../../perfil/bento-perfil/bento-perfil-style.css';
 const MovimientosRecientes = () => {
   const [movimientosRecientes, setMovimientosRecientes] = useState([]);
 
+  // Función para obtener los datos de movimientos recientes
   const fetchMovimientosRecientes = async () => {
     try {
       const response = await fetch("http://localhost:5000/api/data/movimientos-recientes", {
@@ -12,8 +13,8 @@ const MovimientosRecientes = () => {
       if (!response.ok) throw new Error("Error en la respuesta de la red");
 
       const data = await response.json();
-      console.log("Datos recibidos:", data); // Asegúrate de que los datos lleguen bien
-      setMovimientosRecientes(Array.isArray(data) ? data : []); // Asegúrate de que data sea un array
+      console.log("Datos recibidos:", data); // Para depurar, puedes ver si los datos llegan bien
+      setMovimientosRecientes(data); // Asumiendo que la respuesta es un array de movimientos
     } catch (error) {
       console.error("Error al obtener movimientos recientes:", error);
     }
@@ -23,10 +24,8 @@ const MovimientosRecientes = () => {
     fetchMovimientosRecientes();
   }, []);
 
-  console.log("Movimientos Recientes en el estado:", movimientosRecientes); // Verifica el estado
-
   return (
-    <div className="seccion" id="reciente-componente">
+    <div className="seccion" id="reciente-componente1">
       <div className="titulo-principal">
         <p className="titulo-movimientos">Últimos Movimientos</p>
       </div>

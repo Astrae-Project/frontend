@@ -3,7 +3,7 @@ import "./bento-inicio-style.css"
 import { Placeholder } from "../placeholder/placeholder-demo";
 import { StartupsRecomendadas } from "../startups-recomendadas/startup-recomendadas-demo";
 import TablaPortfolio from "../tabla-portfolio/tabla-portfolio";
-import InversionesPrevias from "../movimientos-recientes/movimientos-recientes";
+import MovimientosRecientesPerfil from "../movimientos-recientes/movimientos-recientes copy";
 
 export function BentoGridInicio() {
   return (
@@ -17,7 +17,7 @@ export function BentoGridInicio() {
                 <TablaPortfolio></TablaPortfolio>
             </div>
             <div className="apartado">
-                <InversionesPrevias></InversionesPrevias>
+                <MovimientosRecientesPerfil></MovimientosRecientesPerfil>
             </div>
             <div className="apartado">
                 <p>Calendario</p>

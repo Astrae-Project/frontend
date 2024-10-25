@@ -6,7 +6,7 @@ import './bento-perfil-style.css';
 import Contacto from "@/app/ui/components/contacto/contacto";
 import Eventos from "@/app/ui/components/eventos/eventos";
 import InversorInfo from "@/app/ui/components/info/info";
-import InversionesPrevias from "@/app/ui/components/movimientos-recientes/movimientos-recientes";
+import MovimientosRecientes from "@/app/ui/components/movimientos-recientes/movimientos-recientes";
 import TablaGrupos from "@/app/ui/components/tabla-grupos/tabla-grupos";
 import TablaPortfolio from "@/app/ui/components/tabla-portfolio/tabla-portfolio";
 import Seguidores from "@/app/ui/components/seguidores/seguidores";
@@ -19,7 +19,7 @@ export function BentoGridPerfil() {
       <div className="grid">
         <InversorInfo />
         <TablaPortfolio />
-        <InversionesPrevias />
+        <MovimientosRecientes />
         <Seguidores />
         <Suscriptores />
         <InversionesRealizadas />

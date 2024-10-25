@@ -1,5 +1,61 @@
 import React, { useState, useEffect } from 'react';
 
+const InformacionContacto = ({ contacto }) => {
+  return (
+    <div className="seccion" id='contacto'>
+      <div className='titulo-principal'>
+        <p className='titulo-contacto'>Contacto</p>
+      </div>
+      {contacto ? (
+        <ul className="contacto-lista">
+          {contacto.correo && (
+            <li className="contacto-item">
+              <div className="movimiento-icono">
+                <img src='/Imagenes/iconos/gmail.svg' className="contacto-icono" /> {/* Icono de correo */}
+              </div>              
+              <p>{contacto.correo}</p>
+            </li>
+          )}
+          {contacto.twitter && (
+            <li className="contacto-item">
+              <div className="movimiento-icono">
+                <img src='/Imagenes/iconos/x.svg' className="contacto-icono" /> {/* Icono de correo */}
+              </div>             
+              <p>@{contacto.twitter}</p>
+            </li>
+          )}
+          {contacto.linkedin && (
+            <li className="contacto-item">
+              <div className="movimiento-icono">
+                <img src='/Imagenes/iconos/linkedin.svg' className="contacto-icono" /> {/* Icono de correo */}
+              </div>
+              <p>@{contacto.linkedin}</p>
+            </li>
+          )}
+          {contacto.facebook && (
+            <li className="contacto-item">
+              <div className="movimiento-icono">
+                <img src='/Imagenes/iconos/facebook.svg' className="contacto-icono" /> {/* Icono de correo */}
+              </div>              
+              <p>@{contacto.facebook}</p>
+            </li>
+          )}
+          {contacto.instagram && (
+            <li className="contacto-item">
+              <div className="movimiento-icono">
+                <img src='/Imagenes/iconos/instagram.svg' className="contacto-icono" /> {/* Icono de correo */}
+              </div>
+               <p>@{contacto.instagram}</p>
+            </li>
+          )}
+        </ul>
+      ) : (
+        <p>No hay información de contacto disponible.</p>
+      )}
+    </div>
+  );
+};
+
 export default function Contacto() {
   const [contacto, setContacto] = useState(null);
 
@@ -22,20 +78,9 @@ export default function Contacto() {
     fetchContacto();
   }, []);
 
-  // Renderiza la información de contacto si está disponible
   return (
     <div className="seccion">
-      {contacto ? (
-        <div>
-          {contacto.correo && <p>Email: {contacto.correo}</p>}
-          {contacto.twitter && <p>Twitter: {contacto.twitter}</p>}
-          {contacto.linkedin && <p>LinkedIn: {contacto.linkedin}</p>}
-          {contacto.facebook && <p>Facebook: {contacto.facebook}</p>}
-          {contacto.instagram && <p>Instagram: {contacto.instagram}</p>}
-        </div>
-      ) : (
-        <p>No hay información de contacto disponible.</p>
-      )}
+      <InformacionContacto contacto={contacto} />
     </div>
   );
 }
