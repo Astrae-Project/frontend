@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import '../../../perfil/bento-perfil/bento-perfil-style.css';
+import { IconLockFilled } from "@tabler/icons-react";
 
 const TablaGrupos = () => {
   const [grupos, setGrupos] = useState([]);
@@ -26,18 +27,35 @@ const TablaGrupos = () => {
   }, []);
 
   return (
-    <div className="seccion">
+    <div className="seccion" id="grupos-perfil">
+      <div className="titulo-principal">
+        <p className="titulo-contacto">Grupos</p>
+      </div>
       {grupos.length > 0 ? (
-        <ul>
-          {grupos.map((grupo, index) => (
-            <li key={index}>{grupo.grupo.nombre}</li>
+        <div className="contenido-scrollable">
+          <ul className="grupos-lista">
+            {grupos.map((grupo, index) => (
+            <li key={index} className="grupo-item">
+              <div className="grupo-icono">
+                <img src={grupo.grupo.foto_grupo} className="grupo-avatar"/>
+              </div>
+              <div className="grupo-info">
+                <p id="nombre-grupo">{grupo.grupo.nombre}</p>
+                {grupo.grupo.tipo === 'privado' && (
+              <IconLockFilled className="icono-candado"></IconLockFilled>
+              )}
+              </div>
+            </li>
           ))}
         </ul>
+        </div>
+
       ) : (
         <p>No estás en ningún grupo.</p>
       )}
     </div>
   );
 };
+
 
 export default TablaGrupos;

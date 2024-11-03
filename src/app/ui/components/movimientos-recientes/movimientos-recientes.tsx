@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import '../../../perfil/bento-perfil/bento-perfil-style.css';
+import { IconMoneybag, IconCalendarEvent, IconStar } from "@tabler/icons-react";
 
 const MovimientosRecientes = () => {
   const [movimientosRecientes, setMovimientosRecientes] = useState([]);
@@ -39,43 +40,46 @@ const MovimientosRecientes = () => {
                 month: '2-digit',
                 year: 'numeric',
               });
-              const startupAvatar = movimiento.startup?.usuario?.avatar;
+
+              // Determina el ícono según el tipo de movimiento
+              let iconoMovimiento;
+              if (movimiento.tipo_movimiento === 'inversion') {
+                iconoMovimiento = <IconStar className="iconos"></IconStar>; // Icono de inversión
+              } else if (movimiento.tipo_movimiento === 'oferta') {
+                iconoMovimiento = <IconMoneybag className="iconos"></IconMoneybag>; // Icono de oferta
+              } else if (movimiento.tipo_movimiento === 'evento') {
+                iconoMovimiento = <IconCalendarEvent className="iconos"></IconCalendarEvent>; // Icono de evento
+              }
 
               return (
                 <li key={index} className="movimiento-item">
-                  <div className="movimiento-contenedor">
-                    <div className="movimiento-icono">
-                      {startupAvatar ? (
-                        <img src={startupAvatar} className="avatar-imagen" alt="Avatar" />
-                      ) : (
-                        <div className="avatar-placeholder">Sin Avatar</div>
-                      )}
-                    </div>
+                  <div className="borde-icono">
+                    <div className="movimiento-icono" id="icono-morado">{iconoMovimiento}</div>
+                  </div>
                     <div className="movimiento-detalles">
                       {movimiento.tipo_movimiento === 'inversion' ? (
                         <>
                           <p className="movimiento-nombre">{movimiento.startup?.nombre || 'Sin nombre'}</p>
-                          <p className="movimiento-monto">{movimiento.monto_invertido}€</p>
-                          <p className="movimiento-porcentaje">{movimiento.porcentaje_adquirido}%</p>
+                          <p className="movimiento-monto">Inversión de {movimiento.monto_invertido}€</p>
+                          <p className="movimiento-porcentaje">por el {movimiento.porcentaje_adquirido}%</p>
                           <p className="movimiento-fecha">{fechaFormateada}</p>
                         </>
                       ) : movimiento.tipo_movimiento === 'oferta' ? (
                         <>
                           <p className="movimiento-nombre">
-                            Oferta a {movimiento.startup?.nombre || 'Sin nombre'}
+                            {movimiento.startup?.nombre || 'Sin nombre'}
                           </p>
-                          <p className="movimiento-monto">{movimiento.monto_ofrecido}€</p>
-                          <p className="movimiento-porcentaje">{movimiento.porcentaje_ofrecido}%</p>
+                          <p className="movimiento-monto">Oferta de {movimiento.monto_ofrecido}€</p>
+                          <p className="movimiento-porcentaje">por el {movimiento.porcentaje_ofrecido}%</p>
                           <p className="movimiento-fecha">{fechaFormateada}</p>
                         </>
                       ) : movimiento.tipo_movimiento === 'evento' ? (
                         <>
-                          <p className="movimiento-nombre">Evento: {movimiento.titulo || 'Sin título'}</p>
+                          <p className="movimiento-nombre">{movimiento.titulo || 'Sin título'}</p>
                           <p className="movimiento-fecha">{fechaFormateada}</p>
                         </>
                       ) : null}
                     </div>
-                  </div>
                 </li>
               );
             })}

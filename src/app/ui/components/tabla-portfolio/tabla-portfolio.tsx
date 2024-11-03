@@ -59,15 +59,15 @@ const TablaPortfolio = () => {
               const cambioPorcentualInfo = formatCambioPorcentual(inversion.cambio_porcentual);
               return (
                 <li key={index}>
-                  <div className="movimiento-icono">
-                    <img src={inversion.startup.usuario.avatar} className="avatar-imagen" />
+                  <div className="portfolio-icono">
+                    <img src={inversion.startup.usuario.avatar} className="portfolio-imagen" />
                   </div>
                   <div className="portfolio-info">
                     <p className="startup-nombre">{inversion.startup.nombre}</p>
                     <p className="startup-username">{inversion.startup.username}</p>
                     <p className='mini-titulo' id='titulo-porcentaje'>Porcentaje</p>
                     <p className="porcentaje">{inversion.porcentaje_adquirido}%</p>
-                    <p className='mini-titulo' id='titulo-variacion'>Variación</p>
+                    <p className='mini-titulo' id='titulo-variacion'>Cambio</p>
                     <p className={`variacion ${cambioPorcentualInfo.glowClass}`} 
                       style={{ color: cambioPorcentualInfo.color }}>
                       {cambioPorcentualInfo.text}%
