@@ -39,11 +39,10 @@ body {
 #pequeño-arriba{
   position: relative;
   top: 10px;
-  left: 15px;
+  left: 12px;
   width: 102px;
   height: 24px;
   border-radius: 5px;
-  background-color: #14141f;
   font-size: 10px;
   gap: 4%;
   color: #d9d9d9;
@@ -52,61 +51,55 @@ body {
 #pequeño3{
   position: relative;
   top: 20px;
-  left: 15px;
+  left: 12px;
   width: 42px;
   height: 42px;
   border-radius: 7px;
-  background-color: #14141f;
 }
 
 #pequeño4{
   position: relative;
   top: -22px;
-  left: 75px;
+  left: 72px;
   width: 42px;
   height: 42px;
   border-radius: 7px;
-  background-color: #14141f;
 }
 
 #pequeño5{
   position: relative;
   top: -8px;
-  left: 15px;
+  left: 12px;
   width: 42px;
   height: 42px;
   border-radius: 7px;
-  background-color: #14141f;
 }
 
 #pequeño6{
   position: relative;
   top: -50px;
-  left: 75px;
+  left: 72px;
   width: 42px;
   height: 42px;
   border-radius: 7px;
-  background-color: #14141f;
 }
 
 #pequeño7{
   position: relative;
   top: -34px;
-  left: 15px;
+  left: 12px;
   width: 42px;
   height: 42px;
   border-radius: 7px;
-  background-color: #14141f;
 }
 
 #pequeño8{
   position: relative;
   top: -76px;
-  left: 75px;
+  left: 72px;
   width: 42px;
   height: 42px;
   border-radius: 7px;
-  background-color: #14141f;
 }
 
 .contenedor-botones{
@@ -117,7 +110,7 @@ body {
 .iconos-calendar{
   width: 16px;
   height: 16px;
-  color: #9069ca;
+  color: white;
 }
 
 #hoy{
@@ -128,16 +121,6 @@ body {
 #texto-hoy{
   position: relative;
   top: 1.5px;
-}
-
-.botones{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  justify-content: center;
 }
 
 .contenedor {
@@ -152,7 +135,7 @@ body {
 
 .contenedor-calendario{
   display: flex;
-  margin-left: 10px
+  gap: 10px
 }
 
 .bento {
@@ -178,6 +161,17 @@ body {
   height: 100%; /* Asegúrate de que esto esté aquí */
   flex-wrap: nowrap;
   flex: 1; /* Esto hará que cada sección ocupe el espacio disponible */
+}
+
+.botones{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  justify-content: center;
+  background-color: #151522;
 }
 
 .bento .apartado:nth-child(1) {

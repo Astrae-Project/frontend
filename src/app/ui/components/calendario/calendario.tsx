@@ -1,5 +1,6 @@
 import * as React from "react";
 import "../calendario1/calendario-style.css";
+import '../bento-inicio/bento-inicio-style.css'
 import { Calendar } from "./calendar";
 import { isPast, isToday } from "date-fns";
 import { IconCalendar, IconPencil, IconPlus, IconSearch, IconShare3, IconTrash } from "@tabler/icons-react";
