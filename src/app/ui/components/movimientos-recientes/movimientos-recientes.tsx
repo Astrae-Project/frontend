@@ -13,8 +13,8 @@ const MovimientosRecientes = () => {
       if (!response.ok) throw new Error("Error en la respuesta de la red");
 
       const data = await response.json();
-      console.log("Datos recibidos:", data); // Asegúrate de que los datos lleguen bien
-      setMovimientosRecientes(Array.isArray(data) ? data : []); // Asegúrate de que data sea un array
+      console.log("Datos recibidos:", data);
+      setMovimientosRecientes(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error al obtener movimientos recientes:", error);
     }
@@ -24,12 +24,12 @@ const MovimientosRecientes = () => {
     fetchMovimientosRecientes();
   }, []);
 
-  console.log("Movimientos Recientes en el estado:", movimientosRecientes); // Verifica el estado
+  console.log("Movimientos Recientes en el estado:", movimientosRecientes);
 
   return (
     <div className="seccion" id="reciente-componente">
       <div className="titulo-principal">
-        <p className="titulo-movimientos">Últimos Movimientos</p>
+        <p className="titulo-movimientos">Movimientos</p>
       </div>
       {movimientosRecientes.length > 0 ? (
         <div className="contenido-scrollable">
@@ -51,35 +51,44 @@ const MovimientosRecientes = () => {
                 iconoMovimiento = <IconCalendarEvent className="iconos"></IconCalendarEvent>; // Icono de evento
               }
 
+              const formatInversion = (monto) => {
+                if (monto >= 1e6) {
+                    return `${(monto / 1e6).toFixed(1)}M`; // Para millones, 'M' es el sufijo
+                } else if (monto >= 1e3) {
+                    return `${(monto / 1e3).toFixed(0)}K`; // Para miles, 'k' es el sufijo
+                } else {
+                    return monto.toString(); // Para cantidades menores a mil, no se cambia
+                }
+            };            
+
               return (
                 <li key={index} className="movimiento-item">
                   <div className="borde-icono">
                     <div className="movimiento-icono" id="icono-morado">{iconoMovimiento}</div>
                   </div>
-                    <div className="movimiento-detalles">
-                      {movimiento.tipo_movimiento === 'inversion' ? (
-                        <>
-                          <p className="movimiento-nombre">{movimiento.startup?.nombre || 'Sin nombre'}</p>
-                          <p className="movimiento-monto">Inversión de {movimiento.monto_invertido}€</p>
-                          <p className="movimiento-porcentaje">por el {movimiento.porcentaje_adquirido}%</p>
-                          <p className="movimiento-fecha">{fechaFormateada}</p>
-                        </>
-                      ) : movimiento.tipo_movimiento === 'oferta' ? (
-                        <>
-                          <p className="movimiento-nombre">
-                            {movimiento.startup?.nombre || 'Sin nombre'}
-                          </p>
-                          <p className="movimiento-monto">Oferta de {movimiento.monto_ofrecido}€</p>
-                          <p className="movimiento-porcentaje">por el {movimiento.porcentaje_ofrecido}%</p>
-                          <p className="movimiento-fecha">{fechaFormateada}</p>
-                        </>
-                      ) : movimiento.tipo_movimiento === 'evento' ? (
-                        <>
-                          <p className="movimiento-nombre">{movimiento.titulo || 'Sin título'}</p>
-                          <p className="movimiento-fecha">{fechaFormateada}</p>
-                        </>
-                      ) : null}
-                    </div>
+                  <div className="movimiento-detalles">
+                    {movimiento.tipo_movimiento === 'inversion' ? (
+                      <>
+                        <p className="movimiento-nombre">{movimiento.startup?.nombre || 'Sin nombre'}</p>
+                        <p className="movimiento-monto">Inversión: {formatInversion(movimiento.monto_invertido)}€</p>
+                        <p className="movimiento-porcentaje">por el {movimiento.porcentaje_adquirido}%</p>
+                        <p className="movimiento-fecha">{fechaFormateada}</p>
+                      </>
+                    ) : movimiento.tipo_movimiento === 'oferta' ? (
+                      <>
+                        <p className="movimiento-nombre">{movimiento.startup?.nombre || 'Sin nombre'}</p>
+                        <p className="movimiento-monto">Oferta: {formatInversion(movimiento.monto_ofrecido)}€</p>
+                        <p className="movimiento-porcentaje">por el {movimiento.porcentaje_ofrecido}%</p>
+                        <p className="movimiento-fecha">{fechaFormateada}</p>
+                      </>
+                    ) : movimiento.tipo_movimiento === 'evento' ? (
+                      <>
+                        <p className="movimiento-nombre">{movimiento.creador.username || 'Sin título'}</p>
+                        <p className="movimiento-monto">{movimiento.titulo}</p>
+                        <p className="movimiento-fecha">{fechaFormateada}</p>
+                      </>
+                    ) : null}
+                  </div>
                 </li>
               );
             })}

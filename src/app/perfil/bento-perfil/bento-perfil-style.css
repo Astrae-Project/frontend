@@ -80,6 +80,11 @@
   flex-wrap: wrap;
 }
 
+.contenedor-ancho div:nth-child(4){
+  justify-content: center;
+  padding-top: 1.6%;
+}
+
 .contenedor-ancho div:nth-child(5){
   margin-top: 1px;
 }
@@ -117,6 +122,16 @@
   align-items: normal;
 }
 
+#eventos-componente{
+  padding-bottom: 12px;
+  padding-top: 4px;
+  padding-left: 3%;
+  padding-right: 3%;
+  border: none;
+  align-items: normal;
+  overflow-y: hidden;
+}
+
 #contacto,#grupos-perfil{
   padding-bottom: 12px;
   padding-top: 15%;
@@ -130,7 +145,7 @@
   padding-bottom: 12px;
   padding-top: 43.475px;
   padding-left: 8%;
-  padding-right: 8%;
+  padding-right: 4%;
   border: none;
   align-items: normal;
 }
@@ -167,6 +182,12 @@
   flex-shrink: 0;
 }
 
+.movimiento-monto{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .avatar-imagen, .grupo-avatar, .portfolio-imagen{
   position: relative;
   width: 100%;
@@ -178,18 +199,22 @@
   padding: 25%;
 }
 
-.titulo-portfolio, .titulo-movimientos, .titulo-contacto{
+.titulo-portfolio, .titulo-movimientos, .titulo-contacto, .titulo-eventos{
   position: relative;
   font-variation-settings: "slnt" 0, "wght" 500;
   z-index: 10;
   font-size: .90rem;
 }
 
+.titulo-eventos{
+  margin: 0 auto;
+}
+
 .titulo-principal{
   position: absolute;
   display: flex;
   top: 15px;
-  gap: 5px
+  gap: 5px;
 }
 
 .titulo-contacto{
@@ -362,6 +387,32 @@ ul {
   justify-content: space-between;
 }
 
+.contenido1{
+  display: flex;
+  flex-direction: row;
+  width: inherit;
+  gap: 7.5%;
+  justify-content: center;
+}
+
+.contenido{
+  width: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5%;
+}
+
+#eventos{
+  margin-top: 12px;
+  align-content: center;
+}
+
+.texto-defecto{
+  position: relative;
+  top: -12px;
+  font-size: 0.95rem;
+}
+
 li {
   display: flex;
   align-items: center;
@@ -404,6 +455,9 @@ li {
   top: 15%;
   gap: 3px;
   font-variation-settings: "slnt" 0, "wght" 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .movimiento-detalles1{
@@ -414,6 +468,9 @@ li {
   top: 17%;
   gap: 3px;
   font-variation-settings: "slnt" 0, "wght" 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .movimiento-nombre{

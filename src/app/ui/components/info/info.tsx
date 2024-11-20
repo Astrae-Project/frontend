@@ -7,6 +7,7 @@ import { Chips } from "@/app/perfil/chip/chip-demo";
 import { MiniChips } from "@/app/perfil/mini-chips/mini-chips";
 import { Botones } from "@/app/perfil/boton/boton-demo";
 import StarRating from "@/app/perfil/estrellas/estrellas";
+import { id } from "date-fns/locale";
 
 const InversorInfo = () => {
   const [inversor, setInversor] = useState(null);
@@ -46,13 +47,11 @@ const InversorInfo = () => {
     <div className="seccion">
       <Chips />
       <span className="avatar">
-        {inversor?.usuario?.avatar && (
           <img
-            src={inversor.usuario.avatar}
-            alt={`${inversor.nombre} avatar`}
+            src={inversor?.usuario.avatar}
+            alt={`${inversor?.nombre} avatar`}
             className="avatar-imagen"
           />
-        )}
       </span>
       <p id="nombre">{inversor?.nombre || "Nombre del inversor"}</p>
       <p id="creacion">
@@ -64,7 +63,7 @@ const InversorInfo = () => {
         <MiniChips label={<div className="icon-text"><IconMapPinFilled className="icono2"/>{inversor?.usuario?.ciudad && inversor?.usuario?.pais? `${inversor.usuario.ciudad}, ${inversor.usuario.pais}`: "Sin ubicación"}</div>} />
         <MiniChips label={<div className="icon-text"><IconBriefcaseFilled className="icono2"/> {inversor?.perfil_inversion || "Desconocido"}</div>} />
         <MiniChips label={<div className="icon-text"><IconBulbFilled className="icono2"/> {sectorFavorito}</div>} />
-        <MiniChips label={<StarRating puntuacionMedia={puntuacionMedia} />} />
+        <MiniChips label={<StarRating  puntuacionMedia={puntuacionMedia} />} />
         <MiniChips label={<div className="icon-text"><IconMedal id="icono-pequeño" className="icono2"/> Inversiones Exitosas: {inversionesExitosas}</div>} />
         <MiniChips label={<div className="icon-text"><IconPercentage id="icono-pequeño2" className="icono2"/> ROI Promedio: {roiPromedio}%</div>} />
       </span>

@@ -1,13 +1,52 @@
 .carta {
-    position: relative;
-    display: inline-flex;  /* Usar inline-flex para ajustarse mejor al desplazamiento */
-    align-items: center;
-    justify-content: center;
-    width: 230px;
-    height: 100%;
-    border-radius: 18px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.1);
-    background-color: #10101A;
-    border: 1px solid #151522;
-    margin-right: 13px;
-  }
+  position: relative;
+  display: inline-grid;
+  width: 230px;
+  height: 100%;
+  border-radius: 18px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.1);
+  background-color: #10101A;
+  border: 1px solid #151522;
+  margin-right: 13px;
+  padding: 1.5%;
+}
+
+.carta-header{
+  display: flex;
+  position: relative;
+  top: 0;
+}
+
+.carta-info{
+  text-align: left;
+  margin-left: 10px;
+}
+
+.carta-icono{
+  position: relative;
+  display: flex;
+  height: 70px;
+  width: 70px;
+  background-color: #1C1C29;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  box-sizing: border-box; /* Asegura el tamaño */
+}
+
+.carta-avatar{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+}
+
+.carta-username{
+  position: relative;
+  color: #888888; /* Un gris claro */
+  font-variation-settings: "slnt" 0, "wght" 400;
+
+}
+
+

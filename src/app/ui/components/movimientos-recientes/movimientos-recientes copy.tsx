@@ -29,7 +29,7 @@ const MovimientosRecientes = () => {
   return (
     <div className="seccion" id="reciente-componente1">
       <div className="titulo-principal">
-        <p className="titulo-movimientos">Últimos Movimientos</p>
+        <p className="titulo-movimientos">Movimientos</p>
       </div>
       {movimientosRecientes.length > 0 ? (
         <div className="contenido-scrollable">
@@ -51,6 +51,16 @@ const MovimientosRecientes = () => {
                 iconoMovimiento = <IconCalendarEvent className="iconos1"></IconCalendarEvent>; // Icono de evento
               }
 
+              const formatInversion = (monto) => {
+                if (monto >= 1e6) {
+                    return `${(monto / 1e6).toFixed(1)}M`; // Para millones, 'M' es el sufijo
+                } else if (monto >= 1e3) {
+                    return `${(monto / 1e3).toFixed(0)}K`; // Para miles, 'k' es el sufijo
+                } else {
+                    return monto.toString(); // Para cantidades menores a mil, no se cambia
+                }
+            }; 
+
               return (
                 <li key={index} className="movimiento-item">
                   <div className="borde-icono1">
@@ -60,7 +70,7 @@ const MovimientosRecientes = () => {
                       {movimiento.tipo_movimiento === 'inversion' ? (
                         <>
                           <p className="movimiento-nombre1">{movimiento.startup?.nombre || 'Sin nombre'}</p>
-                          <p className="movimiento-monto">Inversión de {movimiento.monto_invertido}€</p>
+                          <p className="movimiento-monto">Inversión de {formatInversion(movimiento.monto_invertido)}€</p>
                           <p className="movimiento-porcentaje">por el {movimiento.porcentaje_adquirido}%</p>
                           <p className="movimiento-fecha1">{fechaFormateada}</p>
                         </>
@@ -69,13 +79,14 @@ const MovimientosRecientes = () => {
                           <p className="movimiento-nombre1">
                             {movimiento.startup?.nombre || 'Sin nombre'}
                           </p>
-                          <p className="movimiento-monto">Oferta de {movimiento.monto_ofrecido}€</p>
+                          <p className="movimiento-monto">Oferta de {formatInversion(movimiento.monto_ofrecido)}€</p>
                           <p className="movimiento-porcentaje">por el {movimiento.porcentaje_ofrecido}%</p>
                           <p className="movimiento-fecha1">{fechaFormateada}</p>
                         </>
                       ) : movimiento.tipo_movimiento === 'evento' ? (
                         <>
-                          <p className="movimiento-nombre1">{movimiento.titulo || 'Sin título'}</p>
+                          <p className="movimiento-nombre1">{movimiento.creador.username || 'Sin título'}</p>
+                          <p className="movimiento-monto">{movimiento.titulo}</p>
                           <p className="movimiento-fecha1">{fechaFormateada}</p>
                         </>
                       ) : null}

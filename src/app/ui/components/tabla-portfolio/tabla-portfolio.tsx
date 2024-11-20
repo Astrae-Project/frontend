@@ -46,10 +46,19 @@ const TablaPortfolio = () => {
     };
   };
 
+  const formatInversion = (monto) => {
+    if (monto >= 1e6) {
+        return `${(monto / 1e6).toFixed(1)}M`; // Para millones, 'M' es el sufijo
+    } else if (monto >= 1e3) {
+        return `${(monto / 1e3).toFixed(0)}K`; // Para miles, 'k' es el sufijo
+    } else {
+        return monto.toString(); // Para cantidades menores a mil, no se cambia
+    }
+  };
+
   return (
     <div className="seccion" id="portfolio-componente">
       <div className='titulo-principal'>
-        <IconTrendingUp className='svg'></IconTrendingUp>
         <p className='titulo-portfolio'>Activos</p>
       </div>
       <div className="contenido-scrollable">
@@ -64,7 +73,7 @@ const TablaPortfolio = () => {
                   </div>
                   <div className="portfolio-info">
                     <p className="startup-nombre">{inversion.startup.nombre}</p>
-                    <p className="startup-username">{inversion.startup.username}</p>
+                    <p className="startup-username">@{inversion.startup.usuario.username}</p>
                     <p className='mini-titulo' id='titulo-porcentaje'>Porcentaje</p>
                     <p className="porcentaje">{inversion.porcentaje_adquirido}%</p>
                     <p className='mini-titulo' id='titulo-variacion'>Cambio</p>
@@ -73,7 +82,7 @@ const TablaPortfolio = () => {
                       {cambioPorcentualInfo.text}%
                     </p>
                     <p className='mini-titulo' id='titulo-valor'>Valor</p>
-                    <p className="valor">{inversion.valor}€</p>
+                    <p className="valor">  {formatInversion(inversion.valor)}€</p>
                   </div>            
                 </li>
               );

@@ -1,0 +1,42 @@
+.calendario{
+  position: relative;
+  margin-top: 4px;
+  margin-left: 2%;
+}
+
+.calendario1{
+  margin-top: 1.5%;
+  margin-left: 5%;
+  align-self: center;
+  justify-self: center;
+  align-content: center;
+}
+
+.day-has-event::after{
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: #6e4ba3;
+  border-radius: 50%;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.day-has-event1::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: #6e4ba3;
+  border-radius: 50%;
+  bottom: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.day-outside {
+  color: gray;
+}
+
