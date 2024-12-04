@@ -405,6 +405,7 @@ ul {
 #eventos{
   margin-top: 12px;
   align-content: center;
+  padding-left: 10px;
 }
 
 .texto-defecto{
@@ -425,15 +426,42 @@ li {
   flex-shrink: 0;
 }
 
+.relleno-btn{
+  width: 100%;
+  height: 100%;
+  display: flex; /* Asegura que el contenido esté alineado correctamente */
+  align-items: center; /* Centra el contenido dentro del botón */
+  justify-content: center; /* Centra el contenido dentro del botón */
+  background-color: transparent;
+}
+
+.btn-fecha{
+  position: absolute;
+  bottom: 7%;
+  color: #888888;
+  font-size: 7px;
+  z-index: 10;
+}
+
+.btn-nombre{
+  position: absolute;
+  top: 2%;
+  font-size: 9px;
+  color: #a390bf;
+}
 
 .movimiento-item{
   background-color: transparent;
   padding: 0;
 }
 
+.movimiento-item:hover{
+  background-color: transparent;
+}
+
 .movimiento-icono{
   width: 95%;
-  height: 95%;
+  height: 95.5%;
   background-color: #6e4ba3;
   border-radius: 8px;
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.25); /* Sombra ligera */
@@ -481,10 +509,7 @@ li {
 }
 
 .movimiento-nombre1{
-  position: absolute;
-  top: 6%;
-  font-size: 9px;
-  color: #a390bf;
+
 }
 
 .movimiento-fecha{

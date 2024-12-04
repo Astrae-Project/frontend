@@ -1,7 +1,7 @@
 import React from 'react';
 import './carta-startups-style.css';
 
-export const Carta = ({ startup }) => {
+export const Carta = ({ startup, onClick }) => {
   // Modificación de la función `formatInversion` para mayor compatibilidad
   const formatInversion = (monto) => {
     if (monto === null) {
@@ -18,7 +18,7 @@ export const Carta = ({ startup }) => {
   };
 
   return (
-    <button className="carta">
+    <button className="carta" onClick={onClick}>
       <div className="carta-header">
         <div className="carta-icono">
           <img src={startup?.usuario?.avatar} alt="Avatar de startup" className="carta-avatar" />

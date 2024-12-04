@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from "react";
-import '../../../perfil/bento-perfil/bento-perfil-style.css';
+import "../../../perfil/bento-perfil/bento-perfil-style.css";
 import { IconMoneybag, IconCalendarEvent, IconStar } from "@tabler/icons-react";
+import Bubble from "../bubble/bubble";
 
 const MovimientosRecientes = () => {
   const [movimientosRecientes, setMovimientosRecientes] = useState([]);
+  const [activeBubble, setActiveBubble] = useState(null); // Tipo de burbuja activa
+  const [bubbleData, setBubbleData] = useState(null); // Datos de la burbuja
 
+  // Fetch de datos recientes
   const fetchMovimientosRecientes = async () => {
     try {
       const response = await fetch("http://localhost:5000/api/data/movimientos-recientes", {
-        credentials: 'include',
+        credentials: "include",
       });
       if (!response.ok) throw new Error("Error en la respuesta de la red");
 
       const data = await response.json();
-      console.log("Datos recibidos:", data); // Asegúrate de que los datos lleguen bien
-      setMovimientosRecientes(Array.isArray(data) ? data : []); // Asegúrate de que data sea un array
+      setMovimientosRecientes(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error al obtener movimientos recientes:", error);
     }
@@ -24,7 +27,23 @@ const MovimientosRecientes = () => {
     fetchMovimientosRecientes();
   }, []);
 
-  console.log("Movimientos Recientes en el estado:", movimientosRecientes); // Verifica el estado
+  // Manejo de apertura y cierre de burbujas
+  const handleBubbleOpen = (type, data) => {
+    setBubbleData(data)
+    setActiveBubble(type);
+  };
+
+  const handleBubbleClose = () => {
+    setActiveBubble(null);
+    setBubbleData(null);
+  };
+
+  // Formateo de montos
+  const formatInversion = (monto) => {
+    if (monto >= 1e6) return `${(monto / 1e6).toFixed(1)}M`;
+    if (monto >= 1e3) return `${(monto / 1e3).toFixed(0)}K`;
+    return monto.toString();
+  };
 
   return (
     <div className="seccion" id="reciente-componente1">
@@ -35,62 +54,92 @@ const MovimientosRecientes = () => {
         <div className="contenido-scrollable">
           <ul className="movimientos-lista">
             {movimientosRecientes.map((movimiento, index) => {
-              const fechaFormateada = new Date(movimiento.fecha || movimiento.fecha_creacion).toLocaleDateString('es-ES', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-              });
-
-              // Determina el ícono según el tipo de movimiento
-              let iconoMovimiento;
-              if (movimiento.tipo_movimiento === 'inversion') {
-                iconoMovimiento = <IconStar className="iconos1"></IconStar>; // Icono de inversión
-              } else if (movimiento.tipo_movimiento === 'oferta') {
-                iconoMovimiento = <IconMoneybag className="iconos1"></IconMoneybag>; // Icono de oferta
-              } else if (movimiento.tipo_movimiento === 'evento') {
-                iconoMovimiento = <IconCalendarEvent className="iconos1"></IconCalendarEvent>; // Icono de evento
-              }
-
-              const formatInversion = (monto) => {
-                if (monto >= 1e6) {
-                    return `${(monto / 1e6).toFixed(1)}M`; // Para millones, 'M' es el sufijo
-                } else if (monto >= 1e3) {
-                    return `${(monto / 1e3).toFixed(0)}K`; // Para miles, 'k' es el sufijo
-                } else {
-                    return monto.toString(); // Para cantidades menores a mil, no se cambia
+              const fechaFormateada = new Date(movimiento.fecha || movimiento.fecha_creacion).toLocaleDateString(
+                "es-ES",
+                {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
                 }
-            }; 
+              );
+
+              let iconoMovimiento;
+              if (movimiento.tipo_movimiento === "inversion") {
+                iconoMovimiento = <IconStar className="iconos1" />;
+              } else if (movimiento.tipo_movimiento === "oferta") {
+                iconoMovimiento = <IconMoneybag className="iconos1" />;
+              } else if (movimiento.tipo_movimiento === "evento") {
+                iconoMovimiento = <IconCalendarEvent className="iconos1" />;
+              }
 
               return (
                 <li key={index} className="movimiento-item">
-                  <div className="borde-icono1">
-                    <div className="movimiento-icono1" id="icono-morado">{iconoMovimiento}</div>
-                  </div>
-                    <div className="movimiento-detalles1">
-                      {movimiento.tipo_movimiento === 'inversion' ? (
-                        <>
-                          <p className="movimiento-nombre1">{movimiento.startup?.nombre || 'Sin nombre'}</p>
-                          <p className="movimiento-monto">Inversión de {formatInversion(movimiento.monto_invertido)}€</p>
-                          <p className="movimiento-porcentaje">por el {movimiento.porcentaje_adquirido}%</p>
-                          <p className="movimiento-fecha1">{fechaFormateada}</p>
-                        </>
-                      ) : movimiento.tipo_movimiento === 'oferta' ? (
-                        <>
-                          <p className="movimiento-nombre1">
-                            {movimiento.startup?.nombre || 'Sin nombre'}
-                          </p>
-                          <p className="movimiento-monto">Oferta de {formatInversion(movimiento.monto_ofrecido)}€</p>
-                          <p className="movimiento-porcentaje">por el {movimiento.porcentaje_ofrecido}%</p>
-                          <p className="movimiento-fecha1">{fechaFormateada}</p>
-                        </>
-                      ) : movimiento.tipo_movimiento === 'evento' ? (
-                        <>
-                          <p className="movimiento-nombre1">{movimiento.creador.username || 'Sin título'}</p>
-                          <p className="movimiento-monto">{movimiento.titulo}</p>
-                          <p className="movimiento-fecha1">{fechaFormateada}</p>
-                        </>
-                      ) : null}
+                  <button className="relleno-btn" onClick={() => handleBubbleOpen(movimiento.tipo_movimiento, movimiento)}>
+                    <div className="borde-icono1">
+                      <div className="movimiento-icono1" id="icono-morado">
+                        {iconoMovimiento}
+                      </div>
                     </div>
+                    <div className="movimiento-detalles1">
+                      {movimiento.tipo_movimiento === "inversion" && (
+                        <>
+                          <span
+                            className="btn-nombre"
+                            onClick={() =>
+                              movimiento.startup?.usuario &&
+                              handleBubbleOpen("perfil-startup", movimiento.startup)
+                            }
+                          >
+                            <p>{movimiento.startup?.usuario?.username || "Sin nombre"}</p>
+                          </span>
+                          <p className="movimiento-monto">
+                            Inversión de {formatInversion(movimiento.monto_invertido)}€
+                          </p>
+                          <p className="movimiento-porcentaje">
+                            por el {movimiento.porcentaje_adquirido}%
+                          </p>
+                          <p className="movimiento-fecha1">{fechaFormateada}</p>
+                        </>
+                      )}
+                      {movimiento.tipo_movimiento === "oferta" && (
+                        <>
+                          <span
+                            className="btn-nombre"
+                            onClick={() =>
+                              movimiento.startup?.usuario &&
+                              handleBubbleOpen("perfil-startup", movimiento.startup)
+                            }
+                          >
+                            <p>{movimiento.startup?.usuario?.username || "Sin nombre"}</p>
+                          </span>
+                          <p className="movimiento-monto">
+                            Oferta de {formatInversion(movimiento.monto_ofrecido)}€
+                          </p>
+                          <p className="movimiento-porcentaje">
+                            por el {movimiento.porcentaje_ofrecido}%
+                          </p>
+                          <p className="movimiento-fecha1">{fechaFormateada}</p>
+                        </>
+                      )}
+                      {movimiento.tipo_movimiento === "evento" && (
+                        <>
+                          <span
+                            className="btn-nombre"
+                            onClick={() => handleBubbleOpen("perfil", movimiento.creador)}
+                          >
+                            <p>{movimiento.creador?.username || "Sin nombre"}</p>
+                          </span>
+                          <p className="movimiento-monto">{movimiento.titulo}</p>
+                          <span
+                            className="btn-fecha"
+                            onClick={() => handleBubbleOpen("eventos", movimiento.fecha)}
+                          >
+                            <p>{fechaFormateada}</p>
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </button>
                 </li>
               );
             })}
@@ -99,6 +148,68 @@ const MovimientosRecientes = () => {
       ) : (
         <p>No hay movimientos recientes.</p>
       )}
+      <Bubble show={!!activeBubble} onClose={handleBubbleClose}>
+        {activeBubble === "perfil" && bubbleData && (
+          <div className="perfil-detalle">
+            <p><strong>Usuario:</strong> {bubbleData.username || "Cargando..."}</p>
+          </div>
+        )}
+        {activeBubble === "perfil-startup" && bubbleData && (
+          <div className="perfil-detalle">
+            <p><strong>Usuario:</strong> {bubbleData.usuario.username}</p>
+            <p><strong>Sector:</strong> {bubbleData.sector}</p>
+            <p><strong>Plantilla:</strong> {bubbleData.plantilla}</p>
+            <p><strong>Financiación:</strong> {bubbleData.estado_financiacion}</p>
+            <p><strong>Porcentaje Disponible:</strong> {bubbleData.porcentaje_disponible}%</p>
+            <p><strong>Valoración:</strong> {formatInversion(bubbleData.valoracion)}€</p>
+            <p><strong>Seguidores:</strong> {bubbleData.usuario.seguidores}</p>
+          </div>
+        )}
+        {activeBubble === "eventos" && bubbleData && (
+          <div className="eventos-detalle">
+            <p><strong>Eventos para la fecha:</strong> {new Date(bubbleData).toLocaleDateString("es-ES")}</p>
+            <ul>
+              {movimientosRecientes
+                .filter(
+                  (mov) =>
+                    new Date(mov.fecha || mov.fecha_creacion).toDateString() ===
+                    new Date(bubbleData).toDateString()
+                )
+                .map((evento, idx) => (
+                  <li key={idx}>
+                    <p>{evento.titulo || "Evento sin título"}</p>
+                  </li>
+                ))}
+            </ul>
+          </div>
+        )}
+        {activeBubble === "inversion" && bubbleData && (
+          <div className="inversion-detalle">
+            <p><strong>Startup:</strong> {bubbleData.startup?.usuario?.username || "Cargando..."}</p>
+            <p><strong>Inversión:</strong> {formatInversion(bubbleData.monto_invertido)}€</p>
+            <p><strong>Porcentaje Adquirido:</strong> {bubbleData.porcentaje_adquirido}%</p>
+            <p><strong>Fecha:</strong> {new Date(bubbleData.fecha).toLocaleDateString("es-ES")}</p>
+          </div>
+        )}
+        {activeBubble === "oferta" && bubbleData && (
+          <div className="oferta-detalle">
+            <p><strong>Startup:</strong> {bubbleData.startup?.usuario?.username || "Cargando..."}</p>
+            <p><strong>Oferta de:</strong> {formatInversion(bubbleData.monto_ofrecido)}€</p>
+            <p><strong>Porcentaje Ofrecido:</strong> {bubbleData.porcentaje_ofrecido}%</p>
+            <p><strong>Fecha:</strong> {new Date(bubbleData.fecha_creacion).toLocaleDateString("es-ES")}</p>
+          </div>
+        )}
+        {activeBubble === "evento" && bubbleData && (
+          <div className="evento-detalle">
+            <p><strong>Evento:</strong> {bubbleData.titulo || "Sin título"}</p>
+            <p><strong>Fecha:</strong> {new Date(bubbleData.fecha || bubbleData.fecha_creacion).toLocaleDateString("es-ES")}</p>
+            <p><strong>Descripción:</strong> {bubbleData.descripcion || "Sin descripción"}</p>
+            <p><strong>Creador:</strong> {bubbleData.creador.username || "Sin descripción"}</p>
+            <p><strong>Fecha Unión:</strong> {bubbleData.participantes.fecha_union || "Sin descripción"}</p>
+            <p><strong>Participantes:</strong> {bubbleData.participantes.lenght || "Sin descripción"}</p>
+          </div>
+        )}
+      </Bubble>
     </div>
   );
 };

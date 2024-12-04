@@ -2,7 +2,6 @@
     position: relative;
     display: block;  /* Cambiar a flex para asegurar que el scroll funcione correctamente */
     height: 100%;
-    width: 203%;  /* Ajusta el ancho al 100% del contenedor */
     overflow: hidden;
     white-space: nowrap;  /* Evita el salto de línea de las tarjetas */
     scroll-behavior: smooth;  /* Desplazamiento suave */
@@ -30,3 +29,8 @@
 .contiene1 span:last-child{
     margin-right: 0;
   }
+
+.apartado-raro{
+    overflow: hidden; /* Evita que el contenido desborde */
+    width: fit-content;
+}

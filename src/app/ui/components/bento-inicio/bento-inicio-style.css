@@ -86,7 +86,7 @@ body {
 
 #pequeño7{
   position: relative;
-  top: -34px;
+  top: -36px;
   left: 12px;
   width: 42px;
   height: 42px;
@@ -183,7 +183,6 @@ body {
   grid-column: 2 / 3;
   grid-row: 1 / 2;
   height: 151%;
-  z-index: 2;
 }
 
 .bento .apartado:nth-child(3) {
