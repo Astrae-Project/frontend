@@ -2,9 +2,15 @@
   position: relative;
   display: flex;
   height: 850px;
+  min-width: 1300px;
   width: 96.6%;
   padding-top: 24px;
   padding-left: 132px;
+}
+
+.contenedor4.small {
+  padding-top: 0;
+  padding-left: 24px;
 }
 
 .grid {
@@ -68,7 +74,7 @@
   background-color: transparent;
 }
 
-.contenedor-ancho{
+.contenedor-ancho, .contenedor-ancho1{
   position: relative;
   display: flex;
   width: 94.5%;
@@ -85,11 +91,11 @@
   padding-top: 1.6%;
 }
 
-.contenedor-ancho div:nth-child(5){
+.contenedor-ancho, .contenedor-ancho1 div:nth-child(5){
   margin-top: 1px;
 }
 
-.contenedor-ancho div:nth-child(6){
+.contenedor-ancho, .contenedor-ancho1 div:nth-child(6){
   margin-top: 1px;
 }
 
@@ -448,6 +454,8 @@ li {
   top: 2%;
   font-size: 9px;
   color: #a390bf;
+  z-index: 99999999;
+  cursor: pointer;
 }
 
 .movimiento-item{
@@ -508,10 +516,6 @@ li {
   color: #a390bf;
 }
 
-.movimiento-nombre1{
-
-}
-
 .movimiento-fecha{
   position: absolute;
   bottom: 10%;
@@ -539,10 +543,10 @@ svg{
 }
 
 #icono-pequeño, #icono-pequeño2{
-  width: 18px;
-  height: 18px;
+  width: 17px;
+  height: 17px;
   right: 2px;
-  margin-right: 4px;
+  margin-right: 3px;
 }
 
 .table-header {

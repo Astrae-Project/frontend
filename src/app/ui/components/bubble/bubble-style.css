@@ -11,20 +11,22 @@
     justify-content: center;
     z-index: 999;
     animation: fadeIn 0.3s ease-in-out;
+    padding: 20px;
   }
   
   /* Estilo para el contenido */
   .bubble-content {
-    background: #10101A;
-    width: 90%;
-    max-width: 450px;
-    max-height: 500px;
+    background: #090912;
+    min-width: 35%;
+    width: auto;
+    max-height: 850px;
     padding: 20px;
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     transform: scale(0.9);
     animation: popIn 0.3s ease-in-out;
-    overflow-y: auto;
+    overflow-y: hidden;
+    margin-left: 80px;
   }
   
   /* Animaciones */

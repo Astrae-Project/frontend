@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../../../perfil/bento-perfil/bento-perfil-style.css";
 import { IconMoneybag, IconCalendarEvent, IconStar } from "@tabler/icons-react";
 import Bubble from "../bubble/bubble";
+import Perfil from "@/app/perfil/page";
 
 const MovimientosRecientes = () => {
   const [movimientosRecientes, setMovimientosRecientes] = useState([]);
@@ -74,7 +75,7 @@ const MovimientosRecientes = () => {
 
               return (
                 <li key={index} className="movimiento-item">
-                  <button className="relleno-btn" onClick={() => handleBubbleOpen(movimiento.tipo_movimiento, movimiento)}>
+                  <button className="relleno-btn" >
                     <div className="borde-icono">
                       <div className="movimiento-icono" id="icono-morado">
                         {iconoMovimiento}
@@ -85,6 +86,7 @@ const MovimientosRecientes = () => {
                         <>
                           <span
                             className="btn-nombre"
+                            role="button"
                             onClick={() =>
                               movimiento.startup?.usuario &&
                               handleBubbleOpen("perfil-startup", movimiento.startup)
@@ -105,6 +107,7 @@ const MovimientosRecientes = () => {
                         <>
                           <span
                             className="btn-nombre"
+                            role="button"
                             onClick={() =>
                               movimiento.startup?.usuario &&
                               handleBubbleOpen("perfil-startup", movimiento.startup)
@@ -125,6 +128,7 @@ const MovimientosRecientes = () => {
                         <>
                           <span
                             className="btn-nombre"
+                            role="button"
                             onClick={() => handleBubbleOpen("perfil", movimiento.creador)}
                           >
                             <p>{movimiento.creador?.username || "Sin nombre"}</p>
@@ -155,15 +159,7 @@ const MovimientosRecientes = () => {
           </div>
         )}
         {activeBubble === "perfil-startup" && bubbleData && (
-          <div className="perfil-detalle">
-            <p><strong>Usuario:</strong> {bubbleData.usuario.username}</p>
-            <p><strong>Sector:</strong> {bubbleData.sector}</p>
-            <p><strong>Plantilla:</strong> {bubbleData.plantilla}</p>
-            <p><strong>Financiación:</strong> {bubbleData.estado_financiacion}</p>
-            <p><strong>Porcentaje Disponible:</strong> {bubbleData.porcentaje_disponible}%</p>
-            <p><strong>Valoración:</strong> {formatInversion(bubbleData.valoracion)}€</p>
-            <p><strong>Seguidores:</strong> {bubbleData.usuario.seguidores}</p>
-          </div>
+          <Perfil></Perfil>
         )}
         {activeBubble === "eventos" && bubbleData && (
           <div className="eventos-detalle">

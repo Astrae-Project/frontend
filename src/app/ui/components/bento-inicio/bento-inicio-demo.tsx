@@ -11,7 +11,7 @@ export function BentoGridInicio() {
     const [inversor, setInversor] = useState(null);
     const fetchDatosInversor = async () => {
         try {
-          const response = await fetch("http://localhost:5000/api/data/inversor", {
+          const response = await fetch("http://localhost:5000/api/data/usuario", {
             credentials: 'include',
           });
           if (!response.ok) throw new Error("Network response was not ok");

@@ -14,10 +14,22 @@
 .status-dot {
     width: 5.5px; /* Tamaño del punto */
     height: 5.5px; /* Tamaño del punto */
-    background-color: #61C454; /* Color del punto */
     border-radius: 50%; /* Hacerlo circular */
     margin-right: 8px; /* Separación del texto */
 }
+
+.status-dot-purple {
+    background-color: #8554c4; /* Color verde para Startup */
+}
+
+.status-dot-blue {
+    background-color: #2196F3; /* Color azul para Inversor */
+}
+
+.status-dot-gray {
+    background-color: #BDBDBD; /* Color gris cuando no se ha cargado el rol */
+}
+
 
 .chip{
     position: relative;

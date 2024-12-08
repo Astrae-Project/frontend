@@ -1,12 +1,9 @@
-.contenedor-botones{
+.contenedor-botones1{
     position: absolute;
-    margin-top: 250px;
     display: flex;
-    gap: 1.4rem;
-    align-items: center;
-    justify-content: center;
-    width: 95%;
-}
+    gap: 20px;
+    top: 80%;
+  }
 
 .custom-button {
     background-color: #151522;

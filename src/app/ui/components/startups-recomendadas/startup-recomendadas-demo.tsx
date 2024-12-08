@@ -78,7 +78,7 @@ export function StartupsRecomendadas() {
             <p><strong>Porcentaje Disponible:</strong> {selectedStartup?.porcentaje_disponible || 'Cargando...'}%</p>
             <p><strong>Valoración:</strong> {selectedStartup?.valoracion ? formatInversion(selectedStartup.valoracion) : 'Cargando...'}€</p>
             <p><strong>Usuario:</strong> {selectedStartup?.usuario?.username || 'Cargando...'}</p>
-            <p><strong>Seguidores:</strong> {selectedStartup?.usuario?.seguidores?.lenght || 'Cargando...'}</p> {/* Aquí debería estar el número de seguidores */}
+            <p><strong>Seguidores:</strong> {selectedStartup?.usuario?.seguidores?.length || 'Cargando...'}</p> {/* Aquí debería estar el número de seguidores */}
             <p><strong>Inversores:</strong> {selectedStartup?.inversiones?.length || 'Cargando...'}</p> {/* Cambiado .lenght a .length */}
           </div>
         </Bubble>
