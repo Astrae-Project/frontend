@@ -5,6 +5,7 @@ import { ScrollShadow } from "@nextui-org/react";
 import "./startups-recomendadas-style.css";
 import { Carta } from "../carta-startups/carta-startups";
 import Bubble from "../bubble/bubble"; // Asegúrate de tener el componente Bubble importado
+import customAxios from "@/service/api.mjs";
 
 export function StartupsRecomendadas() {
   const [startups, setStartups] = useState([]);
@@ -14,12 +15,10 @@ export function StartupsRecomendadas() {
 
   const fetchStartupsData = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/data/startup/recomendadas", {
-        credentials: 'include',
+      const response = await customAxios.get("http://localhost:5000/api/data/startup/recomendadas", {
+        withCredentials: true,
       });
-      if (!response.ok) throw new Error("Network response was not ok");
-      const data = await response.json();
-      setStartups(data.startups);
+      setStartups(response.data.startups);
     } catch (error) {
       console.error("Error fetching startups data:", error);
     }

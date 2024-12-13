@@ -11,11 +11,7 @@ import {
   IconSearch,
   IconShare3,
 } from "@tabler/icons-react";
-import axios from "axios"; // Importar axios
-
-const axiosInstance = axios.create({
-  withCredentials: true, // Asegura que las cookies se envíen en las solicitudes
-});
+import customAxios from "@/service/api.mjs";
 
 export default function Calendario({ eventos, onFechaSeleccionada }) {
   const [date, setDate] = useState(new Date()); // Fecha seleccionada
@@ -80,7 +76,7 @@ export default function Calendario({ eventos, onFechaSeleccionada }) {
   // Crear evento
   const handleCrearEvento = async (eventData) => {
     try {
-      const response = await axiosInstance.post("http://localhost:5000/api/evento/crear", eventData);
+      const response = await customAxios.post("http://localhost:5000/api/evento/crear", eventData);
       console.log(response.data);
       setConfirmationMessage("¡Evento creado con éxito!"); // Mensaje de éxito
       setMessageType("success"); // Tipo de mensaje de éxito
@@ -112,7 +108,7 @@ export default function Calendario({ eventos, onFechaSeleccionada }) {
         return;
       }
   
-      const response = await axiosInstance.delete(`http://localhost:5000/api/evento/eliminar/${eventoId}`);
+      const response = await customAxios.delete(`http://localhost:5000/api/evento/eliminar/${eventoId}`);
       console.log(response.data);
   
       // Actualizar el estado para eliminar el evento del listado
@@ -147,7 +143,7 @@ export default function Calendario({ eventos, onFechaSeleccionada }) {
         return;
       }
 
-      const response = await axiosInstance.put(`http://localhost:5000/api/evento/datos/${eventoId}`, eventData);
+      const response = await customAxios.put(`http://localhost:5000/api/evento/datos/${eventoId}`, eventData);
       console.log(response.data);
 
       setConfirmationMessage("¡Evento editado con éxito!"); // Mensaje de éxito
@@ -179,7 +175,7 @@ export default function Calendario({ eventos, onFechaSeleccionada }) {
         return;
       }
 
-      const response = await axiosInstance.get(`http://localhost:5000/api/evento/data/${eventoId}`);
+      const response = await customAxios.get(`http://localhost:5000/api/evento/data/${eventoId}`);
       console.log(response.data);
       setFormSubmitted(true); // Cambiar el estado para ocultar el formulario
     } catch (error) {

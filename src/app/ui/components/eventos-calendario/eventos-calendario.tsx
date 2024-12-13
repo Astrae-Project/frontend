@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Eventos from "../eventos/eventos";
 import Calendario from "../calendario/calendario";
 import "../../../perfil/bento-perfil/bento-perfil-style.css";
+import customAxios from "@/service/api.mjs";
 
 export default function EventosyCalendario() {
   const [fechaSeleccionada, setFechaSeleccionada] = useState(new Date());
@@ -9,12 +10,10 @@ export default function EventosyCalendario() {
 
   const fetchEventos = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/data/eventos", {
-        credentials: "include",
+      const response = await customAxios.get("http://localhost:5000/api/data/eventos", {
+        withCredentials: true,
       });
-      if (!response.ok) throw new Error("Network response was not ok");
-      const data = await response.json();
-      setEventos(data);
+      setEventos(response.data);
     } catch (error) {
       console.error("Error fetching eventos:", error);
     }

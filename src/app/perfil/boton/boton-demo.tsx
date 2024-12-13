@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios"; // Importa Axios para hacer la solicitud al backend
 import './boton-style.css';
+import customAxios from "@/service/api.mjs";
 
 export function Botones() {
   const [isFollowing, setIsFollowing] = useState(false); // Estado para saber si el usuario ya sigue o no
@@ -11,12 +12,11 @@ export function Botones() {
 
   const fetchUsuario = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/data/usuario", {
-        credentials: 'include',
+      const response = await customAxios.get("http://localhost:5000/api/data/usuario", {
+        withCredentials: true,
       });
-      if (!response.ok) throw new Error("Network response was not ok");
-      const data = await response.json();
-      setUsuario(data); // Almacena la información del usuario
+      
+      setUsuario(response.data); // Almacena la información del usuario
     } catch (error) {
       console.error("Error fetching usuario:", error);
     }
@@ -52,8 +52,6 @@ export function Botones() {
     setLoading(true);
 
     try {
-      // Aquí deberías hacer la lógica para "invertir" en una startup
-      // (Ejemplo: enviar un monto de inversión, id de la startup, etc.)
       const id_startup = 5; // Aquí se debería obtener el ID de la startup en la que se quiere invertir
       const response = await axios.post('http://localhost:5000/api/inversion/invertir', { id_startup }, {
         withCredentials: true, 

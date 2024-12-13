@@ -2,8 +2,8 @@
 
 import '../../../perfil/bento-perfil/bento-perfil-style.css';
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
 import Bubble from '../bubble/bubble';
+import customAxios from '../../../../service/api.mjs';
 
 const TablaPortfolio = () => {
   const [portfolio, setPortfolio] = useState([]); // Estado para el portfolio
@@ -17,12 +17,11 @@ const TablaPortfolio = () => {
   // Función para obtener el portfolio
   const fetchPortfolio = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/data/portfolio", {
+      const response = await customAxios.get("http://localhost:5000/api/data/portfolio", {
         withCredentials: true, // Enviar cookies con la solicitud
       });
 
       // Verificamos la respuesta en consola
-      console.log(response.data);
       setPortfolio(response.data.inversiones); // Actualizamos el estado con las inversiones
     } catch (error) {
       console.error("Error fetching portfolio:", error);
@@ -93,11 +92,10 @@ const TablaPortfolio = () => {
 
       const { id_startup: startupId } = inversionData;
       // Realizar la solicitud para obtener los detalles de la startup
-      const response = await axios.get(`http://localhost:5000/api/data/startup/${startupId}`, {
+      const response = await customAxios.get(`http://localhost:5000/api/data/startup/${startupId}`, {
         withCredentials: true,
       });
 
-      console.log("Detalles de la startup:", response.data); // Verificamos los datos recibidos
       setStartupDetails(response.data); // Actualizamos el estado con los detalles de la startup
     } catch (error) {
       console.error("Error al obtener los datos de la startup:", error);

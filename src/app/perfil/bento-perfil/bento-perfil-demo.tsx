@@ -2,15 +2,16 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import './bento-perfil-style.css';
-import Contacto from "@/app/ui/components/contacto/contacto";
-import InversorInfo from "@/app/ui/components/info/info";
-import MovimientosRecientes from "@/app/ui/components/movimientos-recientes/movimientos-recientes";
-import TablaGrupos from "@/app/ui/components/tabla-grupos/tabla-grupos";
-import TablaPortfolio from "@/app/ui/components/tabla-portfolio/tabla-portfolio";
-import Seguidores from "@/app/ui/components/seguidores/seguidores";
-import Suscriptores from "@/app/ui/components/suscriptores/suscriptores";
-import InversionesRealizadas from "@/app/ui/components/inversiones-realizadas/inversiones-realizadas";
-import EventosyCalendario1 from "@/app/ui/components/eventos-calendario1/eventos-calendario1";
+import Contacto from "../../ui/components/contacto/contacto";
+import EventosyCalendario1 from "../../ui/components/eventos-calendario1/eventos-calendario1";
+import InversionesRealizadas from "../../ui/components/inversiones-realizadas/inversiones-realizadas";
+import Seguidores from "../../ui/components/seguidores/seguidores";
+import Suscriptores from "../../ui/components/suscriptores/suscriptores";
+import TablaGrupos from "../../ui/components/tabla-grupos/tabla-grupos";
+import TablaPortfolio from "../../ui/components/tabla-portfolio/tabla-portfolio";
+import Info from "../../ui/components/info/info";
+import MovimientosRecientes from "../../ui/components/movimientos-recientes/movimientos-recientes-perfil";
+
 
 export function BentoGridPerfil() {
   const containerRef = useRef(null);
@@ -34,7 +35,7 @@ export function BentoGridPerfil() {
     <div ref={containerRef}
     className={`contenedor4 ${isSmall ? "small" : ""}`}>
       <div className="grid">
-        <InversorInfo />
+        <Info />
         <TablaPortfolio />
         <MovimientosRecientes />
         <Seguidores />

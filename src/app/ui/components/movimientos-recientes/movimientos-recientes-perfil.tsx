@@ -1,26 +1,39 @@
 import React, { useState, useEffect } from "react";
 import "../../../perfil/bento-perfil/bento-perfil-style.css";
-import { IconMoneybag, IconCalendarEvent, IconStar } from "@tabler/icons-react";
 import Bubble from "../bubble/bubble";
-import Perfil from "@/app/perfil/page";
+import Perfil from "../../../perfil/page";
+import { IconStar, IconMoneybag, IconCalendarEvent } from "@tabler/icons-react";
+import customAxios from "@/service/api.mjs";
 
 const MovimientosRecientes = () => {
   const [movimientosRecientes, setMovimientosRecientes] = useState([]);
   const [activeBubble, setActiveBubble] = useState(null); // Tipo de burbuja activa
   const [bubbleData, setBubbleData] = useState(null); // Datos de la burbuja
 
-  // Fetch de datos recientes
   const fetchMovimientosRecientes = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/data/movimientos-recientes", {
-        credentials: "include",
+      const response = await customAxios.get("http://localhost:5000/api/data/movimientos-recientes", {
+        withCredentials: true,
       });
-      if (!response.ok) throw new Error("Error en la respuesta de la red");
-
-      const data = await response.json();
-      setMovimientosRecientes(Array.isArray(data) ? data : []);
+  
+      if (!response || !response.data) {
+        throw new Error("No data received or response format is incorrect");
+      }
+  
+      const data = response.data;
+  
+      // Verificar si el formato de los datos es el esperado
+      if (!Array.isArray(data)) {
+        throw new Error("Received data is not an array");
+      }
+  
+      setMovimientosRecientes(data); // Solo actualiza el estado si los datos son válidos
+  
     } catch (error) {
       console.error("Error al obtener movimientos recientes:", error);
+  
+      // Mostrar un mensaje adicional o tomar alguna acción en la interfaz
+      alert("Ocurrió un error al obtener los movimientos recientes. Por favor, intenta nuevamente más tarde.");
     }
   };
 
@@ -47,7 +60,7 @@ const MovimientosRecientes = () => {
   };
 
   return (
-    <div className="seccion" id="reciente-componente1">
+    <div className="seccion" id="reciente-componente">
       <div className="titulo-principal">
         <p className="titulo-movimientos">Movimientos</p>
       </div>
@@ -71,7 +84,7 @@ const MovimientosRecientes = () => {
                 iconoMovimiento = <IconMoneybag className="iconos1" />;
               } else if (movimiento.tipo_movimiento === "evento") {
                 iconoMovimiento = <IconCalendarEvent className="iconos1" />;
-              }
+              } 
 
               return (
                 <li key={index} className="movimiento-item">
@@ -81,7 +94,7 @@ const MovimientosRecientes = () => {
                         {iconoMovimiento}
                       </div>
                     </div>
-                    <div className="movimiento-detalles1">
+                    <div className="movimiento-detalles">
                       {movimiento.tipo_movimiento === "inversion" && (
                         <>
                           <span
@@ -99,7 +112,7 @@ const MovimientosRecientes = () => {
                           <p className="movimiento-porcentaje">
                             por el {movimiento.porcentaje_adquirido}%
                           </p>
-                          <p className="movimiento-fecha1">{fechaFormateada}</p>
+                          <p className="movimiento-fecha">{fechaFormateada}</p>
                         </>
                       )}
                       {movimiento.tipo_movimiento === "oferta" && (

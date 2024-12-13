@@ -3,20 +3,19 @@ import "./bento-inicio-style.css"
 import { Placeholder } from "../placeholder/placeholder-demo";
 import { StartupsRecomendadas } from "../startups-recomendadas/startup-recomendadas-demo";
 import TablaPortfolio from "../tabla-portfolio/tabla-portfolio";
-import MovimientosRecientesPerfil from "../movimientos-recientes/movimientos-recientes copy";
 import EventosyCalendario from "../eventos-calendario/eventos-calendario";
+import MovimientosRecientes1 from "../movimientos-recientes/movimientos-recientes";
+import customAxios from "@/service/api.mjs";
 
 
 export function BentoGridInicio() {
     const [inversor, setInversor] = useState(null);
     const fetchDatosInversor = async () => {
         try {
-          const response = await fetch("http://localhost:5000/api/data/usuario", {
-            credentials: 'include',
+          const response = await customAxios.get("http://localhost:5000/api/data/usuario", {
+            withCredentials: true,
           });
-          if (!response.ok) throw new Error("Network response was not ok");
-          const data = await response.json();
-          setInversor(data.inversor);
+          setInversor(response.data.inversor);
 
       
         } catch (error) {
@@ -39,7 +38,7 @@ export function BentoGridInicio() {
                 <TablaPortfolio></TablaPortfolio>
             </div>
             <div className="apartado">
-                <MovimientosRecientesPerfil></MovimientosRecientesPerfil>
+                <MovimientosRecientes1></MovimientosRecientes1>
             </div>
             <div className="apartado">
                 <EventosyCalendario></EventosyCalendario>

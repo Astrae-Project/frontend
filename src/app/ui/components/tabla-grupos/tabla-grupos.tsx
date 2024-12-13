@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import '../../../perfil/bento-perfil/bento-perfil-style.css';
 import { IconLockFilled } from "@tabler/icons-react";
+import customAxios from "@/service/api.mjs";
 
 const TablaGrupos = () => {
   const [grupos, setGrupos] = useState([]);
@@ -8,16 +9,28 @@ const TablaGrupos = () => {
   // Función para hacer fetch de los grupos
   const fetchGrupos = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/data/grupos', {
-        credentials: 'include', // Incluye cookies para la sesión del usuario
+      const response = await customAxios.get("http://localhost:5000/api/data/grupos", {
+        withCredentials: true,
       });
-      if (!response.ok) throw new Error('Error al recuperar los grupos');
-      const data = await response.json();
-      
-      // Aseguramos que data sea un array
-      setGrupos(Array.isArray(data) ? data : []);
+  
+      if (!response || !response.data) {
+        throw new Error("No data received or response format is incorrect");
+      }
+  
+      const data = response.data;
+  
+      // Verificar si el formato de los datos es el esperado
+      if (!Array.isArray(data)) {
+        throw new Error("Received data is not an array");
+      }
+  
+      setGrupos(data); // Solo actualiza el estado si los datos son válidos
+  
     } catch (error) {
-      console.error('Error al obtener los grupos:', error);
+      console.error("Error al obtener movimientos recientes:", error);
+  
+      // Mostrar un mensaje adicional o tomar alguna acción en la interfaz
+      alert("Ocurrió un error al obtener los movimientos recientes. Por favor, intenta nuevamente más tarde.");
     }
   };
 

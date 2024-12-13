@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner } from "@nextui-org/react";
 import '../../../perfil/bento-perfil/bento-perfil-style.css';
+import customAxios from "@/service/api.mjs";
 
 const Tabla = () => {
   const [portfolio, setPortfolio] = useState([]);
@@ -9,12 +10,10 @@ const Tabla = () => {
   // Función para obtener el portafolio
   const fetchPortfolio = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/data/portfolio", {
-        credentials: 'include',
+      const response = await customAxios.get("http://localhost:5000/api/data/portfolio", {
+        withCredentials: true,
       });
-      if (!response.ok) throw new Error("Network response was not ok");
-      const data = await response.json();
-      setPortfolio(data.inversiones);
+      setPortfolio(response.data.inversiones);
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching portfolio:", error);

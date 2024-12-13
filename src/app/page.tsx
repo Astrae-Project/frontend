@@ -1,13 +1,15 @@
-"use client"
+"use client";
 
 import { BentoGridInicio } from "./ui/components/bento-inicio/bento-inicio-demo";
 
-export default function Inicio() {
+const Inicio = () => {
   return (
     <main>
-      <div>
-        <BentoGridInicio></BentoGridInicio>
-      </div>
-    </main>      
+      <section>
+        <BentoGridInicio />
+      </section>
+    </main>
   );
-}
+};
+
+export default Inicio;

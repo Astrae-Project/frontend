@@ -1,3 +1,4 @@
+import customAxios from '@/service/api.mjs';
 import React, { useState, useEffect } from 'react';
 
 const InformacionContacto = ({ contacto }) => {
@@ -56,12 +57,10 @@ export default function Contacto2() {
 
   const fetchContacto = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/data/contacto', {
-        credentials: 'include',
+      const response = await customAxios.get('http://localhost:5000/api/data/contacto', {
+        withCredentials: true,
       });
-      if (!response.ok) throw new Error('Error al recuperar los datos de contacto');
-      const data = await response.json();
-      setContacto(data);
+      setContacto(response.data);
     } catch (error) {
       console.error('Error al obtener los datos de contacto:', error);
     }

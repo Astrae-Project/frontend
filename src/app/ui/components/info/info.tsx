@@ -3,10 +3,13 @@
 import React, { useState, useEffect } from "react";
 import { IconBriefcaseFilled, IconBulbFilled, IconChartPieFilled, IconCurrencyEuro, IconMapPinFilled, IconMedal, IconPercentage, IconStarFilled, IconUserFilled} from "@tabler/icons-react";
 import '../../../perfil/bento-perfil/bento-perfil-style.css';
-import { Chips } from "@/app/perfil/chip/chip-demo";
-import { MiniChips } from "@/app/perfil/mini-chips/mini-chips";
-import { Botones } from "@/app/perfil/boton/boton-demo";
-import StarRating from "@/app/perfil/estrellas/estrellas";
+import { Botones } from "../../../perfil/boton/boton-demo";
+import { Chips } from "../../../perfil/chip/chip-demo";
+import StarRating from "../../../perfil/estrellas/estrellas";
+import { MiniChips } from "../../../perfil/mini-chips/mini-chips";
+
+// Asumiendo que customAxios está configurado adecuadamente en otro archivo
+import customAxios from "@/service/api.mjs"; 
 
 const Info = () => {
   const [usuario, setUsuario] = useState(null);
@@ -16,30 +19,34 @@ const Info = () => {
   const [inversionesExitosas, setInversionesExitosas] = useState(0);
   const [roiPromedio, setRoiPromedio] = useState(0);
   const [puntuacionMedia, setPuntuacionMedia] = useState(0);
-  const [recaudacionTotal, setRecaudacionTotal] = useState(0)
-  
+  const [recaudacionTotal, setRecaudacionTotal] = useState(0);
+
   const fetchDatos = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/data/usuario", {
-        credentials: 'include',
+      const response = await customAxios.get(`http://localhost:5000/api/data/usuario`, {
+        withCredentials: true, // Asegúrate de que la configuración se mantenga
       });
-      if (!response.ok) throw new Error("Network response was not ok");
-      const data = await response.json();
+      
+      // Verifica la respuesta
+      if (!response || !response.data) {
+        throw new Error("No data received from the API");
+      }
+
+      const data = response.data;
 
       setUsuario(data.inversor || data.startup); // Establecer el usuario con la respuesta
       setPerfilTipo(data.inversor ? "inversor" : "startup"); // Determinar el tipo de perfil
-      setSectorFavorito(data.sectorFavorito);
+      setSectorFavorito(data.sectorFavorito || "Desconocido");
       setInversionesRealizadas(data.inversor ? data.inversionesRealizadas : data.startup.inversiones.length);
-      setRoiPromedio(data.roiPromedio);
-      setPuntuacionMedia(data.puntuacionMedia);
-      setRecaudacionTotal(data.recaudacionTotal)
+      setRoiPromedio(data.roiPromedio || 0);
+      setPuntuacionMedia(data.puntuacionMedia || 0);
+      setRecaudacionTotal(data.recaudacionTotal || 0);
 
       if (data.inversor) {
         const exitosas = data.inversor.inversiones.filter(inv => inv.esExitosa).length;
         setInversionesExitosas(exitosas);
       } else if (data.startup) {
-        // Si es una startup, puedes contar los inversores o hacer algún cálculo relacionado
-        setInversionesExitosas(data.startup.inversiones.filter(inv => inv.monto_invertido > 0).length); // Ejemplo de cómo contar las inversiones exitosas
+        setInversionesExitosas(data.startup.inversiones.filter(inv => inv.monto_invertido > 0).length);
       }
     } catch (error) {
       console.error("Error fetching usuario data:", error);
@@ -48,7 +55,7 @@ const Info = () => {
 
   useEffect(() => {
     fetchDatos();
-  }, []);
+  }, []); // Solo se ejecuta una vez al montar el componente
 
   return (
     <div className="seccion">

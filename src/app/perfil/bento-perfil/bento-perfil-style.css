@@ -91,11 +91,11 @@
   padding-top: 1.6%;
 }
 
-.contenedor-ancho, .contenedor-ancho1 div:nth-child(5){
+.contenedor-ancho div:nth-child(5), .contenedor-ancho1 div:nth-child(5){
   margin-top: 1px;
 }
 
-.contenedor-ancho, .contenedor-ancho1 div:nth-child(6){
+.contenedor-ancho div:nth-child(6), .contenedor-ancho1 div:nth-child(6){
   margin-top: 1px;
 }
 

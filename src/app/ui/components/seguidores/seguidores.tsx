@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import '../../../perfil/bento-perfil/bento-perfil-style.css';
+import customAxios from "@/service/api.mjs";
 
 const Seguidores = () => {
   const [seguidores, setSeguidores] = useState(0);
 
   const fetchEstadisticas = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/data/usuario", {
-        credentials: 'include',
+      const response = await customAxios.get("http://localhost:5000/api/data/usuario", {
+        withCredentials: true,
       });
-      if (!response.ok) throw new Error("Network response was not ok");
-      const data = await response.json();
-      setSeguidores(data.seguidores);
+      setSeguidores(response.data.seguidores);
     } catch (error) {
       console.error("Error fetching estadísticas:", error);
     }
