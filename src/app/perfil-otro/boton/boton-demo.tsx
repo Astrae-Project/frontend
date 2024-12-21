@@ -1,24 +1,28 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import axios from "axios"; // Importa Axios para hacer la solicitud al backend
+import customAxios from "@/service/api.mjs"; // Usa tu instancia de Axios personalizada
 import './boton-style.css';
-import customAxios from "@/service/api.mjs";
 
-export function Botones() {
+export function BotonesOtro() {
   const [isFollowing, setIsFollowing] = useState(false); // Estado para saber si el usuario ya sigue o no
   const [loading, setLoading] = useState(false); // Para manejar el estado de carga
   const [usuario, setUsuario] = useState(null); // Estado para almacenar la información del usuario
-
+  
   const fetchUsuario = async () => {
+    if (!username) {
+      console.error("No se encontró el username.");
+      return;
+    }
+
     try {
-      const response = await customAxios.get(zzz, {
+      const response = await customAxios.get(`http://localhost:5000/api/data/usuario/${username}`, {
         withCredentials: true,
       });
-      
+
       setUsuario(response.data); // Almacena la información del usuario
     } catch (error) {
-      console.error("Error fetching usuario:", error);
+      console.error("Error al obtener la información del usuario:", error);
     }
   };
 
@@ -27,21 +31,25 @@ export function Botones() {
   }, []);
 
   const handleFollowClick = async () => {
-    if (loading) return; // Si ya está en carga, evitar más clics
+    if (loading) return; // Evitar múltiples clics
     setLoading(true);
 
     try {
-      // Suponiendo que tienes el ID del usuario al que se va a seguir
-      const id_seguido = 5; // Aquí se debería obtener el ID del usuario al que se quiere seguir
-      const response = await axios.post('http://localhost:5000/api/follow/seguir', { id_seguido }, {
-        withCredentials: true, // Asegura que se envíen las cookies (si usas sesiones)
-      });
+      // Supón que tienes el ID del usuario que se va a seguir
+      const id_seguido = usuario?.id; // Usar el ID del usuario obtenido
+      if (!id_seguido) throw new Error("ID del usuario no disponible.");
+
+      const response = await customAxios.post(
+        "http://localhost:5000/api/follow/seguir",
+        { id_seguido },
+        { withCredentials: true }
+      );
 
       if (response.status === 201) {
         setIsFollowing(true); // Cambia el estado a "siguiendo"
       }
     } catch (error) {
-      console.error('Error al seguir al usuario:', error);
+      console.error("Error al seguir al usuario:", error);
     } finally {
       setLoading(false); // Restablece el estado de carga
     }
@@ -52,17 +60,20 @@ export function Botones() {
     setLoading(true);
 
     try {
-      const id_startup = 5; // Aquí se debería obtener el ID de la startup en la que se quiere invertir
-      const response = await axios.post('http://localhost:5000/api/inversion/invertir', { id_startup }, {
-        withCredentials: true, 
-      });
+      const id_startup = usuario?.id; // Usar el ID del startup asociado al usuario
+      if (!id_startup) throw new Error("ID de la startup no disponible.");
+
+      const response = await customAxios.post(
+        "http://localhost:5000/api/inversion/invertir",
+        { id_startup },
+        { withCredentials: true }
+      );
 
       if (response.status === 201) {
-        // Aquí podrías actualizar el estado o manejar la respuesta
-        alert('Inversión realizada');
+        alert("Inversión realizada");
       }
     } catch (error) {
-      console.error('Error al invertir en la startup:', error);
+      console.error("Error al invertir en la startup:", error);
     } finally {
       setLoading(false);
     }
@@ -78,12 +89,13 @@ export function Botones() {
       >
         <p className="text">{isFollowing ? "Siguiendo" : "Seguir"}</p>
       </button>
-      
-      {/* Aquí mostramos "Invertir" si es una startup, o "Suscribir" si no lo es */}
+
+      {/* Cambiar "Invertir" o "Suscribir" según el rol del usuario */}
       <button
         className="custom-button"
         id="suscribir"
         onClick={usuario?.startup ? handleInvestClick : undefined} // Solo ejecuta la función si es startup
+        disabled={loading} // Desactiva el botón mientras se está cargando
       >
         <p className="text">{usuario?.startup ? "Invertir" : "Suscribir"}</p>
       </button>

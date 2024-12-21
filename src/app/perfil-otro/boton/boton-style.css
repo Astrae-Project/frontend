@@ -1,0 +1,29 @@
+.contenedor-botones1{
+    position: absolute;
+    display: flex;
+    gap: 20px;
+    top: 80%;
+    width: 94%;
+  }
+
+.custom-button {
+    background-color: #151522;
+    color: #e9e9e9;
+    border-radius: 8px;
+    width: 300px;
+    height: 50px;
+    font-size: 15px;
+    outline: none;
+}
+
+.text{
+    position: relative;
+    top: 2px;
+}
+
+#suscribir{
+    background-color: #573688 ;
+    box-shadow: 0 0 25px #573688 ;
+    
+}
+

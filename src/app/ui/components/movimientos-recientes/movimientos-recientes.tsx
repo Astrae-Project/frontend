@@ -2,17 +2,17 @@ import React, { useState, useEffect } from "react";
 import "../../../perfil/bento-perfil/bento-perfil-style.css";
 import { IconMoneybag, IconCalendarEvent, IconStar } from "@tabler/icons-react";
 import Bubble from "../bubble/bubble";
-import Perfil from "../../../perfil/page";
 import customAxios from "@/service/api.mjs";
+import PerfilOtro from "@/app/perfil-otro/page";
 
-const MovimientosRecientes1 = () => {
+const MovimientosRecientes1 = ({ username }) => {
   const [movimientosRecientes, setMovimientosRecientes] = useState([]);
   const [activeBubble, setActiveBubble] = useState(null); // Tipo de burbuja activa
   const [bubbleData, setBubbleData] = useState(null); // Datos de la burbuja
 
   const fetchMovimientosRecientes = async () => {
     try {
-      const response = await customAxios.get("http://localhost:5000/api/data/movimientos-recientes", {
+      const response = await customAxios.get(`http://localhost:5000/api/data/movimientos-recientes`, {
         withCredentials: true,
       });
   
@@ -43,7 +43,7 @@ const MovimientosRecientes1 = () => {
 
   // Manejo de apertura y cierre de burbujas
   const handleBubbleOpen = (type, data) => {
-    setBubbleData(data)
+    setBubbleData(data);
     setActiveBubble(type);
   };
 
@@ -172,7 +172,7 @@ const MovimientosRecientes1 = () => {
           </div>
         )}
         {activeBubble === "perfil-startup" && bubbleData && (
-          <Perfil></Perfil>
+          <PerfilOtro username={bubbleData.usuario.username}></PerfilOtro>
         )}
         {activeBubble === "eventos" && bubbleData && (
           <div className="eventos-detalle">

@@ -1,0 +1,24 @@
+.star-rating {
+    display: flex;
+    position: relative;
+    top: -5%;
+    gap: 4%;
+    justify-content: center;
+    align-items: center; /* Centrar las estrellas */
+  }
+  
+  .star {
+    color: #8154c4; /* Color de las estrellas llenas */
+    position: relative;
+  }
+  
+  /* Estrellas llenas */
+  .star.filled {
+    color: #8154c4; /* Color de las estrellas llenas */
+  }
+  
+  /* Media estrella */
+  .half-filled {
+    clip-path: inset(0 50% 0 0); /* Solo la mitad izquierda se muestra */
+  }
+  
