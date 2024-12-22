@@ -83,7 +83,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
       <Chips />
       <span className="avatar">
         <img
-          src={usuario?.usuario?.avatar || "/default-avatar.png"}
+          src={usuario?.usuario?.avatar}
           alt={`${usuario?.nombre || "Usuario"} avatar`}
           className="avatar-imagen"
         />
@@ -94,8 +94,8 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
       <p id="creacion">
         {perfilTipo === "inversor" ? "Invirtiendo en Astrae desde" : "En Astrae desde"}{" "}
         <span className="morado">
-          {usuario?.usuario?.fecha_creacion
-            ? new Date(usuario.usuario.fecha_creacion).getFullYear()
+          {usuario?.fecha_creacion
+            ? new Date(usuario.fecha_creacion).getFullYear()
             : "Fecha"}
         </span>
       </p>

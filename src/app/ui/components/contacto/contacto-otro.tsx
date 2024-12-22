@@ -2,71 +2,71 @@
 
 import customAxios from "@/service/api.mjs";
 import React, { useState, useEffect } from "react";
+import "../../../perfil/bento-perfil/bento-perfil-style.css";
 
 const InformacionContactoOtro = ({ contacto }) => {
+  const contactoItems = [
+    contacto?.correo && (
+      <li className="contacto-item" key="correo">
+        <div className="borde-icono">
+          <div className="movimiento-icono">
+            <img src="/Imagenes/iconos/gmail.svg" className="contacto-imagen" alt="Correo" />
+          </div>
+        </div>
+        <p>{contacto.correo}</p>
+      </li>
+    ),
+    contacto?.twitter && (
+      <li className="contacto-item" key="twitter">
+        <div className="borde-icono">
+          <div className="movimiento-icono">
+            <img src="/Imagenes/iconos/x.svg" className="contacto-imagen" alt="Twitter" />
+          </div>
+        </div>
+        <p>@{contacto.twitter}</p>
+      </li>
+    ),
+    contacto?.linkedin && (
+      <li className="contacto-item" key="linkedin">
+        <div className="borde-icono">
+          <div className="movimiento-icono">
+            <img src="/Imagenes/iconos/linkedin.svg" className="contacto-imagen" alt="LinkedIn" />
+          </div>
+        </div>
+        <p>@{contacto.linkedin}</p>
+      </li>
+    ),
+    contacto?.facebook && (
+      <li className="contacto-item" key="facebook">
+        <div className="borde-icono">
+          <div className="movimiento-icono">
+            <img src="/Imagenes/iconos/facebook.svg" className="contacto-imagen" alt="Facebook" />
+          </div>
+        </div>
+        <p>@{contacto.facebook}</p>
+      </li>
+    ),
+    contacto?.instagram && (
+      <li className="contacto-item" key="instagram">
+        <div className="borde-icono">
+          <div className="movimiento-icono">
+            <img src="/Imagenes/iconos/instagram.svg" className="contacto-imagen" alt="Instagram" />
+          </div>
+        </div>
+        <p>@{contacto.instagram}</p>
+      </li>
+    ),
+  ].filter(Boolean).slice(0, 4); // Filtramos elementos nulos y limitamos a 4
+
   return (
     <div className="seccion" id="contacto">
       <div className="titulo-principal">
         <p className="titulo-contacto">Contacto</p>
       </div>
       {contacto ? (
-        <div className="contenedor-social">
-          {contacto.correo && (
-            <div className="borde-icono icono-social">
-              <div className="icono-social2 movimiento-icono">
-                <img
-                  src="/Imagenes/iconos/gmail.svg"
-                  alt="Gmail"
-                  className="contacto-imagen imagen2"
-                />
-              </div>
-            </div>
-          )}
-          {contacto.twitter && (
-            <div className="borde-icono icono-social">
-              <div className="icono-social2 movimiento-icono">
-                <img
-                  src="/Imagenes/iconos/x.svg"
-                  alt="Twitter"
-                  className="contacto-imagen imagen2"
-                />
-              </div>
-            </div>
-          )}
-          {contacto.linkedin && (
-            <div className="borde-icono icono-social">
-              <div className="icono-social2 movimiento-icono">
-                <img
-                  src="/Imagenes/iconos/linkedin.svg"
-                  alt="LinkedIn"
-                  className="contacto-imagen imagen2"
-                />
-              </div>
-            </div>
-          )}
-          {contacto.facebook && (
-            <div className="borde-icono icono-social">
-              <div className="icono-social2 movimiento-icono">
-                <img
-                  src="/Imagenes/iconos/facebook.svg"
-                  alt="Facebook"
-                  className="contacto-imagen imagen2"
-                />
-              </div>
-            </div>
-          )}
-          {contacto.instagram && (
-            <div className="borde-icono icono-social">
-              <div className="icono-social2 movimiento-icono">
-                <img
-                  src="/Imagenes/iconos/instagram.svg"
-                  alt="Instagram"
-                  className="contacto-imagen imagen2"
-                />
-              </div>
-            </div>
-          )}
-        </div>
+        <ul className="contacto-lista">
+          {contactoItems}
+        </ul>
       ) : (
         <p>No hay información de contacto disponible.</p>
       )}
@@ -76,26 +76,26 @@ const InformacionContactoOtro = ({ contacto }) => {
 
 export default function ContactoOtro({ username }) {
   const [contacto, setContacto] = useState(null);
-  const [error, setError] = useState(null);
-
-  const fetchContacto = async () => {
-    if (!username) return;
-
-    try {
-      const response = await customAxios.get(
-        `http://localhost:5000/api/data/usuario/${username}`,
-        {
-          withCredentials: true,
-        }
-      );
-      setContacto(response.data?.usuario || null);
-    } catch (error) {
-      console.error("Error al obtener los datos de contacto:", error);
-      setError("No se pudo cargar la información de contacto.");
-    }
-  };
 
   useEffect(() => {
+    const fetchContacto = async () => {
+      if (!username) return;
+
+      try {
+        const response = await customAxios.get(
+          `http://localhost:5000/api/data/usuario/${username}`,
+          {
+            withCredentials: true,
+          }
+        );
+        // Ajuste aquí: verifica si es un array y selecciona el primer elemento
+        const contactoData = response.data.contacto?.[0] || null;
+        setContacto(contactoData);
+      } catch (error) {
+        console.error("Error al obtener los datos de contacto:", error);
+      }
+    };
+
     fetchContacto();
   }, [username]);
 

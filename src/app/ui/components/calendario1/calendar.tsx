@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { DayPicker } from "react-day-picker"
+import * as React from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { DayPicker } from "react-day-picker";
 import { es } from "date-fns/locale";
 
-import { buttonVariants1 } from "./button"
+import { buttonVariants1 } from "./button";
 import { cn } from "../../../lib/utils";
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>
+export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
 function Calendar1({
   className,
@@ -61,8 +61,8 @@ function Calendar1({
       }}
       {...props}
     />
-  )
+  );
 }
-Calendar1.displayName = "Calendar1"
+Calendar1.displayName = "Calendar1";
 
-export { Calendar1 }
+export { Calendar1 };

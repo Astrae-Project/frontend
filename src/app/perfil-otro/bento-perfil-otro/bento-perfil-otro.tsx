@@ -2,15 +2,15 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import './bento-perfil-style.css';
-import EventosyCalendario1 from "../../ui/components/eventos-calendario1/eventos-calendario1";
-import Seguidores from "../../ui/components/seguidores/seguidores";
-import Suscriptores from "../../ui/components/suscriptores/suscriptores";
-import TablaGrupos from "../../ui/components/tabla-grupos/tabla-grupos";
 import TablaPortfolio from "../../ui/components/tabla-portfolio/tabla-portfolio";
-import MovimientosRecientes from "../../ui/components/movimientos-recientes/movimientos-recientes-perfil";
 import InfoOtro from "@/app/ui/components/info/info-otro";
 import InversionesRealizadasOtro from "@/app/ui/components/inversiones-realizadas/inversiones-realizadas-otro";
 import ContactoOtro from "@/app/ui/components/contacto/contacto-otro";
+import TablaGruposOtro from "@/app/ui/components/tabla-grupos/tabla-grupos-otro";
+import SuscriptoresOtro from "@/app/ui/components/suscriptores/suscriptores-otro";
+import SeguidoresOtro from "@/app/ui/components/seguidores/seguidores-otro";
+import EventosyCalendarioOtro1 from "@/app/ui/components/eventos-calendario1/eventos-calendario-otro1";
+import MovimientosRecientesOtro from "@/app/ui/components/movimientos-recientes/movimientos-recientes-perfil-otro";
 
 
 export function BentoGridPerfilOtro({ username }) {
@@ -37,12 +37,12 @@ export function BentoGridPerfilOtro({ username }) {
       <div className="grid">
         <InfoOtro username={username} />
         <TablaPortfolio username={username} />
-        <MovimientosRecientes username={username} />
-        <Seguidores username={username} />
-        <Suscriptores username={username} />
+        <MovimientosRecientesOtro username={username} />
+        <SeguidoresOtro username={username} />
+        <SuscriptoresOtro username={username} />
         <InversionesRealizadasOtro username={username} />
-        <EventosyCalendario1 username={username} />
-        <TablaGrupos username={username} />
+        <EventosyCalendarioOtro1 username={username} />
+        <TablaGruposOtro username={username} />
         <ContactoOtro username={username} />
       </div>
     </div>

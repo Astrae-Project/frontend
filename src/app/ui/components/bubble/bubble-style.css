@@ -22,7 +22,6 @@
     max-height: 850px;
     padding: 20px;
     border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     transform: scale(0.9);
     animation: popIn 0.3s ease-in-out;
     overflow-y: hidden;

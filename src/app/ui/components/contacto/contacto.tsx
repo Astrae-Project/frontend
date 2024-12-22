@@ -72,7 +72,7 @@ const InformacionContacto = ({ contacto }) => {
   );
 };
 
-export default function Contacto2() {
+export default function Contacto() {
   const [contacto, setContacto] = useState(null);
 
   const fetchContacto = async () => {

@@ -1,10 +1,10 @@
-.calendario{
+.calendario {
   position: relative;
   margin-top: 4px;
   margin-left: 1%;
 }
 
-.calendario1{
+.calendario1 {
   margin-top: 1.5%;
   margin-left: 5%;
   align-self: center;
@@ -12,7 +12,7 @@
   align-content: center;
 }
 
-.day-has-event::after{
+.day-has-event::after {
   content: '';
   position: absolute;
   width: 4px;
@@ -40,7 +40,7 @@
   color: gray;
 }
 
-.contenedor-eventos{
+.contenedor-eventos {
   max-height: 200px; /* Puedes ajustar la altura según tus necesidades */
   overflow-y: auto; /* Permite el desplazamiento vertical */
   padding: 10px;
@@ -51,7 +51,7 @@
   margin-top: 5px;
 }
 
-.botn-eventos{
+.botn-eventos {
   position: relative;
   width: auto;
   height: 30px;
@@ -64,7 +64,7 @@
   padding-right: 5%;
 }
 
-.contendor-botn-evento{
+.contendor-botn-evento {
   position: relative;
   display: flex;
   width: 95%;
@@ -72,7 +72,7 @@
   margin: 0 auto;
 }
 
-.contendor-botn-evento1{
+.contendor-botn-evento1 {
   position: relative;
   display: flex;
   width: 95%;
@@ -80,7 +80,7 @@
   margin: 0 auto;
 }
 
-.enviar{
+.enviar {
   background-color: #6e4ba3;
 }
 
@@ -99,4 +99,3 @@ li.selected:hover {
 li:hover {
   background-color: rgba(0, 0, 0, 0.1);  /* Fondo oscuro al hacer hover sobre el li */
 }
-
