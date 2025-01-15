@@ -13,7 +13,7 @@ customAxios.interceptors.response.use(
   
       console.log('Interceptando error:', error);
   
-      if (error.response?.status === 403 || error.response?.status === 500 && !originalRequest._retry) {
+      if (error.response?.status === 403 || error.response?.status === 401 || error.response?.status === 402 || error.response?.status === 500 && !originalRequest._retry) {
         console.log('Token expirado, intentando refrescar...');
         originalRequest._retry = true;
   
@@ -34,7 +34,7 @@ customAxios.interceptors.response.use(
 
   export const generateRefreshToken = async () => {
     try {
-      const response = await customAxios.post("/auth/refrescar-token");
+      const response = await customAxios.post("http://localhost:5000/api/auth/refrescar-token");
   
       // Verifica si la respuesta tiene un nuevo access token
       console.log('Respuesta del refresh token:', response);

@@ -1,45 +1,165 @@
-.contenedor-botones1{
-    position: absolute;
-    display: flex;
-    gap: 20px;
-    top: 80%;
-    width: 94%;
-  }
+.contenedor-botones1 {
+  position: absolute;
+  display: flex;
+  gap: 20px;
+  top: 80%;
+  width: 94%;
+}
 
+/* Estilo de los botones */
 .custom-button {
-    background-color: #151522;
-    color: #e9e9e9;
-    border-radius: 8px;
-    width: 300px;
-    height: 50px;
-    font-size: 15px;
-    outline: none;
+  background-color: #151522;
+  color: #e9e9e9;
+  border-radius: 8px;
+  width: 300px;
+  height: 50px;
+  font-size: 15px;
+  outline: none;
 }
 
-.text{
-    position: relative;
-    top: 2px;
+.text {
+  position: relative;
+  top: 2px;
 }
 
-#suscribir{
-    background-color: #573688 ;
-    box-shadow: 0 0 25px #573688 ;
-    
+/* Estilo específico para el botón #suscribir */
+#suscribir {
+  background-color: #573688;
+  box-shadow: 0 0 25px #573688;
 }
+
 /* Estilo cuando no se está siguiendo */
 .custom-button.not-following {
-    background-color: #151522; /* Azul oscuro */
-  }
-  
-  .custom-button.not-following:hover {
-    background-color: #1a1a2b; /* Un poco más claro */
-  }
-  
-  /* Estilo cuando se está siguiendo */
-  .custom-button.following {
-    background-color: #414153; /* Claro pero con contraste respecto a "not-following" */
-  }
-  
-  .custom-button.following:hover {
-    background-color: #4e4e5b; /* Más claro en el hover para resaltar interacción */
-  }
+  background-color: #151522; /* Azul oscuro */
+}
+
+.custom-button.not-following:hover {
+  background-color: #1a1a2b; /* Un poco más claro */
+}
+
+/* Estilo cuando se está siguiendo */
+.custom-button.following {
+  background-color: #414153; /* Claro pero con contraste respecto a "not-following" */
+}
+
+.custom-button.following:hover {
+  background-color: #4e4e5b; /* Más claro en el hover para resaltar interacción */
+}
+
+/* Contenedor de los botones de invertir */
+.contendor-botn-invertir {
+  position: relative;
+  display: flex;
+  width: 95%;
+  justify-content: space-between;
+  margin: 0 auto;
+}
+
+/* Estilo para los botones de inversión */
+.botn-invertir {
+  position: relative;
+  width: auto;
+  height: 30px;
+  background-color: #1C1C29;
+  border: 1px solid #1E202F;
+  border-radius: 5px;
+  font-size: 13px;
+  padding-top: 1.2%;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+/* Estilo específico para el botón de enviar */
+.enviar {
+  background-color: #6e4ba3;
+}
+
+.enviar:hover {
+  background-color: #563085;
+}
+
+/* Estilos del formulario de inversión */
+.formulario-inversion {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* Estilos de los campos del formulario */
+.campo-inversion {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+label.form-label {
+  font-size: 14px;
+  color: #ccc;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+/* Cambiar los select y los inputs específicos de inversión */
+.input-inversion, .select-inversion {
+  padding: 10px;
+  border: 2px solid #444;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 16px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.input-inversion:focus, .select-inversion:focus {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: #6e4ba3;
+  outline: none;
+}
+
+/* Estilo para los botones de los selectores */
+.selector-btn {
+  background-color: rgba(51, 51, 51, 0.5);
+  border: 2px solid #444;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 18px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.selector-btn:hover {
+  background-color: rgba(51, 51, 51, 0.8);
+}
+
+/* Estilos para el campo de porcentaje */
+.campo-porcentaje {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-porcentaje {
+  width: 100px;
+  text-align: center;
+}
+
+/* Estilo para los botones de incremento y decremento */
+.selector-btn {
+  padding: 8px 12px;
+  font-size: 18px;
+  background-color: rgba(51, 51, 51, 0.5);
+  color: #fff;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.selector-btn:hover {
+  background-color: rgba(51, 51, 51, 0.8);
+}

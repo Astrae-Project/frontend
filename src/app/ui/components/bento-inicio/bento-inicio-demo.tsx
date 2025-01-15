@@ -2,12 +2,10 @@ import React, { useEffect, useState } from "react";
 import "./bento-inicio-style.css"
 import { Placeholder } from "../placeholder/placeholder-demo";
 import { StartupsRecomendadas } from "../startups-recomendadas/startup-recomendadas-demo";
-import TablaPortfolio from "../tabla-portfolio/tabla-portfolio";
 import EventosyCalendario from "../eventos-calendario/eventos-calendario";
 import MovimientosRecientes1 from "../movimientos-recientes/movimientos-recientes";
 import customAxios from "@/service/api.mjs";
 import GraficaInversor from "../grafica-inversor/grafica-inversor";
-import GraficaStartup from "../grafica-startup/grafica-startup";
 
 
 export function BentoGridInicio() {
