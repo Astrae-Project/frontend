@@ -41,7 +41,7 @@ const TablaGruposOtro = ({ username }) => {
               <li key={grupo.id} className="grupo-item">
                 <div className="grupo-icono">
                   <img
-                    src={grupo.grupo?.foto_grupo || "/placeholder-image.png"}
+                    src={grupo.grupo?.foto_grupo}
                     alt={`Avatar del grupo ${grupo.grupo?.nombre}`}
                     className="grupo-avatar"
                   />

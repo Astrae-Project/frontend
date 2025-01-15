@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import './bento-perfil-style.css';
-import TablaPortfolio from "../../ui/components/tabla-portfolio/tabla-portfolio";
 import InfoOtro from "@/app/ui/components/info/info-otro";
 import InversionesRealizadasOtro from "@/app/ui/components/inversiones-realizadas/inversiones-realizadas-otro";
 import ContactoOtro from "@/app/ui/components/contacto/contacto-otro";
@@ -11,11 +10,42 @@ import SuscriptoresOtro from "@/app/ui/components/suscriptores/suscriptores-otro
 import SeguidoresOtro from "@/app/ui/components/seguidores/seguidores-otro";
 import EventosyCalendarioOtro1 from "@/app/ui/components/eventos-calendario1/eventos-calendario-otro1";
 import MovimientosRecientesOtro from "@/app/ui/components/movimientos-recientes/movimientos-recientes-perfil-otro";
+import TablaPortfolioOtro from "@/app/ui/components/tabla-portfolio/tabla-portfolio-otro";
+import GraficaStartupOtro from "@/app/ui/components/grafica-startup/grafica-startup-otro";
+import DatosStartupOtro from "@/app/ui/components/datos-startup/datos-startup-otro";
+import customAxios from "@/service/api.mjs";
 
 
 export function BentoGridPerfilOtro({ username }) {
   const containerRef = useRef(null);
   const [isSmall, setIsSmall] = useState(false);
+  const [rol, setRol] = useState(null); // Estado para el rol
+
+  const fetchRol = async () => {
+    try {
+      const response = await customAxios.get(`http://localhost:5000/api/data/usuario/${username}`, {
+        withCredentials: true, // Enviar cookies con la solicitud
+      });
+  
+      console.log(response.data); // Añadir para depuración
+      
+      // Verificamos si es un inversor o una startup
+      if (response.data.inversor) {
+        setRol("inversor");
+      } else if (response.data.startup) {
+        setRol("startup");
+      } else {
+        console.error("No se encontró un tipo de usuario válido");
+      }
+    } catch (error) {
+      console.error("Error fetching rol:", error);
+    }
+  };
+  
+
+    useEffect(() => {
+      fetchRol(); // Llamada a la API cuando se monta el componente
+    }, []);
 
   useEffect(() => {
     const observer = new ResizeObserver(([entry]) => {
@@ -32,19 +62,36 @@ export function BentoGridPerfilOtro({ username }) {
   }, []);
 
   return (
-    <div ref={containerRef}
-    className={`contenedor4 ${isSmall ? "small" : ""}`}>
+    <div ref={containerRef} className={`contenedor4 ${isSmall ? "small" : ""}`}>
       <div className="grid">
-        <InfoOtro username={username} />
-        <TablaPortfolio username={username} />
-        <MovimientosRecientesOtro username={username} />
-        <SeguidoresOtro username={username} />
-        <SuscriptoresOtro username={username} />
-        <InversionesRealizadasOtro username={username} />
-        <EventosyCalendarioOtro1 username={username} />
-        <TablaGruposOtro username={username} />
-        <ContactoOtro username={username} />
+        {rol === null ? (
+          <div>Loading...</div> // Puedes mostrar un mensaje de carga mientras esperas la respuesta
+        ) : rol === "inversor" ? (
+          <>
+            <InfoOtro username={username} />
+            <TablaPortfolioOtro username={username} />
+            <MovimientosRecientesOtro username={username} />
+            <SeguidoresOtro username={username} />
+            <SuscriptoresOtro username={username} />
+            <InversionesRealizadasOtro username={username} />
+            <EventosyCalendarioOtro1 username={username} />
+            <TablaGruposOtro username={username} />
+            <ContactoOtro username={username} />
+          </>
+        ) : (
+          <>
+            <InfoOtro username={username} />
+            <GraficaStartupOtro username={username} />
+            <DatosStartupOtro username={username}/>
+            <SeguidoresOtro username={username} />
+            <SuscriptoresOtro username={username} />
+            <InversionesRealizadasOtro username={username} />
+            <EventosyCalendarioOtro1 username={username} />
+            <TablaGruposOtro username={username} />
+            <ContactoOtro username={username} />
+          </>
+        )}
       </div>
     </div>
   );
-}
+}  

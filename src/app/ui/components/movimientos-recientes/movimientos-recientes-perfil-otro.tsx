@@ -20,7 +20,7 @@ const MovimientosRecientesOtro = ({ username }) => {
         throw new Error("No data received or response format is incorrect");
       }
 
-      const data = response.data;
+      const data = response.data.ultimosMovimientos;
 
       // Verificar si el formato de los datos es el esperado
       if (!Array.isArray(data)) {
@@ -31,9 +31,6 @@ const MovimientosRecientesOtro = ({ username }) => {
 
     } catch (error) {
       console.error("Error al obtener movimientos recientes:", error);
-
-      // Mostrar un mensaje adicional o tomar alguna acción en la interfaz
-      alert("Ocurrió un error al obtener los movimientos recientes. Por favor, intenta nuevamente más tarde.");
     }
   };
 

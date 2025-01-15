@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import "../../../perfil/bento-perfil/bento-perfil-style.css";
+import { IconMoneybag, IconCalendarEvent, IconStar } from "@tabler/icons-react";
 import Bubble from "../bubble/bubble";
-import Perfil from "../../../perfil/page";
-import { IconStar, IconMoneybag, IconCalendarEvent } from "@tabler/icons-react";
 import customAxios from "@/service/api.mjs";
+import PerfilOtro from "@/app/perfil-otro/page";
 
-const MovimientosRecientes = () => {
+const MovimientosRecientes = ({ username }) => {
   const [movimientosRecientes, setMovimientosRecientes] = useState([]);
   const [activeBubble, setActiveBubble] = useState(null); // Tipo de burbuja activa
   const [bubbleData, setBubbleData] = useState(null); // Datos de la burbuja
 
   const fetchMovimientosRecientes = async () => {
     try {
-      const response = await customAxios.get("http://localhost:5000/api/data/movimientos-recientes", {
+      const response = await customAxios.get(`http://localhost:5000/api/data/movimientos-recientes`, {
         withCredentials: true,
       });
   
@@ -31,9 +31,6 @@ const MovimientosRecientes = () => {
   
     } catch (error) {
       console.error("Error al obtener movimientos recientes:", error);
-  
-      // Mostrar un mensaje adicional o tomar alguna acción en la interfaz
-      alert("Ocurrió un error al obtener los movimientos recientes. Por favor, intenta nuevamente más tarde.");
     }
   };
 
@@ -43,7 +40,7 @@ const MovimientosRecientes = () => {
 
   // Manejo de apertura y cierre de burbujas
   const handleBubbleOpen = (type, data) => {
-    setBubbleData(data)
+    setBubbleData(data);
     setActiveBubble(type);
   };
 
@@ -79,18 +76,18 @@ const MovimientosRecientes = () => {
 
               let iconoMovimiento;
               if (movimiento.tipo_movimiento === "inversion") {
-                iconoMovimiento = <IconStar className="iconos1" />;
+                iconoMovimiento = <IconStar className="iconos" />;
               } else if (movimiento.tipo_movimiento === "oferta") {
-                iconoMovimiento = <IconMoneybag className="iconos1" />;
+                iconoMovimiento = <IconMoneybag className="iconos" />;
               } else if (movimiento.tipo_movimiento === "evento") {
-                iconoMovimiento = <IconCalendarEvent className="iconos1" />;
-              } 
+                iconoMovimiento = <IconCalendarEvent className="iconos" />;
+              }
 
               return (
                 <li key={index} className="movimiento-item">
                   <button className="relleno-btn" >
-                    <div className="borde-icono1">
-                      <div className="movimiento-icono1" id="icono-morado">
+                    <div className="borde-icono">
+                      <div className="movimiento-icono" id="icono-morado">
                         {iconoMovimiento}
                       </div>
                     </div>
@@ -99,6 +96,7 @@ const MovimientosRecientes = () => {
                         <>
                           <span
                             className="btn-nombre"
+                            role="button"
                             onClick={() =>
                               movimiento.startup?.usuario &&
                               handleBubbleOpen("perfil-startup", movimiento.startup)
@@ -119,6 +117,7 @@ const MovimientosRecientes = () => {
                         <>
                           <span
                             className="btn-nombre"
+                            role="button"
                             onClick={() =>
                               movimiento.startup?.usuario &&
                               handleBubbleOpen("perfil-startup", movimiento.startup)
@@ -132,14 +131,17 @@ const MovimientosRecientes = () => {
                           <p className="movimiento-porcentaje">
                             por el {movimiento.porcentaje_ofrecido}%
                           </p>
-                          <p className="movimiento-fecha1">{fechaFormateada}</p>
+                          <p className="movimiento-fecha">{fechaFormateada}</p>
                         </>
                       )}
                       {movimiento.tipo_movimiento === "evento" && (
                         <>
                           <span
                             className="btn-nombre"
-                            onClick={() => handleBubbleOpen("perfil", movimiento.creador)}
+                            role="button"
+                            onClick={() =>
+                              movimiento.creador &&
+                              handleBubbleOpen("perfil", movimiento.creador)}
                           >
                             <p>{movimiento.creador?.username || "Sin nombre"}</p>
                           </span>
@@ -164,12 +166,10 @@ const MovimientosRecientes = () => {
       )}
       <Bubble show={!!activeBubble} onClose={handleBubbleClose}>
         {activeBubble === "perfil" && bubbleData && (
-          <div className="perfil-detalle">
-            <p><strong>Usuario:</strong> {bubbleData.username || "Cargando..."}</p>
-          </div>
+          <PerfilOtro username={bubbleData.username}></PerfilOtro>
         )}
         {activeBubble === "perfil-startup" && bubbleData && (
-          <Perfil></Perfil>
+          <PerfilOtro username={bubbleData.usuario.username}></PerfilOtro>
         )}
         {activeBubble === "eventos" && bubbleData && (
           <div className="eventos-detalle">
@@ -212,7 +212,7 @@ const MovimientosRecientes = () => {
             <p><strong>Descripción:</strong> {bubbleData.descripcion || "Sin descripción"}</p>
             <p><strong>Creador:</strong> {bubbleData.creador.username || "Sin descripción"}</p>
             <p><strong>Fecha Unión:</strong> {bubbleData.participantes.fecha_union || "Sin descripción"}</p>
-            <p><strong>Participantes:</strong> {bubbleData.participantes.lenght || "Sin descripción"}</p>
+            <p><strong>Participantes:</strong> {bubbleData.participantes.length || "Sin descripción"}</p>
           </div>
         )}
       </Bubble>

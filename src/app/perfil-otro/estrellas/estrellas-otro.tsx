@@ -1,7 +1,7 @@
 import { IconStar, IconStarFilled } from "@tabler/icons-react";
 import "./estrellas-style.modules.css";
 
-const StarRating = ({ puntuacionMedia }) => {
+const StarRatingOtro = ({ puntuacionMedia }) => {
   const totalStars = 5;
   const filledStars = Math.floor(puntuacionMedia); // Estrellas completas
   const hasHalfStar = puntuacionMedia % 1 >= 0.5; // Si hay un medio (0.5 o más)
@@ -37,4 +37,4 @@ const StarRating = ({ puntuacionMedia }) => {
   return <div className="star-rating">{stars}</div>;
 };
 
-export default StarRating;
+export default StarRatingOtro;

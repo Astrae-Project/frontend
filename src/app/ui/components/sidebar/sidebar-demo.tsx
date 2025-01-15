@@ -13,95 +13,102 @@ import {
 import Link from "next/link";
 import { motion } from "framer-motion";
 import "./sidebar-demo-style.css";
+import customAxios from "@/service/api.mjs";
 
 export function SidebarDemo() {
-  const [open, setOpen] = useState(false); 
+  const [open, setOpen] = useState(false);
+  const [rol, setRol] = useState(null); // Estado para almacenar el rol
+  const [links, setLinks] = useState([]); // Estado para los enlaces dinámicos
 
+  // Función para obtener los enlaces según el rol
+  const getLinksByRole = (role) => {
+    const rolesLinks = {
+      inversor: [
+        { label: "Inicio", href: "/", icon: <IconHome className="icon-style" /> },
+        { label: "Portfolio", href: "/portfolio", icon: <IconWallet className="icon-style" /> },
+        { label: "Grupos", href: "/grupos", icon: <IconMessage className="icon-style" /> },
+        { label: "Ajustes", href: "/ajustes", icon: <IconSettings className="icon-style" /> },
+      ],
+      startup: [
+        { label: "Inicio", href: "/", icon: <IconHome className="icon-style" /> },
+        { label: "Grupos", href: "/grupos", icon: <IconMessage className="icon-style" /> },
+        { label: "Ajustes", href: "/ajustes", icon: <IconSettings className="icon-style" /> },
+      ],
+    };
+    return rolesLinks[role] || [];
+  };
+
+  const fetchRol = async () => {
+    try {
+      const response = await customAxios.get("http://localhost:5000/api/data/usuario", { withCredentials: true });
+      if (response.data.startup) {
+        setRol("startup");
+      } else if (response.data.inversor) {
+        setRol("inversor");
+      } else {
+        setRol(null); // Rol desconocido o usuario sin categoría
+      }
+    } catch (error) {
+      console.error("Error fetching user role:", error);
+      setRol(null); // Maneja el error asignando un rol nulo
+    }
+  };
+
+  // Fetch inicial para obtener el rol
   useEffect(() => {
-    setOpen(false); 
+    fetchRol();
   }, []);
 
-  const links = [
-    {
-      label: "Inicio",
-      href: "/",
-      icon: (
-        <IconHome className="icon-style" />
-      ),
-    },
-    {
-      label: "Portfolio",
-      href: "/portfolio",
-      icon: (
-        <IconWallet className="icon-style" />
-      ),
-    },
-    {
-      label: "Grupos",
-      href: "/grupos",
-      icon: (
-        <IconMessage className="icon-style" />
-      ),
-    },
-    {
-      label: "Ajustes",
-      href: "/ajustes",
-      icon: (
-        <IconSettings className="icon-style" />
-      ),
-    },
-  ];
+  // Actualiza los enlaces cuando el rol cambie
+  useEffect(() => {
+    if (rol) {
+      setLinks(getLinksByRole(rol));
+    }
+  }, [rol]);
+
+  // Renderizar estado de carga si el rol aún no se ha obtenido
+  if (rol === null) {
+    return <div>Loading...</div>;
+  }
 
   return (
-      <Sidebar open={open} setOpen={setOpen}>
-        <SidebarBody className="sidebar-body">
-          <div className="content">
-            {open ? <Logo /> : <LogoIcon />} 
-            <div className="links-container">
-              {links.map((link, idx) => (
-                <SidebarLink key={idx} link={link} />
-              ))}
-            </div>
+    <Sidebar open={open} setOpen={setOpen}>
+      <SidebarBody className="sidebar-body">
+        <div className="content">
+          {open ? <Logo /> : <LogoIcon />} 
+          <div className="links-container">
+            {links.map((link, idx) => (
+              <SidebarLink key={idx} link={link} />
+            ))}
           </div>
-          <div>
-            <SidebarLink
-              link={{
-                label: open ? "Perfil" : "",
-                href: "/perfil",
-                icon: (
-                  <IconUserCircle className="icon-style" />
-                ),
-              }}
-            />
-          </div>
-        </SidebarBody>
-      </Sidebar>
+        </div>
+        <div>
+          <SidebarLink
+            link={{
+              label: open ? "Perfil" : "",
+              href: "/perfil",
+              icon: <IconUserCircle className="icon-style" />,
+            }}
+          />
+        </div>
+      </SidebarBody>
+    </Sidebar>
   );
 }
 
-export const Logo = () => {
-  return (
-    <Link
-      href="/"
-      className="logo-container"
-    >
-      <img
-        src="/favicon.svg"
-        alt="Logo Astrae"
-        className="logo-img"
-      />
-      <motion.span
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="logo-text"
-      >
-      </motion.span>
-    </Link>
-  );
-};
+export const Logo = () => (
+  <Link href="/" className="logo-container">
+    <img src="/favicon.svg" alt="Logo Astrae" className="logo-img" />
+    <motion.span
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="logo-text"
+    />
+  </Link>
+);
 
 export const LogoIcon = () => {
-  const { open } = useSidebar(); // Accede al estado de la barra lateral
+  const { open } = useSidebar();
 
   return (
     <Link href="/" className="logo-container">
@@ -110,19 +117,14 @@ export const LogoIcon = () => {
         alt="Logo Astrae"
         className="logo-img"
         animate={{
-          scale: open ? 1.5 : 1, // Escala el logo cuando la barra está abierta
-          translateX: open ? 0 : 0, // Cambia la posición en el eje X si es necesario
-          translateY: open ? 0 : 0, // Cambia la posición en el eje Y si es necesario
+          scale: open ? 1.5 : 1,
         }}
         transition={{
-          type: "spring", // Usa una animación de resorte para un efecto suave
-          stiffness: 300, // Ajusta la rigidez del resorte
-          damping: 20, // Ajusta la amortiguación para suavizar la animación
+          type: "spring",
+          stiffness: 300,
+          damping: 20,
         }}
       />
     </Link>
   );
 };
-
-
-

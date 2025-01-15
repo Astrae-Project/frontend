@@ -5,12 +5,12 @@ import './chip-style.css';
 import { useState, useEffect } from "react";
 import customAxios from "@/service/api.mjs";
 
-export function Chips() {
+export function ChipsOtro({username}) {
   const [usuario, setUsuario] = useState(null);
 
   const fetchUsuario = async () => {
     try {
-      const response = await customAxios.get("http://localhost:5000/api/data/usuario", {
+      const response = await customAxios.get(`http://localhost:5000/api/data/usuario/${username}`, {
         withCredentials: true, // Cambiado a 'true' (booleano)
       });
       setUsuario(response.data); // Asumiendo que los datos contienen información sobre si es inversor o startup
@@ -21,7 +21,7 @@ export function Chips() {
 
   useEffect(() => {
     fetchUsuario();
-  }, []);
+  }, [username]);
 
   // Determinar el color del dot dependiendo del rol
   const getDotClass = () => {

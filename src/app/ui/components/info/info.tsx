@@ -62,7 +62,7 @@ const Info = () => {
       <Chips />
       <span className="avatar">
         <img
-          src={usuario?.usuario?.avatar || "/default-avatar.png"} // Asegurarse de que haya una imagen por defecto
+          src={usuario?.usuario?.avatar} // Asegurarse de que haya una imagen por defecto
           alt={`${usuario?.nombre} avatar`}
           className="avatar-imagen"
         />
@@ -76,7 +76,6 @@ const Info = () => {
       {/* Renderizado condicional para perfil inversor */}
       {perfilTipo === "inversor" ? (
         <>
-          <button className="rankear"><IconStarFilled id="estrella" /></button>
           <span className="contenedor-ancho">
             <MiniChips label={<div className="icon-text"><IconMapPinFilled className="icono2"/>{usuario?.usuario?.ciudad && usuario?.usuario?.pais ? `${usuario.usuario.ciudad}, ${usuario.usuario.pais}` : "Sin ubicación"}</div>} />
             <MiniChips label={<div className="icon-text"><IconBriefcaseFilled className="icono2"/> {usuario?.perfil_inversion || "Desconocido"}</div>} />

@@ -10,15 +10,15 @@ import {
   IconMedal,
   IconPercentage,
   IconStarFilled,
+  IconUserFilled,
+  IconUsersGroup
 } from "@tabler/icons-react";
 import '../../../perfil/bento-perfil/bento-perfil-style.css';
-import { Botones } from "../../../perfil/boton/boton-demo";
-import { Chips } from "../../../perfil/chip/chip-demo";
-import StarRating from "../../../perfil/estrellas/estrellas";
-import { MiniChips } from "../../../perfil/mini-chips/mini-chips";
-
-// Asumiendo que customAxios está configurado adecuadamente en otro archivo
 import customAxios from "@/service/api.mjs";
+import { BotonesOtro } from "@/app/perfil-otro/boton/boton-otro";
+import { ChipsOtro } from "@/app/perfil-otro/chip/chip-otro";
+import StarRatingOtro from "../../../perfil/estrellas/estrellas";
+import { MiniChipsOtro } from "@/app/perfil-otro/mini-chips/mini-chips";
 
 interface InfoOtroProps {
   username: string; // Define el tipo para la prop `username`
@@ -80,7 +80,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
 
   return (
     <div className="seccion">
-      <Chips />
+      <ChipsOtro username={username} />
       <span className="avatar">
         <img
           src={usuario?.usuario?.avatar}
@@ -94,9 +94,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
       <p id="creacion">
         {perfilTipo === "inversor" ? "Invirtiendo en Astrae desde" : "En Astrae desde"}{" "}
         <span className="morado">
-          {usuario?.fecha_creacion
-            ? new Date(usuario.fecha_creacion).getFullYear()
-            : "Fecha"}
+          {usuario?.usuario?.fecha_creacion ? new Date(usuario.usuario.fecha_creacion).getFullYear() : "Fecha"}
         </span>
       </p>
 
@@ -106,84 +104,27 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
             <IconStarFilled id="estrella" />
           </button>
           <span className="contenedor-ancho">
-            <MiniChips
-              label={
-                <div className="icon-text">
-                  <IconMapPinFilled className="icono2" />
-                  {usuario?.usuario?.ciudad && usuario?.usuario?.pais
-                    ? `${usuario.usuario.ciudad}, ${usuario.usuario.pais}`
-                    : "Sin ubicación"}
-                </div>
-              }
-            />
-            <MiniChips
-              label={
-                <div className="icon-text">
-                  <IconBriefcaseFilled className="icono2" />
-                  {usuario?.perfil_inversion || "Desconocido"}
-                </div>
-              }
-            />
-            <MiniChips label={<StarRating puntuacionMedia={puntuacionMedia} />} />
-            <MiniChips
-              label={
-                <div className="icon-text">
-                  <IconMedal id="icono-pequeño" className="icono2" />
-                  Inversiones Exitosas: {inversionesExitosas}
-                </div>
-              }
-            />
-            <MiniChips
-              label={
-                <div className="icon-text">
-                  <IconPercentage id="icono-pequeño2" className="icono2" />
-                  ROI Promedio: {roiPromedio}%
-                </div>
-              }
-            />
+            <MiniChipsOtro label={<div className="icon-text"><IconMapPinFilled className="icono2"/>{usuario?.usuario?.ciudad && usuario?.usuario?.pais ? `${usuario.usuario.ciudad}, ${usuario.usuario.pais}` : "Sin ubicación"}</div>} />
+            <MiniChipsOtro label={<div className="icon-text"><IconBriefcaseFilled className="icono2"/> {usuario?.perfil_inversion || "Desconocido"}</div>} />
+            <MiniChipsOtro label={<div className="icon-text"><IconBulbFilled className="icono2"/> {sectorFavorito}</div>}/>
+            <MiniChipsOtro label={<StarRatingOtro puntuacionMedia={puntuacionMedia} />} />
+            <MiniChipsOtro label={<div className="icon-text"><IconMedal id="icono-pequeño" className="icono2"/> Inversiones Exitosas: {inversionesExitosas}</div>} />
+            <MiniChipsOtro label={<div className="icon-text"><IconPercentage id="icono-pequeño2" className="icono2"/> ROI Promedio: {roiPromedio}%</div>} />
           </span>
         </>
       ) : (
         <>
           <span className="contenedor-ancho1">
-            <MiniChips
-              label={
-                <div className="icon-text">
-                  <IconMapPinFilled className="icono2" />
-                  {usuario?.usuario?.ciudad && usuario?.usuario?.pais
-                    ? `${usuario.usuario.ciudad}, ${usuario.usuario.pais}`
-                    : "Sin ubicación"}
-                </div>
-              }
-            />
-            <MiniChips
-              label={
-                <div className="icon-text">
-                  <IconBulbFilled className="icono2" />
-                  {usuario?.sector || "Desconocido"}
-                </div>
-              }
-            />
-            <MiniChips
-              label={
-                <div className="icon-text">
-                  <IconChartPieFilled className="icono2" />
-                  {usuario?.estado_financiacion || "Desconocido"}
-                </div>
-              }
-            />
-            <MiniChips
-              label={
-                <div className="icon-text">
-                  <IconCurrencyEuro id="icono-pequeño" className="icono2" />
-                  Recaudación Total: {recaudacionTotal ?? "0"} €
-                </div>
-              }
-            />
+            <MiniChipsOtro label={<div className="icon-text"><IconMapPinFilled className="icono2"/>{usuario?.usuario?.ciudad && usuario?.usuario?.pais ? `${usuario.usuario.ciudad}, ${usuario.usuario.pais}` : "Sin ubicación"}</div>} />
+            <MiniChipsOtro label={<div className="icon-text"><IconBulbFilled className="icono2"/> {usuario?.sector || "Desconocido"}</div>} />
+            <MiniChipsOtro label={<div className="icon-text"><IconChartPieFilled className="icono2"/> {usuario?.estado_financiacion || "Desconocido"}</div>} />
+            <MiniChipsOtro label={<div className="icon-text"><IconUserFilled  className="icono2"/> {usuario?.plantilla || "Desconocida"}</div>} />
+            <MiniChipsOtro label={<div className="icon-text"><IconCurrencyEuro id="icono-pequeño" className="icono2"/> Recaudación Total: {recaudacionTotal ?? "0"} €</div>} />
+            <MiniChipsOtro label={<div className="icon-text"><IconPercentage id="icono-pequeño2" className="icono2"/> Porcentaje Disponible: {usuario?.porcentaje_disponible || "0"}%</div>} />
           </span>
         </>
       )}
-      <Botones />
+      <BotonesOtro username={username} />
     </div>
   );
 };

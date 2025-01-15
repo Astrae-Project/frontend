@@ -26,4 +26,20 @@
     box-shadow: 0 0 25px #573688 ;
     
 }
-
+/* Estilo cuando no se está siguiendo */
+.custom-button.not-following {
+    background-color: #151522; /* Azul oscuro */
+  }
+  
+  .custom-button.not-following:hover {
+    background-color: #1a1a2b; /* Un poco más claro */
+  }
+  
+  /* Estilo cuando se está siguiendo */
+  .custom-button.following {
+    background-color: #414153; /* Claro pero con contraste respecto a "not-following" */
+  }
+  
+  .custom-button.following:hover {
+    background-color: #4e4e5b; /* Más claro en el hover para resaltar interacción */
+  }

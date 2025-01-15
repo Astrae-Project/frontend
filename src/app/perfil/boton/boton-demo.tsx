@@ -12,7 +12,7 @@ export function Botones() {
 
   const fetchUsuario = async () => {
     try {
-      const response = await customAxios.get(zzz, {
+      const response = await customAxios.get(`http://localhost:5000/api/data/usuario`, {
         withCredentials: true,
       });
       
@@ -31,7 +31,6 @@ export function Botones() {
     setLoading(true);
 
     try {
-      // Suponiendo que tienes el ID del usuario al que se va a seguir
       const id_seguido = 5; // Aquí se debería obtener el ID del usuario al que se quiere seguir
       const response = await axios.post('http://localhost:5000/api/follow/seguir', { id_seguido }, {
         withCredentials: true, // Asegura que se envíen las cookies (si usas sesiones)
@@ -72,20 +71,20 @@ export function Botones() {
     <span className="contenedor-botones1">
       <button
         className="custom-button"
-        id="seguir"
+        id="editar-perfil"
         onClick={handleFollowClick}
         disabled={loading} // Desactiva el botón mientras se está cargando
       >
-        <p className="text">{isFollowing ? "Siguiendo" : "Seguir"}</p>
+        <p className="text">{"Editar Perfil"}</p>
       </button>
       
       {/* Aquí mostramos "Invertir" si es una startup, o "Suscribir" si no lo es */}
       <button
         className="custom-button"
         id="suscribir"
-        onClick={usuario?.startup ? handleInvestClick : undefined} // Solo ejecuta la función si es startup
+        onClick={null} // Poner Bubble
       >
-        <p className="text">{usuario?.startup ? "Invertir" : "Suscribir"}</p>
+        <p className="text">{"Invertir"}</p>
       </button>
     </span>
   );

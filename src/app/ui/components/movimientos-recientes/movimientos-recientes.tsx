@@ -31,9 +31,6 @@ const MovimientosRecientes1 = ({ username }) => {
   
     } catch (error) {
       console.error("Error al obtener movimientos recientes:", error);
-  
-      // Mostrar un mensaje adicional o tomar alguna acción en la interfaz
-      alert("Ocurrió un error al obtener los movimientos recientes. Por favor, intenta nuevamente más tarde.");
     }
   };
 

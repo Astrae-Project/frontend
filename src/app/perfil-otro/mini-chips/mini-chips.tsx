@@ -7,7 +7,7 @@ interface MiniChipsProps {
     label: string;
   }
 
-export function MiniChips({ label }: MiniChipsProps) {
+export function MiniChipsOtro({ label }: MiniChipsProps) {
   return (
     <Chip className="mini-chip"> {label}</Chip>
  

@@ -6,6 +6,8 @@ import TablaPortfolio from "../tabla-portfolio/tabla-portfolio";
 import EventosyCalendario from "../eventos-calendario/eventos-calendario";
 import MovimientosRecientes1 from "../movimientos-recientes/movimientos-recientes";
 import customAxios from "@/service/api.mjs";
+import GraficaInversor from "../grafica-inversor/grafica-inversor";
+import GraficaStartup from "../grafica-startup/grafica-startup";
 
 
 export function BentoGridInicio() {
@@ -35,7 +37,7 @@ export function BentoGridInicio() {
         <button id="pequeño2" className="apartado"></button>
         <div className="bento">
             <div className="apartado">
-                <TablaPortfolio></TablaPortfolio>
+                <GraficaInversor></GraficaInversor>
             </div>
             <div className="apartado">
                 <MovimientosRecientes1></MovimientosRecientes1>
