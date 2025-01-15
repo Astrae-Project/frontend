@@ -73,24 +73,36 @@ export function BotonesOtro({ username }) {
         return;
       }
 
-      // Mostrar por consola los datos que se están enviando
-      console.log("Enviando solicitud de seguimiento a:", idSeGuido);
+      // Si ya está siguiendo, eliminar el seguimiento (hacer DELETE)
+      if (isFollowing) {
+        console.log("Eliminando seguimiento a:", idSeGuido);
+        const response = await customAxios.delete(
+          `http://localhost:5000/api/follow/seguir`,
+          { data: { id_seguido: idSeGuido }, withCredentials: true }
+        );
 
-      const response = await customAxios.post(
-        `http://localhost:5000/api/follow/seguir`,
-        { id_seguido: idSeGuido },
-        { withCredentials: true }
-      );
-
-      console.log("Respuesta de la API de seguimiento:", response); // Ver la respuesta de la API
-
-      if (response.status === 201) {
-        setIsFollowing(true); // Cambiar estado a "siguiendo"
+        if (response.status === 200) {
+          setIsFollowing(false); // Cambiar estado a "no siguiendo"
+        } else {
+          throw new Error("No se pudo eliminar el seguimiento.");
+        }
       } else {
-        throw new Error("No se pudo completar la acción de seguir.");
+        // Si no está siguiendo, agregar el seguimiento (hacer POST)
+        console.log("Enviando solicitud de seguimiento a:", idSeGuido);
+        const response = await customAxios.post(
+          `http://localhost:5000/api/follow/seguir`,
+          { id_seguido: idSeGuido },
+          { withCredentials: true }
+        );
+
+        if (response.status === 201) {
+          setIsFollowing(true); // Cambiar estado a "siguiendo"
+        } else {
+          throw new Error("No se pudo completar la acción de seguir.");
+        }
       }
     } catch (error) {
-      console.error("Error al seguir al usuario:", error.message);
+      console.error("Error al manejar el seguimiento:", error.message);
     } finally {
       setLoading(false);
     }
