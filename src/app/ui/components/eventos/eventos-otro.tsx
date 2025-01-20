@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "../../../perfil/bento-perfil/bento-perfil-style.css";
+import "./evento-style.css";
 import customAxios from "@/service/api.mjs";
+import Bubble from "../bubble/bubble";
+import PerfilOtro from "@/app/perfil-otro/page";
 
 export default function EventosOtro({ fechaSeleccionada, username }) {
   const [eventos, setEventos] = useState([]);
   const [eventosFiltrados, setEventosFiltrados] = useState([]);
+  const [activeBubble, setActiveBubble] = useState(null);
+  const [bubbleData, setBubbleData] = useState(null);
 
   const fetchEventos = async () => {
     try {
@@ -59,34 +64,54 @@ export default function EventosOtro({ fechaSeleccionada, username }) {
     return `${formattedDate} ${formattedTime}`;
   };
 
+
+  // Manejo de apertura y cierre de burbujas
+  const handleBubbleOpen = (type, data) => {
+    setBubbleData(data);
+    setActiveBubble(type);
+  };
+
+  const handleBubbleClose = () => {
+    setActiveBubble(null);
+    setBubbleData(null);
+  };
+
   return (
     <div className="contenido-scrollable" id="eventos">
       {eventosFiltrados.length > 0 ? (
         <ul>
-          {eventosFiltrados.map((evento, index) => (
-            <li key={index} className="movimiento-item">
-              <div className="portfolio-icono">
-                <img
-                  src={evento.creador?.avatar || "/default-avatar.png"}
-                  alt="Avatar del creador"
-                  className="avatar-imagen"
-                />
-              </div>
-              <div className="movimiento-detalles1">
-                <p className="movimiento-nombre1">
-                  {evento.creador?.username || "Usuario desconocido"}
-                </p>
-                <p className="movimiento-monto">{evento.titulo}</p>
-                <p className="movimiento-fecha1">
-                  {formatDateTime(evento.fecha_evento)}
-                </p>
-              </div>
+          {eventosFiltrados.map((evento) => (
+            <li key={evento.id} className="evento-item">
+              <button
+                className="evento"
+                onClick={() => handleBubbleOpen("perfil", evento)}
+              >
+                <div className="portfolio-icono">
+                  <img
+                    src={evento.creador?.avatar || "/default-avatar.png"}
+                    alt={`${evento.creador?.username || "Usuario"} Avatar`}
+                    className="avatar-imagen"
+                  />
+                </div>
+                <div className="evento-detalles">
+                  <p className="evento-creador">{evento.creador?.username || "Usuario desconocido"}</p>
+                  <p className="evento-titulo">{evento.titulo || "Sin título"}</p>
+                  <p className="evento-fecha">{formatDateTime(evento.fecha_evento)}</p>
+                </div>
+              </button>
             </li>
           ))}
         </ul>
       ) : (
         <p className="texto-defecto">No hay eventos en esta fecha.</p>
       )}
+
+      {/* Componente Bubble */}
+      <Bubble show={!!activeBubble} onClose={handleBubbleClose}>
+        {activeBubble === "perfil" && bubbleData && (
+          <PerfilOtro username={bubbleData.creador?.username} />
+        )}
+      </Bubble>
     </div>
   );
 }

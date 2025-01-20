@@ -2,18 +2,19 @@ import React from 'react';
 import './carta-startups-style.css';
 
 export const Carta = ({ startup, onClick }) => {
-  // Modificación de la función `formatInversion` para mayor compatibilidad
   const formatInversion = (monto) => {
     if (monto === null) {
-      return 'N/A'
+      return 'N/A';
     }
-
+  
     if (monto >= 1e6) {
-      return `${(monto / 1e6).toFixed(1)}M`; // Para millones
+      const millones = monto / 1e6;
+      return `${millones % 1 === 0 ? millones.toFixed(0) : millones.toFixed(1)}M€`; // Para millones
     } else if (monto >= 1e3) {
-      return `${(monto / 1e3).toFixed(0)}K`; // Para miles
+      const miles = monto / 1e3;
+      return `${miles % 1 === 0 ? miles.toFixed(0) : miles.toFixed(1)}K€`; // Para miles
     } else {
-      return monto // Para cantidades menores a mil, con formato de miles
+      return `${monto}€`; // Para cantidades menores a mil
     }
   };
 
@@ -31,7 +32,7 @@ export const Carta = ({ startup, onClick }) => {
       <div className="carta-detalles">
         <div className="carta-detalle">
           <p className="mini-titulo">Valoración</p>
-          <p className="carta-valoracion">{formatInversion(startup?.valoracion)}€</p>
+          <p className="carta-valoracion">{formatInversion(startup?.valoracion)}</p>
         </div>
       </div>
     </button>

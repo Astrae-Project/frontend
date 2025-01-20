@@ -16,6 +16,8 @@ export function BotonesOtro({ username }) {
   const [messageType, setMessageType] = useState(""); // Tipo de mensaje ("success" o "error")
   const [selectedPercentage, setSelectedPercentage] = useState(10); // Porcentaje seleccionado
   const [selectedAmount, setSelectedAmount] = useState(1000); // Cantidad seleccionada
+  const [rawAmount, setRawAmount] = useState(""); // Estado para el valor sin formato
+
   
   
   // Función para cerrar la burbuja
@@ -26,6 +28,22 @@ export function BotonesOtro({ username }) {
     setMessageType(""); // Limpiar el tipo de mensaje
   };
 
+  const formatInversion = (monto) => {
+    if (monto === null) {
+      return 'N/A';
+    }
+  
+    if (monto >= 1e6) {
+      const millones = monto / 1e6;
+      return `${millones % 1 === 0 ? millones.toFixed(0) : millones.toFixed(1)}M €`; // Para millones
+    } else if (monto >= 1e3) {
+      const miles = monto / 1e3;
+      return `${miles % 1 === 0 ? miles.toFixed(0) : miles.toFixed(1)}K €`; // Para miles
+    } else {
+      return `${monto} €`; // Para cantidades menores a mil
+    }
+  };
+  
   // Obtener datos del usuario autenticado
   const fetchUsuarioAutenticado = async () => {
     try {
@@ -138,12 +156,12 @@ export function BotonesOtro({ username }) {
         },
         { withCredentials: true }
       );
-      setConfirmationMessage("¡Inversión realizada con éxito!");
+      setConfirmationMessage("Oferta realizada con éxito!");
       setMessageType("success");
       setFormSubmitted(true);
     } catch (error) {
-      console.error("Error al realizar la inversión:", error);
-      setConfirmationMessage("Hubo un error al realizar la inversión.");
+      console.error("Error al realizar la oferta:", error);
+      setConfirmationMessage("Hubo un error al realizar la oferta.");
       setMessageType("error");
       setFormSubmitted(true);
     } finally {
@@ -179,14 +197,32 @@ export function BotonesOtro({ username }) {
       >
         {activeBubble === "crear-inversion" && !formSubmitted && (
           <div>
-            <p>Haciendo oferta a {usuarioObservado.startup?.nombre || "Startup Desconocida"}</p>
+            <p className="titulo">Haciendo oferta a {usuarioObservado.startup?.usuario.username || "Startup Desconocida"}</p>
             <div className="formulario-inversion">
+              <div className="campo-inversion">
+                <label className="form-label" htmlFor="cantidad">Selecciona la cantidad de dinero:</label>
+                <input 
+                  id="cantidad"
+                  className="select-inversion"
+                  value={rawAmount}
+                  onChange={(e) => {
+                    const inputValue = e.target.value.replace(/[^0-9]/g, ""); // Permitir solo números
+                    setRawAmount(inputValue); // Almacena el valor bruto
+                    setSelectedAmount(Number(inputValue)); // Actualiza el estado formateado
+                  }}
+                  onBlur={() => {
+                    setRawAmount(formatInversion(selectedAmount)); // Formatea al perder el foco
+                  }}
+                  onFocus={() => {
+                    setRawAmount(selectedAmount); // Devuelve el valor bruto al enfocar
+                  }}
+                />
+              </div>
               <div className="campo-inversion">
                 <label className="form-label" htmlFor="porcentaje">Selecciona el porcentaje:</label>
                 <div className="campo-porcentaje">
                   <button className="selector-btn" onClick={() => setSelectedPercentage(selectedPercentage - 1)}>-</button>
                   <input 
-                    type="number"
                     id="porcentaje"
                     className="input-inversion"
                     value={selectedPercentage}
@@ -195,25 +231,8 @@ export function BotonesOtro({ username }) {
                   <button className="selector-btn" onClick={() => setSelectedPercentage(selectedPercentage + 1)}>+</button>
                 </div>
               </div>
-
-              <div className="campo-inversion">
-                <label className="form-label" htmlFor="cantidad">Selecciona la cantidad de dinero a invertir:</label>
-                <select 
-                  id="cantidad"
-                  className="select-inversion"
-                  value={selectedAmount}
-                  onChange={(e) => setSelectedAmount(Number(e.target.value))}
-                >
-                  {[1000, 5000, 10000, 20000].map((amount) => (
-                    <option key={amount} value={amount}>
-                      ${amount.toLocaleString()}
-                    </option>
-                  ))}
-                </select>
-              </div>
             </div>
-
-                        <div className="contendor-botn-invertir">
+            <div className="contendor-botn-invertir">
               <button className="botn-invertir" onClick={closeBubble}>
                 Cancelar
               </button>

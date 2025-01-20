@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Bubble from "../bubble/bubble"; // Componente reutilizable
 import "../calendario1/calendario-style.css";
 import "../bento-inicio/bento-inicio-style.css";
+import "../eventos/evento-style.css";
 import { Calendar } from "./calendar";
 import { isPast, isToday } from "date-fns";
 import {
@@ -13,7 +14,10 @@ import {
 } from "@tabler/icons-react";
 import customAxios from "@/service/api.mjs";
 
-export default function Calendario({ eventos, onFechaSeleccionada }) {
+export default function Calendario({ eventos = [], onFechaSeleccionada }) {
+  const eventosArray = Array.isArray(eventos) ? eventos : [];
+
+  const [eventosState, setEventos] = useState([]); // Estado para almacenar los eventos
   const [date, setDate] = useState(new Date()); // Fecha seleccionada
   const [month, setMonth] = useState(new Date()); // Mes mostrado en el calendario
   const [activeBubble, setActiveBubble] = useState(null); // Estado dinámico para burbujas
@@ -49,22 +53,62 @@ export default function Calendario({ eventos, onFechaSeleccionada }) {
   };
 
   const handleSelectEvent = (eventoId) => {
-    // Si el evento ya está seleccionado, deseleccionarlo, si no, seleccionarlo
     setSelectedEvent((prevSelected) => (prevSelected === eventoId ? null : eventoId));
   };
 
-  // Convertir las fechas de los eventos a objetos Date
-  const fechasEventos = eventos.map((evento) => new Date(evento.fecha_evento));
+  const fechasEventos = eventosArray.length > 0 
+    ? eventosArray.map((evento) => new Date(evento.fecha_evento)) 
+    : [];
+
+
+  const fetchEventos = async () => {
+    try {
+      const response = await customAxios.get(
+        "http://localhost:5000/api/evento/todos", // Aquí debes asegurarte de que esta ruta devuelva todos los eventos
+        { withCredentials: true }
+      );
+      // Verificamos si la respuesta es un array antes de actualizar el estado
+      if (Array.isArray(response.data)) {
+        setEventos(response.data);
+      } else {
+        setEventos([]); // Si no es un array, asignamos un array vacío
+      }
+    } catch (error) {
+      console.error("Error fetching eventos:", error);
+      setEventos([]); // En caso de error, asignamos un array vacío
+    }
+  };
+    
+  useEffect(() => {
+    fetchEventos();
+  }, []);  
 
   // Filtrar los eventos por búsqueda (nombre o fecha)
-  const filteredEvents = eventos.filter((evento) => {
+  const filteredEvents = eventosState.length > 0 
+  ? eventosState.filter((evento) => {
     const searchLower = searchQuery.toLowerCase();
     return (
       evento.titulo.toLowerCase().includes(searchLower) ||
       new Date(evento.fecha_evento).toLocaleDateString().includes(searchLower)
     );
-  });
+  })
+  : [];
 
+  const formatDateTime = (datetime) => {
+    const date = new Date(datetime);
+    const formattedDate = new Intl.DateTimeFormat("es-ES", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    }).format(date);
+
+    const formattedTime = date.toLocaleTimeString("es-ES", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    return `${formattedDate} ${formattedTime}`;
+  };
 
   // Función para cerrar la burbuja
   const closeBubble = () => {
@@ -88,7 +132,8 @@ export default function Calendario({ eventos, onFechaSeleccionada }) {
       setFormSubmitted(true); // Cambiar el estado para ocultar el formulario
     }
   };
-
+  
+  // Función para eliminar el evento
   const handleEliminarEvento = async () => {
     if (!selectedEvent) {
       setConfirmationMessage("Por favor, selecciona un evento para eliminar.");
@@ -122,6 +167,42 @@ export default function Calendario({ eventos, onFechaSeleccionada }) {
       setFormSubmitted(true);
     }
   };
+  
+  // Función para desinscribirse de un evento (solo para participantes)
+  const handleDesinscribirseEvento = async () => {
+    if (!selectedEvent) {
+      setConfirmationMessage("Por favor, selecciona un evento para desinscribirte.");
+      setMessageType("error");
+      setFormSubmitted(true);
+      return; // Verificar si hay un evento seleccionado
+    }
+  
+    try {
+      // Extraer el id del evento seleccionado
+      const eventoId = eventos.find((evento) => evento.id === selectedEvent)?.id;
+  
+      if (!eventoId) {
+        setConfirmationMessage("No se encontró el evento seleccionado.");
+        setMessageType("error");
+        setFormSubmitted(true);
+        return;
+      }
+  
+      const response = await customAxios.delete(`http://localhost:5000/api/evento/salir/${eventoId}`);
+      console.log(response.data);
+  
+      // Actualizar el estado para eliminar el evento del listado
+      setConfirmationMessage("Te has desinscrito del evento con éxito");
+      setMessageType("success");
+      setFormSubmitted(true);
+      setSelectedEvent(null); // Limpiar selección después de desinscribirse
+    } catch (error) {
+      setConfirmationMessage("Hubo un error al desinscribirte del evento.");
+      setMessageType("error");
+      setFormSubmitted(true);
+    }
+  };
+  
   
 
   const handleEditarEvento = async (eventData) => {
@@ -177,6 +258,36 @@ export default function Calendario({ eventos, onFechaSeleccionada }) {
 
       const response = await customAxios.get(`http://localhost:5000/api/evento/data/${eventoId}`);
       console.log(response.data);
+      setFormSubmitted(true); // Cambiar el estado para ocultar el formulario
+    } catch (error) {
+      setConfirmationMessage("Hubo un error al recuperar el evento."); // Mensaje de error
+      setMessageType("error"); // Tipo de mensaje de error
+      setFormSubmitted(true); // Cambiar el estado para ocultar el formulario
+    }
+  };
+
+  const handleUnirseEvento = async () => {
+    if (!selectedEvent) {
+      setConfirmationMessage("Por favor, selecciona un evento para eliminar.");
+      setMessageType("error");
+      setFormSubmitted(true);
+      return; // Verificar si hay un evento seleccionado
+    }
+
+    try {
+      // Extraer el id del evento seleccionado
+      const eventoId = selectedEvent.id;
+  
+      if (!eventoId) {
+        setConfirmationMessage("No se encontró el evento seleccionado.");
+        setMessageType("error");
+        setFormSubmitted(true);
+        return;
+      }
+
+      const response = await customAxios.post(`http://localhost:5000/api/evento/entrar/${eventoId}`);
+      setConfirmationMessage("Inscrito en el evento con éxito!"); // Mensaje de éxito
+      setMessageType("success"); // Tipo de mensaje de éxito
       setFormSubmitted(true); // Cambiar el estado para ocultar el formulario
     } catch (error) {
       setConfirmationMessage("Hubo un error al recuperar el evento."); // Mensaje de error
@@ -268,16 +379,16 @@ export default function Calendario({ eventos, onFechaSeleccionada }) {
               onSubmit={(e) => {
                 e.preventDefault();
                 const eventData = {
-                  titulo: e.target["event-name"].value,
-                  tipo: e.target["event-type"].value,
-                  fecha_evento: e.target["event-date"].value,
-                  descripcion: e.target["event-description"].value,
+                  titulo: e.target["titulo"].value,
+                  tipo: e.target["tipo"].value,
+                  fecha_evento: e.target["fecha_evento"].value,
+                  descripcion: e.target["descripcion"].value,
                 };
                 handleCrearEvento(eventData);
               }}
             >
               <div className="form-group">
-                <label htmlFor="event-name">Nombre del evento</label>
+                <label htmlFor="titulo">Nombre del evento</label>
                 <input
                   type="text"
                   id="event-name"
@@ -285,7 +396,7 @@ export default function Calendario({ eventos, onFechaSeleccionada }) {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="event-type">Tipo</label>
+                <label htmlFor="tipo">Tipo</label>
                 <input
                   type="text"
                   id="event-type"
@@ -293,11 +404,11 @@ export default function Calendario({ eventos, onFechaSeleccionada }) {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="event-date">Fecha del evento</label>
+                <label htmlFor="fecha_evento">Fecha del evento</label>
                 <input type="date" id="event-date" />
               </div>
               <div className="form-group">
-                <label htmlFor="event-description">Descripción</label>
+                <label htmlFor="descripcion">Descripción</label>
                 <textarea
                   id="event-description"
                   placeholder="Detalles del evento"
@@ -313,41 +424,46 @@ export default function Calendario({ eventos, onFechaSeleccionada }) {
         )}
 
         {activeBubble === "eliminar-evento" && !formSubmitted && (
-          <div>
-            <p>Selecciona el evento que deseas eliminar</p>
-            <div className="contenedor-eventos">
-              <ul>
-                {eventos.map((evento) => (
-                  <li
-                    key={evento.id}
-                    className={selectedEvent === evento.id ? 'selected' : ''}
-                    onClick={() => handleSelectEvent(evento.id)} // Cambiar estado al hacer clic
-                  >
-                    <div className="portfolio-icono">
-                      <img src={evento.creador.avatar} className="avatar-imagen" />
-                    </div>
-                    <div className="movimiento-detalles1">
-                      <p>{evento.creador.username}</p>
-                      <p>{evento.titulo}</p>
-                      <p>{new Date(evento.fecha_evento).toLocaleDateString()}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+            <div>
+              <p>Selecciona el evento que deseas {selectedEvent?.esCreador ? "eliminar" : "desinscribirte"}</p>
+              <div className="contenedor-eventos">
+                <ul>
+                  {eventosArray.map((evento) => (
+                    <li
+                      key={evento.id}
+                      className={selectedEvent === evento.id ? 'selected' : ''}
+                      onClick={() => handleSelectEvent(evento.id)} // Cambiar estado al hacer clic
+                    >
+                      <div className="portfolio-icono">
+                        <img src={evento.creador.avatar} className="avatar-imagen" />
+                      </div>
+                      <div className="evento-detalles">
+                        <p className="evento-creador">{evento.creador.username}</p>
+                        <p className="evento-titulo">{evento.titulo}</p>
+                        <p className="evento-fecha">{formatDateTime(evento.fecha_evento)}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="contendor-botn-evento">
+                <button className="botn-eventos" onClick={closeBubble}>Cerrar</button>
+                <button
+                  className="botn-eventos enviar"
+                  onClick={selectedEvent?.esCreador ? handleEliminarEvento : handleDesinscribirseEvento}
+                >
+                  {selectedEvent?.esCreador ? "Eliminar" : "Desinscribirse"}
+                </button>
+              </div>          
             </div>
-            <div className="contendor-botn-evento">
-              <button className="botn-eventos" onClick={closeBubble}>Cerrar</button>
-              <button className="botn-eventos enviar" onClick={handleEliminarEvento}>Eliminar</button>
-            </div>          
-          </div>
-        )}
+          )}
 
         {activeBubble === 'editar-evento' && step === 1 && !formSubmitted && (
           <div>
             <p>Selecciona un evento para modificar</p>
             <div className="contenedor-eventos">
               <ul>
-                {eventos.map((evento) => (
+                {eventosArray.map((evento) => (
                   <li
                     key={evento.id}
                     className={selectedEvent === evento.id ? 'selected' : ''}
@@ -356,10 +472,10 @@ export default function Calendario({ eventos, onFechaSeleccionada }) {
                     <div className="portfolio-icono">
                       <img src={evento.creador.avatar} className="avatar-imagen" />
                     </div>
-                    <div className="movimiento-detalles1">
-                      <p>{evento.creador.username}</p>
-                      <p>{evento.titulo}</p>
-                      <p>{new Date(evento.fecha_evento).toLocaleDateString()}</p>
+                    <div className="evento-detalles">
+                        <p className="evento-creador">{evento.creador.username}</p>
+                        <p className="evento-titulo">{evento.titulo}</p>
+                        <p className="evento-fecha">{formatDateTime(evento.fecha_evento)}</p>
                     </div>
                   </li>
                 ))}
@@ -469,15 +585,15 @@ export default function Calendario({ eventos, onFechaSeleccionada }) {
                       <div className="portfolio-icono">
                         <img src={evento.creador.avatar} className="avatar-imagen" alt="Avatar" />
                       </div>
-                      <div className="movimiento-detalles1">
-                        <p>{evento.creador.username}</p>
-                        <p>{evento.titulo}</p>
-                        <p>{new Date(evento.fecha_evento).toLocaleDateString()}</p>
+                      <div className="evento-detalles">
+                        <p className="evento-creador">{evento.creador.username}</p>
+                        <p className="evento-titulo">{evento.titulo}</p>
+                        <p className="evento-fecha">{formatDateTime(evento.fecha_evento)}</p>
                       </div>
                     </li>
                   ))
                 ) : (
-                  <li>No se encontraron eventos</li>
+                  <p>No se encontraron eventos</p>
                 )}
               </ul>
             </div>
@@ -503,10 +619,11 @@ export default function Calendario({ eventos, onFechaSeleccionada }) {
             <p><strong>Descripción:</strong> {selectedEvent.descripcion || "Desconocido"}</p>
             <p><strong>Participantes:</strong> {selectedEvent.participantes || "Ninguno"}</p>
 
-            <div className="contendor-botn-evento1">
+            <div className="contendor-botn-evento">
               <button className="botn-eventos" onClick={() => setFormSubmitted(false)}>
-                Volver a buscar
+                Volver
               </button>
+              <button className="botn-eventos enviar" onClick={handleUnirseEvento}>Unirse</button>
             </div>
           </div>
         )}
@@ -516,7 +633,7 @@ export default function Calendario({ eventos, onFechaSeleccionada }) {
             <p>Selecciona un evento para compartir</p>
             <div className="contenedor-eventos">
               <ul>
-                {eventos.map((evento) => (
+                {eventosArray.map((evento) => (
                   <li
                     key={evento.id}
                     className={selectedEvent === evento.id ? 'selected' : ''}
@@ -525,10 +642,10 @@ export default function Calendario({ eventos, onFechaSeleccionada }) {
                     <div className="portfolio-icono">
                       <img src={evento.creador.avatar} className="avatar-imagen" />
                     </div>
-                    <div className="movimiento-detalles1">
-                      <p>{evento.creador.username}</p>
-                      <p>{evento.titulo}</p>
-                      <p>{new Date(evento.fecha_evento).toLocaleDateString()}</p>
+                    <div className="evento-detalles">
+                        <p className="evento-creador">{evento.creador.username}</p>
+                        <p className="evento-titulo">{evento.titulo}</p>
+                        <p className="evento-fecha">{formatDateTime(evento.fecha_evento)}</p>
                     </div>
                   </li>
                 ))}

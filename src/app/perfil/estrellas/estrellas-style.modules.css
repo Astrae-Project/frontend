@@ -21,4 +21,28 @@
   .half-filled {
     clip-path: inset(0 50% 0 0); /* Solo la mitad izquierda se muestra */
   }
+
+  .star-rating-container {
+    display: flex;
+    position: relative;
+    top: -5%;
+    gap: 4%;
+    justify-content: center;
+    align-items: center; /* Centrar las estrellas */
+    margin: 15px 0px 25px 0px;
+  }
+  
+  .star-big, .big {
+    color: #8154c4; /* Color de las estrellas llenas */
+    position: relative;
+    width: 24px;
+    height: 24px;
+  }
+
+
+  
+  /* Estrellas llenas */
+  .star.filled {
+    color: #8154c4; /* Color de las estrellas llenas */
+  }
   

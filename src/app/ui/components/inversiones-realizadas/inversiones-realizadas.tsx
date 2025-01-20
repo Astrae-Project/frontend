@@ -30,15 +30,17 @@ const InversionesRealizadas = () => {
 
   const formatInversion = (monto) => {
     if (monto === null) {
-      return 'N/A'
+      return 'N/A';
     }
-
+  
     if (monto >= 1e6) {
-      return `${(monto / 1e6).toFixed(1)}M`; // Para millones
+      const millones = monto / 1e6;
+      return `${millones % 1 === 0 ? millones.toFixed(0) : millones.toFixed(1)}M€`; // Para millones
     } else if (monto >= 1e3) {
-      return `${(monto / 1e3).toFixed(0)}K`; // Para miles
+      const miles = monto / 1e3;
+      return `${miles % 1 === 0 ? miles.toFixed(0) : miles.toFixed(1)}K€`; // Para miles
     } else {
-      return monto // Para cantidades menores a mil, con formato de miles
+      return `${monto}€`; // Para cantidades menores a mil
     }
   };
 
@@ -49,7 +51,7 @@ const InversionesRealizadas = () => {
   return (
     <div className="seccion" id="grid3">
       {/* Mostrar valoracion si es una startup, si no mostrar inversiones realizadas */}
-      <p className="numeros">{valoracion > 0 ? formatInversion(valoracion) : formatInversion(inversionesRealizadas)}</p>
+      <p className="numeros">{valoracion > 0 ? formatInversion(valoracion) : (inversionesRealizadas)}</p>
       <section className="datos">
         <p>{valoracion > 0 ? "Valoración" : "Inversiones"}</p>
       </section>

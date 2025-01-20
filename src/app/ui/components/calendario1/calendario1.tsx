@@ -4,6 +4,8 @@ import { Calendar1 } from "./calendar";
 import { isPast,isToday } from "date-fns";
 
 export default function Calendario1({ eventos, onFechaSeleccionada }) {
+  const eventosArray = Array.isArray(eventos) ? eventos : [];
+
   const [date, setDate] = React.useState<Date | undefined>(new Date());
 
   // Manejar la selección de fecha
@@ -12,8 +14,10 @@ export default function Calendario1({ eventos, onFechaSeleccionada }) {
     onFechaSeleccionada(selectedDate);
   };
 
-  const fechasEventos = eventos.map((evento) => new Date(evento.fecha_evento));
-
+  const fechasEventos = eventosArray.length > 0 
+  ? eventosArray.map((evento) => new Date(evento.fecha_evento)) 
+  : [];
+  
   return (
     <Calendar1
       mode="single"

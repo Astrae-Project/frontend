@@ -49,11 +49,20 @@ const MovimientosRecientes = ({ username }) => {
     setBubbleData(null);
   };
 
-  // Formateo de montos
   const formatInversion = (monto) => {
-    if (monto >= 1e6) return `${(monto / 1e6).toFixed(1)}M`;
-    if (monto >= 1e3) return `${(monto / 1e3).toFixed(0)}K`;
-    return monto.toString();
+    if (monto === null) {
+      return 'N/A';
+    }
+  
+    if (monto >= 1e6) {
+      const millones = monto / 1e6;
+      return `${millones % 1 === 0 ? millones.toFixed(0) : millones.toFixed(1)}M€`; // Para millones
+    } else if (monto >= 1e3) {
+      const miles = monto / 1e3;
+      return `${miles % 1 === 0 ? miles.toFixed(0) : miles.toFixed(1)}K€`; // Para miles
+    } else {
+      return `${monto}€`; // Para cantidades menores a mil
+    }
   };
 
   return (
@@ -105,7 +114,7 @@ const MovimientosRecientes = ({ username }) => {
                             <p>{movimiento.startup?.usuario?.username || "Sin nombre"}</p>
                           </span>
                           <p className="movimiento-monto">
-                            Inversión de {formatInversion(movimiento.monto_invertido)}€
+                            Inversión de {formatInversion(movimiento.monto_invertido)}
                           </p>
                           <p className="movimiento-porcentaje">
                             por el {movimiento.porcentaje_adquirido}%
@@ -126,7 +135,7 @@ const MovimientosRecientes = ({ username }) => {
                             <p>{movimiento.startup?.usuario?.username || "Sin nombre"}</p>
                           </span>
                           <p className="movimiento-monto">
-                            Oferta de {formatInversion(movimiento.monto_ofrecido)}€
+                            Oferta de {formatInversion(movimiento.monto_ofrecido)}
                           </p>
                           <p className="movimiento-porcentaje">
                             por el {movimiento.porcentaje_ofrecido}%
@@ -192,7 +201,7 @@ const MovimientosRecientes = ({ username }) => {
         {activeBubble === "inversion" && bubbleData && (
           <div className="inversion-detalle">
             <p><strong>Startup:</strong> {bubbleData.startup?.usuario?.username || "Cargando..."}</p>
-            <p><strong>Inversión:</strong> {formatInversion(bubbleData.monto_invertido)}€</p>
+            <p><strong>Inversión:</strong> {formatInversion(bubbleData.monto_invertido)}</p>
             <p><strong>Porcentaje Adquirido:</strong> {bubbleData.porcentaje_adquirido}%</p>
             <p><strong>Fecha:</strong> {new Date(bubbleData.fecha).toLocaleDateString("es-ES")}</p>
           </div>
@@ -200,7 +209,7 @@ const MovimientosRecientes = ({ username }) => {
         {activeBubble === "oferta" && bubbleData && (
           <div className="oferta-detalle">
             <p><strong>Startup:</strong> {bubbleData.startup?.usuario?.username || "Cargando..."}</p>
-            <p><strong>Oferta de:</strong> {formatInversion(bubbleData.monto_ofrecido)}€</p>
+            <p><strong>Oferta de:</strong> {formatInversion(bubbleData.monto_ofrecido)}</p>
             <p><strong>Porcentaje Ofrecido:</strong> {bubbleData.porcentaje_ofrecido}%</p>
             <p><strong>Fecha:</strong> {new Date(bubbleData.fecha_creacion).toLocaleDateString("es-ES")}</p>
           </div>

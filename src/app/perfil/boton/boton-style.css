@@ -27,3 +27,37 @@
     
 }
 
+.boton-morado{
+    background-color: #573688 ;
+    box-shadow: 0 0 25px #573688 ;
+    
+}
+
+.nombre-startup{
+    position: relative;
+    top: 1.5px;
+    font-size: 8px;
+    color: #a390bf;
+    z-index: 99999999;
+    font-variation-settings: "slnt" 0, "wght" 600;
+}
+
+.username-startup{
+    position: relative;
+    font-size: 14px;
+    top: 2.5px;
+}
+
+
+.startup-lista {
+    position: relative;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    margin-left: 15px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
+
