@@ -119,6 +119,7 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
 
   // Crear evento
   const handleCrearEvento = async (eventData) => {
+    console.log(eventData); // Verifica los datos que se están enviando
     try {
       const response = await customAxios.post("http://localhost:5000/api/evento/crear", eventData);
       console.log(response.data);
@@ -132,6 +133,7 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
       setFormSubmitted(true); // Cambiar el estado para ocultar el formulario
     }
   };
+  
   
   // Función para eliminar el evento
   const handleEliminarEvento = async () => {
@@ -202,7 +204,6 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
       setFormSubmitted(true);
     }
   };
-  
   
 
   const handleEditarEvento = async (eventData) => {
@@ -391,7 +392,8 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
                 <label htmlFor="titulo">Nombre del evento</label>
                 <input
                   type="text"
-                  id="event-name"
+                  id="titulo"
+                  name="titulo" // Añadir el name
                   placeholder="Introduce el nombre del evento"
                 />
               </div>
@@ -399,18 +401,24 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
                 <label htmlFor="tipo">Tipo</label>
                 <input
                   type="text"
-                  id="event-type"
+                  id="tipo"
+                  name="tipo" // Añadir el name
                   placeholder="Introduce el tipo del evento"
                 />
               </div>
               <div className="form-group">
                 <label htmlFor="fecha_evento">Fecha del evento</label>
-                <input type="date" id="event-date" />
+                <input
+                  type="date"
+                  id="fecha_evento"
+                  name="fecha_evento" // Añadir el name
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="descripcion">Descripción</label>
                 <textarea
-                  id="event-description"
+                  id="descripcion"
+                  name="descripcion" // Añadir el name
                   placeholder="Detalles del evento"
                   rows="4"
                 ></textarea>
