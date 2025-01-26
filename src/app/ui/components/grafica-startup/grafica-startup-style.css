@@ -1,0 +1,23 @@
+.valor-portfolio {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    gap: 7px;
+    align-self: start;
+    margin-bottom: 8.5px;
+    margin-left: 3px;
+}
+
+.titulo-valor{
+    font-size: 10.5px;
+    align-self: center;
+    color: rgba(255, 255, 255, 0.642);
+    align-self: end;
+}
+
+.icono-valor{
+    width: 5px;
+    height: 5px;
+    position: relative;
+    top: 3.5px;
+}

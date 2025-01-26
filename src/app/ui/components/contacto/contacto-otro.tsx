@@ -56,21 +56,23 @@ const InformacionContactoOtro = ({ contacto }) => {
         <p>@{contacto.instagram}</p>
       </li>
     ),
-  ].filter(Boolean).slice(0, 4); // Filtramos elementos nulos y limitamos a 4
+  ].filter(Boolean).slice(0, 5); // Filtramos elementos nulos y limitamos a 4
 
   return (
-    <div className="seccion" id="contacto">
+    <>
       <div className="titulo-principal">
         <p className="titulo-contacto">Contacto</p>
       </div>
-      {contacto ? (
-        <ul className="contacto-lista">
-          {contactoItems}
-        </ul>
-      ) : (
-        <p>No hay información de contacto disponible.</p>
-      )}
-    </div>
+      <div className="contenido-scrollable">
+        {contacto ? (
+          <ul className="contacto-lista">
+            {contactoItems}
+          </ul>
+        ) : (
+          <p>No hay información de contacto disponible.</p>
+        )}
+      </div>
+    </>
   );
 };
 
@@ -100,7 +102,7 @@ export default function ContactoOtro({ username }) {
   }, [username]);
 
   return (
-    <div className="seccion">
+    <div className="seccion" id="contacto">
       <InformacionContactoOtro contacto={contacto} />
     </div>
   );

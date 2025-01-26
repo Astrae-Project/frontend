@@ -115,6 +115,16 @@
   overflow-y: auto;
 }
 
+#grafica-startup-otro, #grafica-startup{
+  flex-direction: column;
+  padding-bottom: 12px;
+  padding-top: 12%;
+  padding-left: 3%;
+  padding-right: 3%;
+  border: none;
+  justify-content: normal;
+}
+
 .seccion::-webkit-scrollbar {
   display: none; /* Safari, Chrome y otros navegadores basados en WebKit */
 }
@@ -437,6 +447,7 @@ li {
   align-items: center; /* Centra el contenido dentro del botón */
   justify-content: center; /* Centra el contenido dentro del botón */
   background-color: transparent;
+  cursor: default;
 }
 
 .btn-fecha{
@@ -563,7 +574,7 @@ svg{
 .contacto-item p, #nombre-grupo{
   margin-left: 5%;
   margin-top: 2%;
-  font-variation-settings: "slnt" 0, "wght" 400;
+  font-variation-settings: "slnt" 0, "wght" 500;
   letter-spacing: 0.2px;
 }
 

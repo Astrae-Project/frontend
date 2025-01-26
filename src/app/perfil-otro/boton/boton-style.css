@@ -30,11 +30,11 @@
 
 /* Estilo cuando no se está siguiendo */
 .custom-button.not-following {
-  background-color: #151522; /* Azul oscuro */
+  background-color: #14141f; /* Azul oscuro */
 }
 
 .custom-button.not-following:hover {
-  background-color: #1a1a2b; /* Un poco más claro */
+  background-color: #14141f82; /* Un poco más claro */
 }
 
 /* Estilo cuando se está siguiendo */
@@ -112,7 +112,7 @@ label.form-label {
 .input-inversion, .select-inversion {
   padding: 0.625rem;
   border: none;
-  border: 1px solid rgba(255, 255, 255, 0.3);  /* Solo una raya debajo */
+  border: 1px solid #202029;  /* Solo una raya debajo */
   border-radius: 10px;
   background: transparent;
   color: #999; /* Color gris por defecto */
@@ -142,7 +142,7 @@ label.form-label {
 .selector-btn {
   width: 35px;
   height: 35px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid #202029;
   border-radius: 50%;
   background: transparent;
   color: #fff;
@@ -170,7 +170,7 @@ label.form-label {
 .input-porcentaje {
   width: 6.25rem;
   text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid #202029;
   background: transparent;
   backdrop-filter: blur(10px);
   color: #fff;

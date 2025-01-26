@@ -57,7 +57,7 @@ const TablaGruposOtro = ({ username }) => {
           </ul>
         </div>
       ) : (
-        <p>No estás en ningún grupo.</p>
+        <p>No está en ningún grupo.</p>
       )}
     </div>
   );

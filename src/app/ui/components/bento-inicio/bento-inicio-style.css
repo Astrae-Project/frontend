@@ -14,6 +14,33 @@ body {
   z-index: 10;
 }
 
+.contenedor-buscar{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-direction: column;
+}
+
+.buscador{
+  background-color: #14141f;
+  border-radius: 10px;
+  width: 55%;
+  height: 40px;
+  margin-top: 14.3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 14px 0px 14px;
+  font-size: 12px;
+}
+
+.buscador:focus-visible{
+  border: 1px solid #ffffff40 ;
+  outline: none;
+}
+
 #pequeño1{
   position: absolute;
   top: 30px;
@@ -154,12 +181,25 @@ body {
   border-radius: 18px;
   background-color: #10101A;
   border: 1px solid #151522;
-  overflow: hidden; /* Evita que el contenido desborde */
+  overflow: hidden;
   text-align: center;
   width: 100%;
-  height: 100%; /* Asegúrate de que esto esté aquí */
+  height: 100%;
   flex-wrap: nowrap;
-  flex: 1; /* Esto hará que cada sección ocupe el espacio disponible */
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#pequeño1 svg{
+  width: 17px;
+  height: 17px;
+}
+
+#pequeño2 svg{
+  width: 17px;
+  height: 17px;
 }
 
 .botones{

@@ -113,7 +113,7 @@ export function Botones() {
     if (usuario) {
       if (usuario.startup) {
         return (
-          <button className="custom-button boton-morado" id="compartir">
+          <button className="custom-button" id="compartir">
             <p className="text">Compartir</p>
           </button>
         );
@@ -121,7 +121,7 @@ export function Botones() {
         return (
           <button
             className="custom-button boton-morado"
-            id="invertir"
+            id="suscribir"
             onClick={() => setActiveBubble("crear-inversion")}
             disabled={loading}
           >

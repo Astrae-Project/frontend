@@ -1,11 +1,66 @@
 import customAxios from '@/service/api.mjs';
 import React, { useState, useEffect } from 'react';
+import './contacto-style.css';
+import { IconPlus } from '@tabler/icons-react';
+import Bubble from '../bubble/bubble';
 
-const InformacionContacto = ({ contacto }) => {
+const InformacionContacto = ({ contacto, fetchContacto }) => {
+  const [activeBubble, setActiveBubble] = useState(null);
+  const [confirmationMessage, setConfirmationMessage] = useState(null);
+  const [messageType, setMessageType] = useState(null);
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [step, setStep] = useState(1);
+  const [selectedContact, setSelectedContact] = useState(null);
+  const [formData, setFormData] = useState({
+    correo: contacto?.correo || '',
+    twitter: contacto?.twitter || '',
+    linkedin: contacto?.linkedin || '',
+    facebook: contacto?.facebook || '',
+    instagram: contacto?.instagram || '',
+  });
+
+  const closeBubble = () => {
+    setActiveBubble(null);
+    setConfirmationMessage('');
+    setFormSubmitted(false);
+    setStep(1); // Reset to first step
+    setSelectedContact(null); // Reset the selected contact
+  };
+
+  const handleAñadirContacto = async () => {
+    try {
+      const response = await customAxios.put(
+        'http://localhost:5000/api/perfil/cambiar-datos',
+        formData,
+        { withCredentials: true }
+      );
+      console.log(response.data);
+      setConfirmationMessage('¡Datos actualizados con éxito!');
+      setMessageType('success');
+      setFormSubmitted(true);
+      fetchContacto(); // Refrescar datos después de actualizar
+    } catch (error) {
+      console.error('Error al actualizar los datos de contacto:', error);
+      setConfirmationMessage('Hubo un error al actualizar los datos.');
+      setMessageType('error');
+      setFormSubmitted(true);
+    }
+  };
+
+  const handleSelectContact = (contactType) => {
+    setSelectedContact(contactType);
+    setFormData({ [contactType]: contacto?.[contactType] || '' }); // Garantiza valor controlado
+    setStep(2); // Avanzamos al paso 2 para mostrar el formulario
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   // Construimos un array con los elementos de contacto y aplicamos directamente slice(0, 4)
   const contactoItems = [
     contacto?.correo && (
-      <li className="contacto-item" key="correo">
+      <li className="contacto-item" key="correo" onClick={() => {handleSelectContact('correo'); setActiveBubble('añadir-contacto');}}>
         <div className="borde-icono">
           <div className="movimiento-icono">
             <img src="/Imagenes/iconos/gmail.svg" className="contacto-imagen" />
@@ -15,7 +70,7 @@ const InformacionContacto = ({ contacto }) => {
       </li>
     ),
     contacto?.twitter && (
-      <li className="contacto-item" key="twitter">
+      <li className="contacto-item" key="twitter" onClick={() => {handleSelectContact('twitter'); setActiveBubble('añadir-contacto');}}>
         <div className="borde-icono">
           <div className="movimiento-icono">
             <img src="/Imagenes/iconos/x.svg" className="contacto-imagen" />
@@ -25,7 +80,7 @@ const InformacionContacto = ({ contacto }) => {
       </li>
     ),
     contacto?.linkedin && (
-      <li className="contacto-item" key="linkedin">
+      <li className="contacto-item" key="linkedin" onClick={() => {handleSelectContact('linkedin'); setActiveBubble('añadir-contacto');}}>
         <div className="borde-icono">
           <div className="movimiento-icono">
             <img src="/Imagenes/iconos/linkedin.svg" className="contacto-imagen" />
@@ -35,7 +90,7 @@ const InformacionContacto = ({ contacto }) => {
       </li>
     ),
     contacto?.facebook && (
-      <li className="contacto-item" key="facebook">
+      <li className="contacto-item" key="facebook" onClick={() => {handleSelectContact('facebook'); setActiveBubble('añadir-contacto');}}>
         <div className="borde-icono">
           <div className="movimiento-icono">
             <img src="/Imagenes/iconos/facebook.svg" className="contacto-imagen" />
@@ -45,7 +100,7 @@ const InformacionContacto = ({ contacto }) => {
       </li>
     ),
     contacto?.instagram && (
-      <li className="contacto-item" key="instagram">
+      <li className="contacto-item" key="instagram" onClick={() => {handleSelectContact('instagram'); setActiveBubble('añadir-contacto');}}>
         <div className="borde-icono">
           <div className="movimiento-icono">
             <img src="/Imagenes/iconos/instagram.svg" className="contacto-imagen" />
@@ -54,21 +109,79 @@ const InformacionContacto = ({ contacto }) => {
         <p>@{contacto.instagram}</p>
       </li>
     ),
-  ].filter(Boolean).slice(0, 4); // Filtramos elementos nulos y limitamos a 4
+  ].filter(Boolean);
 
   return (
-    <div className="seccion" id="contacto">
+    <>
       <div className="titulo-principal">
         <p className="titulo-contacto">Contacto</p>
       </div>
+      <div className='contenido-scrollable'>
       {contacto ? (
-          <ul className="contacto-lista">
-            {contactoItems}
-          </ul>
+        <ul className="contacto-lista">
+          {contactoItems}
+          {contactoItems.length < 5 && (
+            <div className="contenido-vacio">
+              <li className="añadir" id="añadir-contacto" onClick={() => setActiveBubble('añadir-contacto')}>
+                <IconPlus />
+                <p>Añadir</p>
+              </li>
+            </div>
+          )}
+        </ul>
       ) : (
-        <p>No hay información de contacto disponible.</p>
+        <div className="contenido-vacio">
+          <li className="añadir">
+            <p>Añadir</p>
+          </li>
+        </div>
       )}
-    </div>
+
+      <Bubble show={!!activeBubble} onClose={closeBubble} message={confirmationMessage} type={messageType}>
+        {activeBubble === 'añadir-contacto' && step === 1 && !formSubmitted && (
+          <div>
+            <p>Selecciona un contacto para actualizar</p>
+            <div className="contenedor-contactos">
+              <button onClick={() => handleSelectContact('correo')} className='boton-redes'><img src="/Imagenes/iconos/gmail.svg" className="contacto-imagen" /></button>
+              <button onClick={() => handleSelectContact('instagram')} className='boton-redes'><img src="/Imagenes/iconos/instagram.svg" className="contacto-imagen" /></button>
+              <button onClick={() => handleSelectContact('twitter')} className='boton-redes'><img src="/Imagenes/iconos/x.svg" className="contacto-imagen" /></button>
+              <button onClick={() => handleSelectContact('facebook')} className='boton-redes'><img src="/Imagenes/iconos/facebook.svg" className="contacto-imagen" /></button>
+              <button onClick={() => handleSelectContact('linkedin')} className='boton-redes'><img src="/Imagenes/iconos/linkedin.svg" className="contacto-imagen" /></button>
+            </div>
+          </div>
+        )}
+
+        {step === 2 && selectedContact && (
+          <div className="edit-form-container">
+            <p>Editando {selectedContact}</p>
+            <input
+              type="text"
+              name={selectedContact}
+              value={formData[selectedContact] || ''} // Siempre controlado
+              onChange={handleChange}
+              placeholder={`Nuevo ${selectedContact}`}
+              className='select-contacto'
+            />
+            <div className="contendor-botn-evento">
+              <button
+                className="botn-eventos"
+                type="button"
+                onClick={() => {
+                  setStep(1); // Volver al paso 1 si se cancela
+                  setSelectedContact(null); // Limpiar selección
+                }}
+              >
+                Atrás
+              </button>
+              <button className="botn-eventos enviar" onClick={handleAñadirContacto}>
+                Confirmar
+              </button>
+            </div>
+          </div>
+        )}
+      </Bubble>
+      </div>
+    </>
   );
 };
 
@@ -91,8 +204,8 @@ export default function Contacto() {
   }, []);
 
   return (
-    <div className="seccion">
-      <InformacionContacto contacto={contacto} />
+    <div className="seccion" id='contacto'>
+      <InformacionContacto contacto={contacto} fetchContacto={fetchContacto} />
     </div>
   );
 }

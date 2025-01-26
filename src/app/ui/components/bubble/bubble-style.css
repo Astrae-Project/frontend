@@ -26,6 +26,7 @@
     animation: popIn 0.3s ease-in-out;
     overflow-y: hidden;
     margin-left: 80px;
+    text-align: center;
   }
   
   /* Animaciones */

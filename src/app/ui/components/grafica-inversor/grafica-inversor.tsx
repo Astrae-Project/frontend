@@ -2,49 +2,60 @@ import customAxios from '@/service/api.mjs';
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, Title, Tooltip, Legend, LineElement, PointElement, Filler } from 'chart.js';
+import '../grafica-startup/grafica-startup-style.css';
+import { IconTriangleFilled, IconTriangleInvertedFilled } from '@tabler/icons-react';
+import MovimientosRecientesSinEventos from '../movimientos-recientes/movimientos-recientes-sin-eventos';
 
-// Registrar las escalas y otros componentes necesarios
 ChartJS.register(CategoryScale, LinearScale, Title, Tooltip, Legend, LineElement, PointElement, Filler);
 
 const GraficaInversor = () => {
   const [data, setData] = useState({
-    labels: [], // Fechas
+    labels: [],
     datasets: [
       {
-        label: 'Valor de la startup',
-        data: [], // Valores de las valoraciones
-        borderColor: 'rgba(75,192,192,1)', // Color de la línea
-        backgroundColor: 'rgba(75,192,192,0.2)', // Color de fondo debajo de la línea
-        fill: true, // Rellenar debajo de la línea
-        tension: 0.4, // Suaviza la curva de la línea (opcional)
+        label: 'Valor del portfolio',
+        data: [],
+        borderColor: 'rgb(142, 110, 190)',
+        backgroundColor: 'rgba(110, 75, 163, 0.1)',
+        fill: true,
+        tension: 0.4,
       },
     ],
   });
 
-  // Función para obtener los datos históricos de valoraciones
-  const fetchValorStartup = async () => {
+  const [totalPortfolioValue, setTotalPortfolioValue] = useState(0); // Inicializar como 0
+  const [percentageChange, setPercentageChange] = useState(0); // Inicializar como 0
+  
+  const fetchValorPortfolio = async () => {
     try {
       const response = await customAxios.get('http://localhost:5000/api/data/historicos', {
-        withCredentials: true, // Enviar cookies con la solicitud
+        withCredentials: true,
       });
-
-      // Verificamos si los datos existen en la clave 'historico' de la respuesta
+  
       if (response.data && Array.isArray(response.data.historico)) {
         const labels = response.data.historico.map((item) =>
           new Date(item.fecha).toLocaleDateString()
         );
-        const dataValues = response.data.historico.map((item) => item.valoracion);
-
+        const dataValues = response.data.historico.map((item) => Number(item.valoracion)); // Convertir a número
+  
+        const latestValue = dataValues[dataValues.length - 1] || 0; // Asegurar número
+        const previousValue = dataValues[dataValues.length - 2] || 0; // Asegurar número
+        const change = previousValue
+          ? ((latestValue - previousValue) / previousValue) * 100
+          : 0;
+  
+        setTotalPortfolioValue(latestValue); // Actualizar con número válido
+        setPercentageChange(Number(change.toFixed(2))); // Redondear a 2 decimales
         setData({
           labels,
           datasets: [
             {
-              label: 'Valor de la startup',
+              label: 'Valor del portfolio',
               data: dataValues,
-              borderColor: 'rgba(75,192,192,1)',
-              backgroundColor: 'rgba(75,192,192,0.2)',
+              borderColor: 'rgb(142, 110, 190)',
+              backgroundColor: 'rgba(144, 113, 190, 0.1)',
               fill: true,
-              tension: 0.4, // Curva de la línea más suave
+              tension: 0.4,
             },
           ],
         });
@@ -55,44 +66,122 @@ const GraficaInversor = () => {
       console.error('Error fetching historics:', error);
     }
   };
+  
 
   useEffect(() => {
-    fetchValorStartup(); // Poblar gráfica al cargar el componente
+    fetchValorPortfolio();
   }, []);
 
   return (
-    <div className="seccion" id="grupos-perfil">
+    <div className="seccion" id="grafica-startup">
       <div className="titulo-principal">
         <p className="titulo-contacto">Gráfica</p>
       </div>
+      {/* Valor total de la startup */}
+      <div className="valor-portfolio">
+        <h2 className='titulo-valor'>
+          Valor Total: 
+        </h2>
+        <span
+        style={{
+          fontSize: '13px', // Tamaño de fuente
+          alignSelf: 'center', // Alinear al centro
+          position: 'relative', // Posición relativa
+          top: '1.5px', // Mover hacia abajo
+        }
+        }>
+          {totalPortfolioValue.toLocaleString('es-ES')}€ 
+        </span>
+        <p className='cambio-valor'
+        style={{
+          display: 'flex', // Mostrar en línea
+          alignItems: 'end', // Alinear verticalmente
+        }}>
+          <span
+            style={{
+              color:
+                percentageChange === 0
+                  ? "rgba(255, 255, 255, 0.6)" // Color gris si el cambio es 0
+                  : percentageChange > 0
+                  ? "rgb(67, 222, 67)" // Color verde si el cambio es positivo
+                    // Icono de flecha hacia arriba
+                  : "rgba(222, 67, 67)", // Color rojo si el cambio es negativo
+              fontWeight: 400, // Fuente en negrita
+              fontSize: '10px', // Tamaño de fuente
+              display: 'flex', // Mostrar en línea
+              gap: '3px', // Espacio entre elementos
+            }}
+          >
+            {percentageChange === 0
+              ? '0%'
+              : `${percentageChange}%`} {/* Porcentaje con formato adecuado */}
+            {percentageChange > 0 && <IconTriangleFilled className='icono-valor' />} {/* Icono de flecha hacia arriba */}
+            {percentageChange < 0 && <IconTriangleInvertedFilled className='icono-valor' />} {/* Icono de flecha hacia arriba */}
+          </span>
+        </p>
+      </div>
+
       <Line
         data={data}
         options={{
           responsive: true,
           plugins: {
             title: {
-              display: true,
-              text: 'Valor de la Startup a lo largo del tiempo',
+              display: false, // No mostrar título
+            },
+            legend: {
+              display: false, // No mostrar leyenda
             },
           },
           scales: {
             x: {
-              type: 'category', // Usamos 'category' para etiquetas
+              type: 'category',
               title: {
-                display: true,
+                display: false,
                 text: 'Fecha',
+                color: 'rgba(255, 255, 255, 0.7)',
+                font: {
+                  family: 'Arial',
+                  size: 11,
+                },
+              },
+              ticks: {
+                color: 'rgba(255, 255, 255, 0.6)',
+                font: {
+                  family: 'Arial',
+                  size: 9.5,
+                },
+              },
+              grid: {
+                color: 'rgba(220, 220, 220, 0.03)',
               },
             },
             y: {
               title: {
-                display: true,
-                text: 'Valor',
+                display: false,
+                text: 'Valor (€)',
+                color: 'rgba(255, 255, 255, 0.7)',
+                font: {
+                  family: 'Arial',
+                  size: 11,
+                },
+              },
+              ticks: {
+                color: 'rgba(255, 255, 255, 0.6)',
+                font: {
+                  family: 'Arial',
+                  size: 9.5,
+                },
               },
               beginAtZero: false,
+              grid: {
+                color: 'rgba(220, 220, 220, 0.03)',
+              },
             },
           },
         }}
       />
+      <MovimientosRecientesSinEventos></MovimientosRecientesSinEventos>
     </div>
   );
 };

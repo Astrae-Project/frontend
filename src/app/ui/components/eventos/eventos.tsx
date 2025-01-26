@@ -82,11 +82,8 @@ export default function Eventos({ fechaSeleccionada }) {
       {eventosFiltrados.length > 0 ? (
         <ul>
           {eventosFiltrados.map((evento) => (
-            <li key={evento.id} className="evento-item">
-              <button
-                className="evento"
-                onClick={() => handleBubbleOpen("perfil", evento)}
-              >
+            <li key={evento.id} className="evento-item" onClick={() => handleBubbleOpen("perfil", evento)}>
+
                 <div className="portfolio-icono">
                   <img
                     src={evento.creador?.avatar || "/default-avatar.png"}
@@ -94,12 +91,11 @@ export default function Eventos({ fechaSeleccionada }) {
                     className="avatar-imagen"
                   />
                 </div>
-                <div className="evento-detalles">
-                  <p className="evento-creador">{evento.creador?.username || "Usuario desconocido"}</p>
-                  <p className="evento-titulo">{evento.titulo || "Sin título"}</p>
-                  <p className="evento-fecha">{formatDateTime(evento.fecha_evento)}</p>
+                <div className="evento-detalles1">
+                  <p className="evento-creador1">{evento.creador?.username || "Usuario desconocido"}</p>
+                  <p className="evento-titulo1">{evento.titulo || "Sin título"}</p>
+                  <p className="evento-fecha1">{formatDateTime(evento.fecha_evento)}</p>
                 </div>
-              </button>
             </li>
           ))}
         </ul>

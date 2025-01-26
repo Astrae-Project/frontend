@@ -9,7 +9,8 @@ import customAxios from "@/service/api.mjs";
 import GraficaInversor from "../grafica-inversor/grafica-inversor";
 import GraficaStartup from "../grafica-startup/grafica-startup";
 import Bubble from "../bubble/bubble";
-import { IconPlus } from "@tabler/icons-react";
+import { IconPlus, IconUsersPlus } from "@tabler/icons-react";
+import MovimientosSeguidos from "../movimientos-recientes/movimientos-recientes-seguidos";
 
 export function BentoGridInicio({username}) {
   const [loading, setLoading] = useState(false); // Estado de carga
@@ -25,6 +26,12 @@ export function BentoGridInicio({username}) {
   const [selectedStartup, setSelectedStartup] = useState(null); // Startup seleccionada
   const [startups, setStartups] = useState([]);
   const [step, setStep] = useState(1); // Paso actual (1 = seleccionar evento, 2 = editar evento)
+  const [formData, setFormData] = useState({
+    nombre: "",
+    descripcion: "",
+    tipo: "publico",
+  });
+
   
 
   const fetchRol = async () => {
@@ -67,8 +74,29 @@ export function BentoGridInicio({username}) {
     fetchStartups();
   }, []);
 
+    // Maneja la creación de un nuevo grupo
+    const handleCrearGrupo = async () => {
+      try {
+        const response = await customAxios.post(
+          "http://localhost:5000/api/grupos/crear",
+          formData,
+          { withCredentials: true }
+        );
+        console.log("Grupo creado:", response.data);
+        setConfirmationMessage("Grupo creado con éxito!");
+        setMessageType("success");
+        setFormSubmitted(true);
+        closeBubble();
+      } catch (error) {
+        console.error("Error al crear el grupo:", error);
+        setConfirmationMessage("Hubo un error al crear el grupo.");
+        setMessageType("error");
+        setFormSubmitted(true);
+      }
+    };
+
   const handleInvestClick = async () => {
-    if (loading || !usuario?.startup) return;
+    if (loading) return;
     setLoading(true);
 
     try {
@@ -137,11 +165,11 @@ export function BentoGridInicio({username}) {
   return (
     <div className="contenedor">
       <h1 className="hero">
-        Hola {usuario?.nombre}, bienvenido de nuevo
+        Hola {rol === "inversor" ? usuario?.nombre : usuario.usuario.username  }, bienvenido de nuevo
       </h1>
       <Placeholder />
       <button id="pequeño1" className="apartado" onClick={() => setActiveBubble("crear-inversion")}><IconPlus></IconPlus></button>
-      <button id="pequeño2" className="apartado"></button>
+      <button id="pequeño2" className="apartado" onClick={() => setActiveBubble("crear-grupo")}><IconUsersPlus></IconUsersPlus></button>
       
       {rol === "inversor" ? (
         // Contenido para inversores
@@ -159,9 +187,9 @@ export function BentoGridInicio({username}) {
             <p>Notificaciones</p>
           </div>
           <div className="apartado">
-            <p>Actividad Seguidos</p>
+            <MovimientosSeguidos />
           </div>
-          <StartupsRecomendadas />
+           <StartupsRecomendadas />
 
           <Bubble
         show={!!activeBubble}
@@ -216,7 +244,7 @@ export function BentoGridInicio({username}) {
 
         {activeBubble === "crear-inversion" && step === 2 && selectedStartup && (
           <div>
-            <p className="titulo">Haciendo oferta a {selectedStartup.usuario?.username || "Startup Desconocida"}</p>
+            <p>Haciendo oferta a {selectedStartup.usuario?.username || "Startup Desconocida"}</p>
             <div className="formulario-inversion">
               <div className="campo-inversion">
                 <label className="form-label" htmlFor="cantidad">Selecciona la cantidad de dinero:</label>
@@ -255,6 +283,80 @@ export function BentoGridInicio({username}) {
                 Hacer Oferta
               </button>
             </div>
+          </div>
+        )}
+
+        {activeBubble === "crear-grupo" && !formSubmitted && (
+          <div className="crear-grupo-container">
+            <h2>Crear Grupo</h2>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleCrearGrupo();
+              }}
+              className="crear-grupo-form"
+            >
+              <div className="form-group">
+                <input
+                  type="text"
+                  className="form-control"
+                  value={formData.nombre}
+                  onChange={(e) =>
+                    setFormData({ ...formData, nombre: e.target.value })
+                  }
+                  required
+                  placeholder="Nombre del grupo"
+                />
+              </div>
+              <div className="form-group">
+                <textarea
+                  id="descripcion"
+                  className="form-control"
+                  value={formData.descripcion}
+                  onChange={(e) =>
+                    setFormData({ ...formData, descripcion: e.target.value })
+                  }
+                  required
+                  placeholder="Descripción del grupo"
+                />
+              </div>
+              <div className="form-group">
+                <div className="tipo-opciones">
+                  <label>
+                    <input
+                      type="radio"
+                      name="tipo"
+                      value="publico"
+                      checked={formData.tipo === "publico"}
+                      onChange={(e) => setFormData({ ...formData, tipo: e.target.value })}
+                    />
+                    <p className="text-label">Público</p>
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="tipo"
+                      value="privado"
+                      checked={formData.tipo === "privado"}
+                      onChange={(e) => setFormData({ ...formData, tipo: e.target.value })}
+                    />
+                    <p className="text-label">Privado</p>
+                  </label>
+                </div>
+              </div>
+              <div className="contendor-botn-grupo">
+                <button
+                  type="button"
+                  className="botn-eventos"
+                  onClick={closeBubble}
+                >
+                  Cancelar
+                </button>
+                <button type="submit" className="botn-eventos enviar">
+                  Crear
+                </button>
+              </div>
+            </form>
           </div>
         )}
       </Bubble>

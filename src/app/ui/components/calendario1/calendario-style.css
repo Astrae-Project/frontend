@@ -49,6 +49,7 @@
   scroll-behavior: smooth;
   margin-bottom: 10px;
   margin-top: 5px;
+  width: 100%;
 }
 
 .botn-eventos {
@@ -86,16 +87,118 @@
 
 /* Estilo para el li seleccionado */
 li.selected {
-  background-color: #6e4ba32c;  /* Fondo verde claro cuando se selecciona */
-  border: 1px solid  #6e4ba3;   /* Borde verde para resaltar el evento seleccionado */
-  cursor: pointer;                          /* Indicar que es interactivo */
+  background-color: #161621;  /* Fondo un poco más oscuro al hacer hover sobre el seleccionado */
+  border: 1px solid #6e4ba3 ;
+  box-shadow: 0 0 3px #6e4ba3 ;
+  outline: none;  cursor: pointer;                          /* Indicar que es interactivo */
 }
 
 li.selected:hover {
-  background-color: #6e4ba32c;  /* Fondo un poco más oscuro al hacer hover sobre el seleccionado */
+  background-color: #14141f82;  /* Fondo un poco más oscuro al hacer hover sobre el seleccionado */
 }
 
 /* Estilo del li al pasar el mouse */
 li:hover {
-  background-color: rgba(0, 0, 0, 0.1);  /* Fondo oscuro al hacer hover sobre el li */
+  background-color: #14141f82;  /* Fondo oscuro al hacer hover sobre el li */
+}
+
+.crear-evento-form, .edit-event-form{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  gap: 15px;
+  flex-direction: column;
+}
+
+.form-group{
+  width: 100%;
+
+}
+
+.form-control{
+  width: 90%;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid #202029;
+  padding: 3px 20px 0 20px;
+  font-size: 14px;
+  font-variation-settings: "slnt" 0, "wght" 400;
+  color: #e9e9e9;
+  background-color: transparent;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+#descripcion{
+  height: 100px;
+  padding-top: 10px;
+  padding-bottom: 5px;
+}
+
+#descripcion::-webkit-scrollbar{
+  display: none;
+}
+
+.form-control::placeholder{
+  color: #5f5f64;
+}
+
+.form-control:focus-visible{
+  outline: none;
+  border-color: #6e4ba3;
+  box-shadow: 0 0 3px #6e4ba3;
+}
+
+.tipo-opciones {
+  display: flex;
+  gap: 30px; /* Espaciado entre las opciones */
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  margin-top: -10px;
+}
+
+.tipo-opciones label {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Espaciado entre el botón y el texto */
+  font-size: 15px;
+  color: #d9d9d9;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  font-variation-settings: "slnt" 0, "wght" 400;
+  top: 10px;
+  position: relative;
+}
+
+.tipo-opciones input[type="radio"] {
+  appearance: none; /* Oculta el radio button predeterminado */
+  width: 17px;
+  height: 17px;
+  border: 2px solid #666;
+  border-radius: 50%; /* Hace el botón redondo */
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #ffffff03;
+}
+
+.tipo-opciones input[type="radio"]:checked {
+  border-color: #202029; /* Color del borde cuando está seleccionado */
+  background-color: #6e4ba3; /* Fondo verde al seleccionarse */
+}
+
+.tipo-opciones input[type="radio"]:hover {
+  border-color: #6e4ba3; /* Color del borde al pasar el mouse */
+}
+
+.tipo-opciones label:hover {
+  color: #6e4ba3; /* Cambia el color del texto al pasar el mouse */
+}
+
+.text-label{
+  position: relative;
+  top: 2.5px;
 }

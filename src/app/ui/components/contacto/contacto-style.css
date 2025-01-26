@@ -1,0 +1,81 @@
+.contenido-vacio{
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+.añadir{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    font-size: 12px;
+    font-variation-settings: "slnt" 0, "wght" 400;
+    letter-spacing: 0.2px;
+    gap: 5px;
+}
+
+#añadir-contacto{
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+#añadir-contacto p{
+    margin-top: 2%;
+}
+
+/* Inputs y selectores */
+.select-contacto {
+   padding: 8px 8px 7px 8px;
+   border: none;
+   border: 1px solid #858585;  /* Solo una raya debajo */
+   border-radius: 10px;
+   background: transparent;
+   color: #999; /* Color gris por defecto */
+   font-size: 14px;
+   text-align: center;
+   transition: background 0.3s ease, box-shadow 0.3s ease;
+   margin-top: 15px;
+   margin-bottom: 20px;
+}
+  
+.select-contacto:focus {
+   background: transparent;
+   border-color: #6e4ba3;
+   box-shadow: 0 0 5px #6e4ba3;
+   outline: none;
+   color: #fff;  /* Color blanco cuando el usuario empieza a escribir */
+}
+
+.select-contacto::placeholder {
+    color: #c5c5c5;  /* Color blanco cuando el usuario empieza a escribir */
+}
+
+.contenedor-contactos{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.boton-redes{
+    background-color: #14141f;
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.boton-redes:hover{
+    background-color: #14141f82
+}
+
+.boton-redes img{
+    width: 20px;
+    height: 20px;
+}
