@@ -1,0 +1,69 @@
+.notificaciones-container {
+    width: 90%;
+    padding: 20px;
+    background-color: transparent;
+    text-align: center;
+    z-index: 1000;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .notificacion-actual p {
+    margin: 0;
+  }
+
+  .navegacion-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .navegacion-puntos {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .punto {
+    width: 5.5px;
+    height: 5.5px;
+    background-color: #7d7d7d;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  .punto.activo {
+    background-color: #ddd;
+  }
+  
+  .navegacion-botones {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-direction: column;
+  }
+  
+  .boton-navegar {
+    background-color: #444;
+    color: white;
+    border: none;
+    padding: 5px 5px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .boton-navegar:hover {
+    background-color: #666;
+  }
+
+  #notificaciones{
+    border: none;
+    overflow-y: hidden;
+  }
+  

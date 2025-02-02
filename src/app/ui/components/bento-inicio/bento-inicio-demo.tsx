@@ -11,6 +11,8 @@ import GraficaStartup from "../grafica-startup/grafica-startup";
 import Bubble from "../bubble/bubble";
 import { IconPlus, IconUsersPlus } from "@tabler/icons-react";
 import MovimientosSeguidos from "../movimientos-recientes/movimientos-recientes-seguidos";
+import Notificaciones from "../notificaciones/notificaciones";
+import LoadingScreen from "../loading-screen/loading-screen";
 
 export function BentoGridInicio({username}) {
   const [loading, setLoading] = useState(false); // Estado de carga
@@ -39,8 +41,6 @@ export function BentoGridInicio({username}) {
       const response = await customAxios.get(`http://localhost:5000/api/data/usuario`, {
         withCredentials: true, // Enviar cookies con la solicitud
       });
-
-      console.log(response.data); // Añadir para depuración
 
       // Verificamos si es un inversor o una startup
       if (response.data.inversor) {
@@ -82,7 +82,6 @@ export function BentoGridInicio({username}) {
           formData,
           { withCredentials: true }
         );
-        console.log("Grupo creado:", response.data);
         setConfirmationMessage("Grupo creado con éxito!");
         setMessageType("success");
         setFormSubmitted(true);
@@ -159,7 +158,7 @@ export function BentoGridInicio({username}) {
   };
 
   if (rol === null) {
-    return <div>Loading...</div>; // Puedes mostrar un mensaje de carga mientras esperas la respuesta
+    return <LoadingScreen></LoadingScreen> // Puedes mostrar un mensaje de carga mientras esperas la respuesta
   }
 
   return (
@@ -184,7 +183,7 @@ export function BentoGridInicio({username}) {
             <EventosyCalendario />
           </div>
           <div className="apartado">
-            <p>Notificaciones</p>
+            <Notificaciones></Notificaciones>
           </div>
           <div className="apartado">
             <MovimientosSeguidos />

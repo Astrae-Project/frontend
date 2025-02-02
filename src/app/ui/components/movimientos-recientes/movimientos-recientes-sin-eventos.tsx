@@ -89,8 +89,8 @@ const MovimientosRecientesSinEventos = ({ username }) => {
               return (
                 <li key={index} className="movimiento-item">
                   <button className="relleno-btn" >
-                    <div className="borde-icono">
-                      <div className="movimiento-icono" id="icono-morado">
+                    <div className="borde-icono3">
+                      <div className="movimiento-icono3">
                         {iconoMovimiento}
                       </div>
                     </div>

@@ -14,6 +14,7 @@ import TablaPortfolioOtro from "@/app/ui/components/tabla-portfolio/tabla-portfo
 import GraficaStartupOtro from "@/app/ui/components/grafica-startup/grafica-startup-otro";
 import DatosStartupOtro from "@/app/ui/components/datos-startup/datos-startup-otro";
 import customAxios from "@/service/api.mjs";
+import LoadingScreen from "@/app/ui/components/loading-screen/loading-screen";
 
 
 export function BentoGridPerfilOtro({ username }) {
@@ -26,9 +27,7 @@ export function BentoGridPerfilOtro({ username }) {
       const response = await customAxios.get(`http://localhost:5000/api/data/usuario/${username}`, {
         withCredentials: true, // Enviar cookies con la solicitud
       });
-  
-      console.log(response.data); // Añadir para depuración
-      
+        
       // Verificamos si es un inversor o una startup
       if (response.data.inversor) {
         setRol("inversor");
@@ -65,7 +64,7 @@ export function BentoGridPerfilOtro({ username }) {
     <div ref={containerRef} className={`contenedor4 ${isSmall ? "small" : ""}`}>
       <div className="grid">
         {rol === null ? (
-          <div>Loading...</div> // Puedes mostrar un mensaje de carga mientras esperas la respuesta
+          <LoadingScreen></LoadingScreen> // Puedes mostrar un mensaje de carga mientras esperas la respuesta
         ) : rol === "inversor" ? (
           <>
             <InfoOtro username={username} />

@@ -51,7 +51,6 @@ export function StartupsRecomendadas({ username }) {
 
   // Manejar la apertura de la burbuja
   const handleShowBubble = (startup) => {
-    console.log("Startup seleccionada:", startup); // Debugging para ver la estructura
     setBubbleData(startup);
     setActiveBubble(true);
   };

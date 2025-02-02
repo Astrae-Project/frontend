@@ -59,8 +59,6 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
     if (eventoSeleccionado) {
       // Si el evento ya está seleccionado, deseleccionarlo. Si no, seleccionarlo.
       setSelectedEvent((prevSelected) => (prevSelected?.id === eventoId ? null : eventoSeleccionado));
-    } else {
-      console.log('Evento no encontrado.');
     }
   };
   
@@ -75,7 +73,6 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
         "http://localhost:5000/api/evento/todos",
         { withCredentials: true }
       );
-      console.log('Eventos obtenidos:', response.data); // Verifica los datos
       if (Array.isArray(response.data)) {
         setEventosState(response.data);
       } else {
@@ -127,10 +124,8 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
 
   // Crear evento
   const handleCrearEvento = async (eventData) => {
-    console.log(eventData); // Verifica los datos que se están enviando
     try {
       const response = await customAxios.post("http://localhost:5000/api/evento/crear", eventData);
-      console.log(response.data);
       setConfirmationMessage("¡Evento creado con éxito!"); // Mensaje de éxito
       setMessageType("success"); // Tipo de mensaje de éxito
       setFormSubmitted(true); // Cambiar el estado para ocultar el formulario
@@ -144,7 +139,6 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
   
   // Función para eliminar el evento
   const handleEliminarEvento = async () => {
-    console.log('Evento seleccionado:', selectedEvent); // Verificar el evento seleccionado
     if (!selectedEvent || !selectedEvent.id) {
       setConfirmationMessage("Por favor, selecciona un evento para eliminar.");
       setMessageType("error");
@@ -155,7 +149,6 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
     try {
       const eventoId = selectedEvent.id;
       const response = await customAxios.delete(`http://localhost:5000/api/evento/eliminar/${eventoId}`);
-      console.log(response.data);
   
       // Actualizar el estado para eliminar el evento del listado
       setConfirmationMessage("Evento eliminado con éxito");
@@ -181,7 +174,6 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
     try {
       const eventoId = selectedEvent.id;
       const response = await customAxios.delete(`http://localhost:5000/api/evento/salir/${eventoId}`);
-      console.log(response.data);
   
       setConfirmationMessage("Te has desinscrito del evento con éxito");
       setMessageType("success");
@@ -205,7 +197,6 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
     try {
       const eventoId = selectedEvent.id;
       const response = await customAxios.put(`http://localhost:5000/api/evento/datos/${eventoId}`, eventData);
-      console.log(response.data);
 
       setConfirmationMessage("¡Evento editado con éxito!"); // Mensaje de éxito
       setMessageType("success"); // Tipo de mensaje de éxito
@@ -228,7 +219,6 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
     try {
       const eventoId = selectedEvent.id;
       const response = await customAxios.get(`http://localhost:5000/api/evento/data/${eventoId}`);
-      console.log(response.data);
       setFormSubmitted(true); // Cambiar el estado para ocultar el formulario
     } catch (error) {
       setConfirmationMessage("Hubo un error al recuperar el evento."); // Mensaje de error

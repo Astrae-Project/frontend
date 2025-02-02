@@ -14,6 +14,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import "./sidebar-demo-style.css";
 import customAxios from "@/service/api.mjs";
+import LoadingScreen from "../loading-screen/loading-screen";
 
 export function SidebarDemo() {
   const [open, setOpen] = useState(false);
@@ -68,7 +69,7 @@ export function SidebarDemo() {
 
   // Renderizar estado de carga si el rol aún no se ha obtenido
   if (rol === null) {
-    return <div>Loading...</div>;
+    return <LoadingScreen></LoadingScreen>
   }
 
   return (

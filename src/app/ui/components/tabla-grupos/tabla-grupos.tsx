@@ -39,7 +39,6 @@ const TablaGrupos = () => {
         formData,
         { withCredentials: true }
       );
-      console.log("Grupo creado:", response.data);
       setConfirmationMessage("Grupo creado con éxito!");
       setMessageType("success");
       setFormSubmitted(true);
@@ -62,7 +61,6 @@ const TablaGrupos = () => {
         {},
         { withCredentials: true }
       );
-      console.log("Te has unido al grupo:", response.data);
       setConfirmationMessage("Te has unido al grupo con éxito!");
       setMessageType("success");
       setFormSubmitted(true);

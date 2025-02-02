@@ -72,7 +72,8 @@
 }
 
 .boton-redes:hover{
-    background-color: #14141f82
+    background-color: #14141f82;
+    transition: background-color 0.3s ease;
 }
 
 .boton-redes img{

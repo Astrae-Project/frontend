@@ -203,7 +203,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
       } catch (error) {
         console.error("Error al enviar la reseña:", error);
         if (error.response) {
-          console.log("Detalles de error de la respuesta:", error.response);
+          console.error("Error response:", error.response.data);
         }
         setConfirmationMessage(
           error.response?.data?.message || "Hubo un problema al enviar la reseña."

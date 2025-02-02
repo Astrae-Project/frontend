@@ -11,16 +11,12 @@ customAxios.interceptors.response.use(
     async (error) => {
       const originalRequest = error.config;
   
-      console.log('Interceptando error:', error);
-  
       if (error.response?.status === 403 || error.response?.status === 401 || error.response?.status === 402 || error.response?.status === 500 && !originalRequest._retry) {
-        console.log('Token expirado, intentando refrescar...');
         originalRequest._retry = true;
   
         try {
           await generateRefreshToken(); // Refrescar el token
   
-          console.log('Token refrescado, reintentando la solicitud...');
           return customAxios(originalRequest); // Reintentar la solicitud original
         } catch (refreshError) {
           console.error('Error al refrescar el token:', refreshError);
@@ -35,15 +31,9 @@ customAxios.interceptors.response.use(
   export const generateRefreshToken = async () => {
     try {
       const response = await customAxios.post("http://localhost:5000/api/auth/refrescar-token");
-  
-      // Verifica si la respuesta tiene un nuevo access token
-      console.log('Respuesta del refresh token:', response);
-    
-  
+   
       if (response.data.accessToken) {
-        
-        console.log('Nuevo access token recibido');  
-      } else {
+        } else {
         console.error('No se recibió un nuevo access token');
       }
     } catch (error) {

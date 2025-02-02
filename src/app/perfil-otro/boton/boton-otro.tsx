@@ -48,7 +48,6 @@ export function BotonesOtro({ username }) {
   const fetchUsuarioAutenticado = async () => {
     try {
       const response = await customAxios.get(`http://localhost:5000/api/data/usuario`, { withCredentials: true });
-      console.log("Datos del usuario autenticado:", response.data);  // Ver los datos de la respuesta
       if (response.data) {
         const { inversor, startup } = response.data;
         const usuarioData = inversor || startup;
@@ -67,7 +66,6 @@ export function BotonesOtro({ username }) {
 
     try {
       const response = await customAxios.get(`http://localhost:5000/api/data/usuario/${username}`, { withCredentials: true });
-      console.log("Datos del usuario observado:", response.data);  // Ver los datos de la respuesta
       if (response.data) {
         setUsuarioObservado(response.data);
       }
@@ -88,7 +86,6 @@ export function BotonesOtro({ username }) {
       if (usuarioData && usuarioData.usuario) {
         const seguidores = usuarioData.usuario.seguidores || [];
         const isUserFollowing = seguidores.some((seguidor) => seguidor.id_seguidor === idUsuarioAutenticado);
-        console.log("Comprobando seguidores:", seguidores, "Is Following:", isUserFollowing);  // Verificación de seguidores
         setIsFollowing(isUserFollowing);
       }
     }
@@ -109,7 +106,6 @@ export function BotonesOtro({ username }) {
 
       // Si ya está siguiendo, eliminar el seguimiento (hacer DELETE)
       if (isFollowing) {
-        console.log("Eliminando seguimiento a:", idSeGuido);
         const response = await customAxios.delete(
           `http://localhost:5000/api/follow/seguir`,
           { data: { id_seguido: idSeGuido }, withCredentials: true }
@@ -121,8 +117,6 @@ export function BotonesOtro({ username }) {
           throw new Error("No se pudo eliminar el seguimiento.");
         }
       } else {
-        // Si no está siguiendo, agregar el seguimiento (hacer POST)
-        console.log("Enviando solicitud de seguimiento a:", idSeGuido);
         const response = await customAxios.post(
           `http://localhost:5000/api/follow/seguir`,
           { id_seguido: idSeGuido },

@@ -34,7 +34,6 @@ const InformacionContacto = ({ contacto, fetchContacto }) => {
         formData,
         { withCredentials: true }
       );
-      console.log(response.data);
       setConfirmationMessage('¡Datos actualizados con éxito!');
       setMessageType('success');
       setFormSubmitted(true);

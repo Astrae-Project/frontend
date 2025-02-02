@@ -192,6 +192,11 @@ body {
   align-items: center;
 }
 
+.apartado:hover{
+  background-color: #181824;
+  transition: background-color 0.3s ease;
+}
+
 #pequeño1 svg{
   width: 17px;
   height: 17px;
@@ -210,7 +215,12 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   text-align: center;
   justify-content: center;
-  background-color: #151522;
+  background-color: #14141f;
+}
+
+.botones:hover{
+  background-color: #181824;
+  transition: background-color 0.3s ease;
 }
 
 .bento .apartado:nth-child(1) {

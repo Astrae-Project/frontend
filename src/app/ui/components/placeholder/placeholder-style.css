@@ -8,16 +8,16 @@
     height: 40px;
     display: flex;
     align-items: center;
-    font-size: 13px;
+    font-size: 12.5px;
     font-variation-settings: "slnt" 0, "wght" 400;
-    z-index: 10;
+    z-index: 999;
     right: 118px;
     top: 30px;
+    border: 1px solid #151522;
 }
 
 .placeholder{
     width: 83%;
-    margin-top: -0.3%;
     margin-left: 7%;
     font-size: inherit;
     font-variation-settings: inherit;
@@ -39,3 +39,62 @@
     width: 20px;
     height: 20px;
 }
+
+.lista-usuarios {
+    position: absolute;
+    top: 100%; /* Coloca la lista justo debajo del input */
+    left: 0;
+    right: 0;
+    height: auto; /* Altura máxima de la lista */
+    max-height: 220px;
+    overflow-y: auto; /* Permite hacer scroll si hay muchos elementos */
+    background-color: #10101A;
+    border: 1px solid #151522;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 99999999; /* Asegura que la lista se muestre por encima de otros elementos */
+    margin-top: 10px;
+    padding: 0px 10px 0px 10px;
+  }
+  
+  /* Estilo de los elementos de la lista */
+  .user-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Hover en los elementos de la lista */
+  .user-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  /* Estilo del avatar de los usuarios */
+  .user-icon {
+    margin-right: 12px;
+  }
+  
+  .avatar-imagen {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  /* Detalles del usuario */
+  .user-details {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .user-name {
+    font-weight: bold;
+  }
+  
+  .user-email, .user-role, .user-extra {
+    font-size: 14px;
+    color: #555;
+  }
+  
