@@ -374,10 +374,10 @@ export function BentoGridInicio({username}) {
             <EventosyCalendario />
           </div>
           <div className="apartado">
-            <p>Notificaciones</p>
+            <Notificaciones />
           </div>
           <div className="apartado">
-            <p>Actividad Seguidos</p>
+            <MovimientosSeguidos />
           </div>
         </div>
       ) : (

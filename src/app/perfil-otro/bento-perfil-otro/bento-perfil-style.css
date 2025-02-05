@@ -447,7 +447,6 @@ li {
   align-items: center; /* Centra el contenido dentro del botón */
   justify-content: center; /* Centra el contenido dentro del botón */
   background-color: transparent;
-  cursor: default;
 }
 
 .btn-fecha{

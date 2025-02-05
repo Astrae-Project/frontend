@@ -134,19 +134,21 @@ const TablaGrupos = () => {
           <ul className="grupos-lista">
             {grupos.map((grupo, index) => (
               <li key={index} className="grupo-item">
-                <div className="grupo-icono">
-                  <img
-                    src={grupo.grupo.foto_grupo || "/default-avatar.png"}
-                    alt="Avatar del grupo"
-                    className="grupo-avatar"
-                  />
-                </div>
-                <div className="grupo-info">
-                  <p id="nombre-grupo">{grupo.grupo.nombre}</p>
-                  {grupo.grupo.tipo === "privado" && (
-                    <IconLockFilled className="icono-candado" />
-                  )}
-                </div>
+                <button className="relleno-btn">
+                  <div className="grupo-icono">
+                    <img
+                      src={grupo.grupo.foto_grupo || "/default-avatar.png"}
+                      alt="Avatar del grupo"
+                      className="grupo-avatar"
+                    />
+                  </div>
+                  <div className="grupo-info">
+                    <p id="nombre-grupo">{grupo.grupo.nombre}</p>
+                    {grupo.grupo.tipo === "privado" && (
+                      <IconLockFilled className="icono-candado" />
+                    )}
+                  </div>
+                </button>
               </li>
             ))}
           </ul>

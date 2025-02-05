@@ -220,10 +220,10 @@
 }
 
 #borde-grande {
-  width: 35px;
-  height: 35px;
+  width: 40px;
+  height: 40px;
   border: 1px solid #1C1C29;
-  border-radius: 9px;
+  border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -307,6 +307,14 @@
   margin-top: 3%;
 }
 
+.linea-morada{
+  height: 60%;
+  width: 1px;
+  background-color: #8154c4;
+  margin-top: 1.5%;
+  border-radius: 1px;
+}
+
 .borde-icono2{
   width: 30px;
   height: 31px;
@@ -332,9 +340,9 @@
 
 .movimiento-icono3{
   width: 95%;
-  height: 94.5%;
+  height: 95%;
   background-color: #1C1C29;
-  border-radius: 7px;
+  border-radius: 9px;
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.15); /* Sombra ligera */
   justify-content: center;
   align-items: center;
@@ -360,8 +368,8 @@
 }
 
 .iconos1{
-  width: 18px;
-  height: 17px;
+  width: 19px;
+  height: 19px;
   color: #e9e9e9;
 }
 
@@ -516,6 +524,7 @@ li {
   margin-top: 14.3px;  
   border-radius: 10px;
   flex-shrink: 0;
+  transition: background-color 0.2s ease ;
 }
 
 .relleno-btn{
@@ -525,7 +534,6 @@ li {
   align-items: center; /* Centra el contenido dentro del botón */
   justify-content: center; /* Centra el contenido dentro del botón */
   background-color: transparent;
-  cursor: default;
 }
 
 .btn-fecha{
@@ -554,12 +562,24 @@ li {
   cursor: pointer;
 }
 
-.movimiento-item{
+.movimiento-item-sin-eventos{
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  width: 100%;
+  height: 40px;
+  gap: 10px;
+  margin-top: 14.3px;  
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.movimiento-item, .movimiento-item-sin-eventos{
   background-color: transparent;
   padding: 0;
 }
 
-.movimiento-item:hover{
+.movimiento-item:hover, .movimiento-item-sin-eventos:hover{
   background-color: transparent;
 }
 
@@ -621,9 +641,8 @@ li {
 .movimiento-detalles3{
   position: relative;
   font-size: 11px;
-  margin-left: 13px;
+  margin-left: 10px;
   width: 100%;
-  top: 15%;
   gap: 3px;
   font-variation-settings: "slnt" 0, "wght" 500;
   white-space: nowrap;
@@ -648,6 +667,13 @@ li {
 .movimiento-fecha1{
   position: absolute;
   bottom: 7%;
+  color: #888888;
+  font-size: 7px;
+}
+
+.movimiento-fecha2{
+  position: absolute;
+  bottom: -1%;
   color: #888888;
   font-size: 7px;
 }

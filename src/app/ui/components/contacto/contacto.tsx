@@ -158,7 +158,7 @@ const InformacionContacto = ({ contacto, fetchContacto }) => {
               name={selectedContact}
               value={formData[selectedContact] || ''} // Siempre controlado
               onChange={handleChange}
-              placeholder={`Nuevo ${selectedContact}`}
+              placeholder={`Escribe aqui...`}
               className='select-contacto'
             />
             <div className="contendor-botn-evento">

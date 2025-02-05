@@ -50,6 +50,7 @@
 
 .select-contacto::placeholder {
     color: #c5c5c5;  /* Color blanco cuando el usuario empieza a escribir */
+    font-size: 13px;
 }
 
 .contenedor-contactos{

@@ -84,7 +84,6 @@ const MovimientosSeguidos = ({ username }) => {
 
               return (
                 <li key={index} className="movimiento-item">
-                  <button className="relleno-btn">
                     <div className="portfolio-icono">
                       <div className="avatar-imagen">
                         {/* Acceso al avatar según el autor */}
@@ -197,7 +196,6 @@ const MovimientosSeguidos = ({ username }) => {
                         </>
                       )}
                     </div>
-                  </button>
                 </li>
               );
             })}

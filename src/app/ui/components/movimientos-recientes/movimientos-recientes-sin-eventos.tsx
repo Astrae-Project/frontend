@@ -87,78 +87,52 @@ const MovimientosRecientesSinEventos = ({ username }) => {
               }
 
               return (
-                <li key={index} className="movimiento-item">
-                  <button className="relleno-btn" >
-                    <div className="borde-icono3">
-                      <div className="movimiento-icono3">
-                        {iconoMovimiento}
-                      </div>
-                    </div>
+                <li key={index} className="movimiento-item-sin-eventos">
+                    <div className= 'linea-morada'></div>
                     <div className="movimiento-detalles3">
                       {movimiento.tipo_movimiento === "inversion" && (
                         <>
-                          <span
-                            className="btn-nombre1"
-                            role="button"
-                            onClick={() =>
-                              movimiento.startup?.usuario &&
-                              handleBubbleOpen("perfil-startup", movimiento.startup)
-                            }
-                          >
-                            <p>{movimiento.startup?.usuario?.username || "Sin nombre"}</p>
-                          </span>
                           <p className="movimiento-monto">
                             Inversión de {formatInversion(movimiento.monto_invertido)}
                           </p>
                           <p className="movimiento-porcentaje">
                             por el {movimiento.porcentaje_adquirido}%
                           </p>
-                          <p className="movimiento-fecha1">{fechaFormateada}</p>
-                        </>
-                      )}
-                      {movimiento.tipo_movimiento === "oferta" && (
-                        <>
                           <span
-                            className="btn-nombre1"
+                            className="movimiento-monto"
                             role="button"
                             onClick={() =>
                               movimiento.startup?.usuario &&
                               handleBubbleOpen("perfil-startup", movimiento.startup)
                             }
                           >
-                            <p>{movimiento.startup?.usuario?.username || "Sin nombre"}</p>
+                            <p>de {movimiento.startup?.usuario?.username || "Sin nombre"}</p>
                           </span>
+                          <p className="movimiento-fecha2">{fechaFormateada}</p>
+                        </>
+                      )}
+                      {movimiento.tipo_movimiento === "oferta" && (
+                        <>
                           <p className="movimiento-monto">
                             Oferta de {formatInversion(movimiento.monto_ofrecido)}
                           </p>
                           <p className="movimiento-porcentaje">
                             por el {movimiento.porcentaje_ofrecido}%
                           </p>
-                          <p className="movimiento-fecha">{fechaFormateada}</p>
-                        </>
-                      )}
-                      {movimiento.tipo_movimiento === "evento" && (
-                        <>
                           <span
-                            className="btn-nombre1"
+                            className="movimiento-monto"
                             role="button"
                             onClick={() =>
-                              movimiento.creador &&
-                              handleBubbleOpen("perfil", movimiento.creador)}
+                              movimiento.startup?.usuario &&
+                              handleBubbleOpen("perfil-startup", movimiento.startup)
+                            }
                           >
-                            <p>{movimiento.creador?.username || "Sin nombre"}</p>
+                            <p>de {movimiento.startup?.usuario?.username || "Sin nombre"}</p>
                           </span>
-                          <p className="movimiento-monto">{movimiento.titulo}</p>
-                          <span
-                            className="btn-fecha"
-                            onClick={() => handleBubbleOpen("eventos", movimiento.fecha)}
-                          >
-                            <p>{fechaFormateada}</p>
-                          </span>
+                          <p className="movimiento-fecha2">{fechaFormateada}</p>
                         </>
                       )}
                     </div>
-                  </button>
                 </li>
               );
             })}

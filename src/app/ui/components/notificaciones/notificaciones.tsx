@@ -6,7 +6,6 @@ import PerfilOtro from "@/app/perfil-otro/page";
 import { IconStar, IconMoneybag, IconCalendarEvent} from "@tabler/icons-react";
 import { ChevronUp , ChevronDown } from "lucide-react";
 import "./notificaciones-style.css";
-import { IconLeft, IconRight } from "react-day-picker";
 
 const Notificaciones = () => {
   const [notificaciones, setNotificaciones] = useState([]);
@@ -71,14 +70,14 @@ const Notificaciones = () => {
   return (
     <div className="seccion" id="notificaciones">
       <div className="notificaciones-container">
-        <li className="movimiento-item">
+        <li className="movimiento-item-notificaciones">
           <div className="borde-icono3" id="borde-grande">
             <div className="movimiento-icono3">{iconoNotificacion}</div>
           </div>
 
-          <div className="movimiento-detalles1">
+          <div className="notificacion-detalles">
             <p>{notificacionActual.contenido}</p>
-            <p className="movimiento-fecha1">{fechaFormateada}</p>
+            <p className="movimiento-fecha2">{fechaFormateada}</p>
           </div>
         </li>
         <div className="navegacion-container">

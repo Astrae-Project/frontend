@@ -94,7 +94,6 @@ const MovimientosRecientes1 = ({ username }) => {
 
               return (
                 <li key={index} className="movimiento-item">
-                  <button className="relleno-btn" >
                     <div className="borde-icono">
                       <div className="movimiento-icono" id="icono-morado">
                         {iconoMovimiento}
@@ -164,7 +163,6 @@ const MovimientosRecientes1 = ({ username }) => {
                         </>
                       )}
                     </div>
-                  </button>
                 </li>
               );
             })}

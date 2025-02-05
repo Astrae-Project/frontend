@@ -31,6 +31,7 @@
 /* Estilo cuando no se está siguiendo */
 .custom-button.not-following {
   background-color: #14141f; /* Azul oscuro */
+  transition: background-color 0.2s ease; /* Efecto de transición al pasar el mouse */
 }
 
 .custom-button.not-following:hover {
@@ -40,6 +41,7 @@
 /* Estilo cuando se está siguiendo */
 .custom-button.following {
   background-color: #414153; /* Claro pero con contraste respecto a "not-following" */
+  transition: background-color 0.2s ease; /* Efecto de transición al pasar el mouse */
 }
 
 .custom-button.following:hover {
