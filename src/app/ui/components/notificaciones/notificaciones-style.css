@@ -1,7 +1,7 @@
 .notificaciones-container {
     width: 90%;
     padding-right: 15px;
-    padding-left: 15.5px;
+    padding-left: 1px;
     padding-bottom: 14px;
     background-color: transparent;
     text-align: center;
@@ -23,13 +23,13 @@
   }
   
   .navegacion-puntos {
-    margin-top: 10px;
+    margin-top: 7.5px;
     display: flex;
     justify-content: center;
     gap: 7px;
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px;
+    margin-bottom: 7.5px;
   }
   
   .punto {
@@ -80,7 +80,10 @@
     gap: 10px;
     flex-shrink: 0;
     background-color: transparent;
-    padding: 0;  
+    padding: 0;
+    position: relative;
+    bottom: 4px;
+    cursor: pointer;
   }
 
   .movimiento-item-notificaciones:hover{
@@ -98,7 +101,24 @@
     overflow: hidden;
     text-overflow: ellipsis;
     display: flex;
-    height: 100%;
+    height: 150%;
     align-items: center;
+    justify-content: space-between;
     z-index: 10;
   }
+
+  .contenido-notificacion {
+    white-space: normal; /* Permite el salto de línea */
+    overflow-wrap: break-word; /* Rompe palabras largas si es necesario */
+    word-wrap: break-word;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    display: block; /* Evita comportamiento de flexbox */
+    text-align: left; /* Asegura alineación a la izquierda */
+    position: relative;
+    top: 3%;
+    font-size: 12px;
+  }
+  

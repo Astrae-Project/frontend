@@ -148,7 +148,7 @@ export function Botones() {
       >
         {activeBubble === "crear-inversion" && step === 1 && !formSubmitted && (
           <div>
-            <p>Selecciona un evento para modificar</p>
+            <p>Selecciona una startup para invertir</p>
             <div className="contenedor-eventos">
               <ul>
                 {startups.length > 0 ? (
@@ -182,7 +182,9 @@ export function Botones() {
               </button>
               <button
                 className="botn-eventos enviar"
-                onClick={goToInvestForm}
+                onClick={
+                  
+                }
                 disabled={!selectedStartup}
               >
                 Seleccionar
