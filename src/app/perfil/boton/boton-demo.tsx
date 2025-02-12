@@ -183,7 +183,9 @@ export function Botones() {
               <button
                 className="botn-eventos enviar"
                 onClick={
-                  
+                  selectedStartup
+                    ? goToInvestForm
+                    : () => alert("Por favor, selecciona una startup.")
                 }
                 disabled={!selectedStartup}
               >
