@@ -302,15 +302,19 @@
 }
 
 #movimientos-sin-eventos{
-  padding-left: 3.5%;
-  padding-right: 3.5%;
+  padding-left: 4%;
+  padding-right: 4%;
   margin-top: 3%;
 }
 
+#movimientos-sin-eventos:last-child{
+  margin-bottom: 3%;
+}
+
 .linea-morada{
-  height: 60%;
+  height: 75%;
   width: 1px;
-  background-color: #8154c4;
+  background-color: #6e4ba3;
   margin-top: 1.5%;
   border-radius: 1px;
 }
@@ -568,7 +572,7 @@ li {
   padding: 8px 10px;
   width: 100%;
   height: 40px;
-  gap: 10px;
+  gap: 5px;
   margin-top: 14.3px;  
   border-radius: 10px;
   flex-shrink: 0;
@@ -680,7 +684,7 @@ li {
 
 .movimiento-fecha3{
   position: absolute;
-  bottom: -3%;
+  bottom: 0%;
   color: #888888;
   font-size: 8px;
 }

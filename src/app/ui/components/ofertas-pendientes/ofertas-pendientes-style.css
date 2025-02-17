@@ -26,9 +26,9 @@
     background-color: transparent; /* Color al pasar el cursor */
 }
 
-.contiene1 span:last-child{
+.contiene1 > *:last-child {
     margin-right: 0;
-  }
+}
 
 .apartado-raro{
     overflow: hidden; /* Evita que el contenido desborde */

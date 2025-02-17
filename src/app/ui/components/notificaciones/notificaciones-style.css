@@ -90,6 +90,11 @@
     background-color: transparent;
   }
 
+  .sin-bubble {
+    cursor: default; /* Cursor normal cuando no tiene Bubble */
+    pointer-events: none; /* Opcional: evita que sea clickeable */
+  }
+
   .notificacion-detalles{
     position: relative;
     font-size: 13px;
@@ -101,7 +106,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     display: flex;
-    height: 150%;
+    height: 140%;
     align-items: center;
     justify-content: space-between;
     z-index: 10;

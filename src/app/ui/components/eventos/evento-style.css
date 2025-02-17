@@ -21,7 +21,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     display: flex;
-    height: 70%;
+    height: 110%;
     width: 100%;
     align-items: center;
     z-index: 10;
@@ -31,7 +31,7 @@
   .evento-creador{
     position: absolute;
     top: 0px;
-    font-size: 6px;
+    font-size: 8px;
     color: #a390bf;
     z-index: 99999999;
     cursor: pointer;
@@ -42,15 +42,15 @@
     overflow: hidden;
     text-overflow: ellipsis;
     position: relative;
-    margin-top: 5px;
-    font-size: 11px;
+    margin-top: 7px;
+    font-size: 12px;
   }
 
   .evento-fecha{
     position: absolute;
-    bottom: -9%;
+    bottom: -8%;
     color: #888888;
-    font-size: 6px;
+    font-size: 7px;
   }
 
   .evento-detalles1{

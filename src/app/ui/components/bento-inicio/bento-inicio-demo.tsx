@@ -13,6 +13,7 @@ import { IconPlus, IconUsersPlus } from "@tabler/icons-react";
 import MovimientosSeguidos from "../movimientos-recientes/movimientos-recientes-seguidos";
 import Notificaciones from "../notificaciones/notificaciones";
 import LoadingScreen from "../loading-screen/loading-screen";
+import { OfertasPendientes } from "../ofertas-pendientes/ofertas-pendientes";
 
 export function BentoGridInicio({username}) {
   const [loading, setLoading] = useState(false); // Estado de carga
@@ -379,6 +380,7 @@ export function BentoGridInicio({username}) {
           <div className="apartado">
             <MovimientosSeguidos />
           </div>
+          <OfertasPendientes />
         </div>
       ) : (
         <div>No se encontró un rol válido</div>

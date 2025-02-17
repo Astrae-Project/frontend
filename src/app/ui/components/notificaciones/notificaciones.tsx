@@ -14,14 +14,6 @@ const Notificaciones = () => {
   const [activeBubble, setActiveBubble] = useState(null);
   // bubbleData contendrá toda la notificación seleccionada
   const [bubbleData, setBubbleData] = useState(null);
-  // Variables para manejar el formulario de oferta (si es necesario)
-  const [step, setStep] = useState(1);
-  const [selectedAmount, setSelectedAmount] = useState(0);
-  const [selectedPercentage, setSelectedPercentage] = useState(0);
-  const [formSubmitted, setFormSubmitted] = useState(false);
-  const [confirmationMessage, setConfirmationMessage] = useState("");
-  const [messageType, setMessageType] = useState("success");
-  const [selectedStartup, setSelectedStartup] = useState(null);
 
   useEffect(() => {
     const fetchNotificaciones = async () => {
@@ -66,7 +58,7 @@ const Notificaciones = () => {
 
   if (loading) return <LoadingScreen />;
   if (notificaciones.length === 0)
-    return <div className="notificaciones-container">No tienes notificaciones.</div>;
+    return <div className="notificaciones-container">No tienes notificaciones</div>;
 
   const notificacionActual = notificaciones[actualIndex];
 
@@ -79,27 +71,12 @@ const Notificaciones = () => {
     iconoNotificacion = <IconCalendarEvent className="iconos1" />;
   }
 
-  // 6. Ir a portfolio (redirección)
   const handleIrPortfolio = () => {
     window.location.href = "/portfolio";
   };
 
-  // 7. Ver evento (redirección usando eventId en bubbleData)
-  const handleVerEvento = () => {
-    if (bubbleData && bubbleData.eventId) {
-      window.location.href = `/evento/${bubbleData.eventId}`;
-    } else {
-      console.error("No se encontró eventId en la notificación.");
-    }
-  };
-
-  // 8. Ver grupo (redirección usando groupId en bubbleData)
   const handleVerGrupo = () => {
-    if (bubbleData) {
       window.location.href = `/grupos`;
-    } else {
-      console.error("No se encontró groupId en la notificación.");
-    }
   };
 
   const fechaFormateada = new Date(notificacionActual?.fecha_creacion).toLocaleDateString();
@@ -107,10 +84,16 @@ const Notificaciones = () => {
   return (
     <div className="seccion" id="notificaciones">
       <div className="notificaciones-container">
-        <li
-          className="movimiento-item-notificaciones"
-          onClick={() => handleBubbleOpen(notificacionActual)}
-        >
+      <li
+        className={`movimiento-item-notificaciones ${
+          ["inversion", "grupo"].includes(notificacionActual.tipo) ? "" : "sin-bubble"
+        }`}
+        onClick={() => {
+          if (["inversion", "grupo"].includes(notificacionActual.tipo)) {
+            handleBubbleOpen(notificacionActual);
+          }
+        }}
+      >
           <div className="borde-icono3" id="borde-grande">
             <div className="movimiento-icono3">{iconoNotificacion}</div>
           </div>
@@ -144,23 +127,16 @@ const Notificaciones = () => {
             <>
               <p className="bubble-contenido">{bubbleData.contenido}</p>
               {activeBubble === "inversion" && (
-                <div className="bubble-acciones">
+                <div className="contenedor-eventos">
                   <button onClick={handleIrPortfolio}>
                     📊 Ir a portfolio
                   </button>
                 </div>
               )}
-              {activeBubble === "evento" && (
-                <div className="bubble-acciones">
-                  <button onClick={handleVerEvento}>
-                    📅 Ver evento
-                  </button>
-                </div>
-              )}
               {activeBubble === "grupo" && (
-                <div className="bubble-acciones">
+                <div className="contenedor-eventos">
                   <button onClick={handleVerGrupo}>
-                    📅 Ver grupo
+                    👥 Ir a grupos
                   </button>
                 </div>
               )}

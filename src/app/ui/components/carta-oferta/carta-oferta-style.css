@@ -1,0 +1,91 @@
+.carta {
+  position: relative;
+  display: inline-grid;
+  width: 230px;
+  height: 100%;
+  border-radius: 18px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.1);
+  background-color: #10101A;
+  border: 1px solid #151522;
+  margin-right: 13px;
+  padding: 1.5%;
+}
+
+.carta-titulo{
+  position: relative;
+  font-size: 8.5px;
+  color: #888888;
+  text-align: left;
+  font-variation-settings: "slnt" 0, "wght" 400;
+}
+
+.carta-fecha{
+  position: absolute;
+  font-size: 10px;
+  color: #888888;
+  text-align: left;
+  font-variation-settings: "slnt" 0, "wght" 400;
+  bottom: 15px;
+  left: 20px;
+}
+
+.carta-header{
+  display: flex;
+  position: relative;
+  top: 0;
+}
+
+.carta-nombre{
+  position: relative;
+  color: #FFFFFF;
+  font-variation-settings: "slnt" 0, "wght" 500;
+  font-size: 14px;
+}
+
+.carta-info{
+  text-align: left;
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.carta-icono{
+  position: relative;
+  display: flex;
+  height: 70px;
+  width: 70px;
+  background-color: #1C1C29;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  box-sizing: border-box; /* Asegura el tamaño */
+}
+
+.carta-avatar{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+}
+
+.carta-username{
+  position: relative;
+  color: #888888; /* Un gris claro */
+  font-variation-settings: "slnt" 0, "wght" 400;
+  font-size: 13px;
+}
+
+.carta-nombre,
+.carta-username,
+.carta-valoracion,
+.carta-detalles,
+.carta-info,
+.carta,
+.carta-header {
+  white-space: nowrap;    /* Evita que el texto se divida en varias líneas */
+  overflow: hidden;       /* Oculta el texto que sobresale */
+  text-overflow: ellipsis; /* Muestra los "..." cuando el texto es demasiado largo */
+  max-width: 100%;        /* Asegura que el texto no supere el ancho del contenedor */
+}

@@ -88,7 +88,7 @@ const MovimientosRecientesSinEventos = ({ username }) => {
 
               return (
                 <li key={index} className="movimiento-item-sin-eventos">
-                    <div className= 'linea-morada'></div>
+                    <div className='linea-morada' style={{ marginTop: "8px" }}></div>
                     <div className="movimiento-detalles3">
                       {movimiento.tipo_movimiento === "inversion" && (
                         <>
