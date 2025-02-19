@@ -193,14 +193,7 @@ export default function Eventos({ fechaSeleccionada }) {
           ))}
         </ul>
       ) : (
-        <div className="contenido-vacio" id="eventos-vacio">
-          <button onClick={() => setActiveBubble("crear-evento")} className="boton-grupo">
-            <IconPlus /><p>Crear</p>
-          </button>
-          <button onClick={() => setActiveBubble("buscar-evento")} className="boton-grupo">
-            <IconSearch /><p>Unir</p>
-          </button>
-        </div>
+        <p>No hay eventos en esta fecha</p>
       )}
 
       {/* Componente Bubble */}

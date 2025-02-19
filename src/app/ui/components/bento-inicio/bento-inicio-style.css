@@ -195,13 +195,14 @@ body {
 #pequeño1 svg{
   width: 17px;
   height: 17px;
-  background-color: #181824;
-  transition: background-color 0.3s ease;
 }
 
 #pequeño2 svg{
   width: 17px;
   height: 17px;
+}
+
+#pequeño1:hover, #pequeño2:hover{
   background-color: #181824;
   transition: background-color 0.3s ease;
 }

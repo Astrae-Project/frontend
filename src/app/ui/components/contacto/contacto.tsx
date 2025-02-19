@@ -130,7 +130,7 @@ const InformacionContacto = ({ contacto, fetchContacto }) => {
         </ul>
       ) : (
         <div className="contenido-vacio">
-          <li className="añadir">
+          <li className="añadir boton-grupo">
             <p>Añadir</p>
           </li>
         </div>

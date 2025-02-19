@@ -64,8 +64,7 @@ export function StartupsSeguidas() {
   };
 
   return (
-    <ScrollShadow size={1000} orientation="horizontal" className="contiene" >
-      <ScrollShadow size={1000} orientation="horizontal" className="contiene1">
+      <ScrollShadow size={1000} orientation="horizontal" className="contiene">
         {displayedStartups.map((startup) => (
           <Carta
             key={startup.id} // Usar "id" único de la startup como key
@@ -73,7 +72,6 @@ export function StartupsSeguidas() {
             onClick={() => handleShowBubble(startup)}
           />
         ))}
-      </ScrollShadow>
 
       {activeBubble && bubbleData && (
         <Bubble show={activeBubble} onClose={closeBubble}>

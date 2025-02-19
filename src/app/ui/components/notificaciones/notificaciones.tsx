@@ -127,16 +127,16 @@ const Notificaciones = () => {
             <>
               <p className="bubble-contenido">{bubbleData.contenido}</p>
               {activeBubble === "inversion" && (
-                <div className="contenedor-eventos">
-                  <button onClick={handleIrPortfolio}>
-                    📊 Ir a portfolio
+                <div className="contenedor-eventos" style={{marginBottom: 0, marginTop: 0}}>
+                  <button className="botn-eventos enviar" onClick={handleIrPortfolio}>
+                    Ir a portfolio
                   </button>
                 </div>
               )}
               {activeBubble === "grupo" && (
-                <div className="contenedor-eventos">
-                  <button onClick={handleVerGrupo}>
-                    👥 Ir a grupos
+                <div className="contenedor-eventos" style={{marginBottom: 0, marginTop: 0}}>
+                  <button className="botn-eventos enviar" onClick={handleVerGrupo}>
+                    Ir a grupos
                   </button>
                 </div>
               )}

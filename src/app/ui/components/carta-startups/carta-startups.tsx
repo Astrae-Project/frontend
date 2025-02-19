@@ -30,10 +30,10 @@ export const Carta = ({ startup, onClick }) => {
         </div>
       </div>
       <div className="carta-detalles">
-        <div className="carta-detalle">
-          <p className="mini-titulo">Valoración</p>
-          <p className="carta-valoracion">{formatInversion(startup?.valoracion)}</p>
-        </div>
+        <p className="carta-titulo">Valoración</p>
+        <p className="carta-valoracion">{formatInversion(startup?.valoracion)}</p>
+        <p className="carta-titulo">Porcentaje</p>
+        <p className="carta-valoracion">{startup?.porcentaje_disponible}</p>
       </div>
     </button>
   );

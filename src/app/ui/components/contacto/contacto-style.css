@@ -14,6 +14,8 @@
     font-variation-settings: "slnt" 0, "wght" 400;
     letter-spacing: 0.2px;
     gap: 5px;
+    border: 2px dashed #202029;
+    background-color: transparent;
 }
 
 #añadir-contacto{
@@ -23,6 +25,10 @@
 
 #añadir-contacto p{
     margin-top: 2%;
+}
+
+#añadir-contacto:hover{
+    background-color: #14141f82;  /* Fondo oscuro al hacer hover sobre el li */
 }
 
 /* Inputs y selectores */
