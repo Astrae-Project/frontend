@@ -382,6 +382,16 @@
   height: 14px;
 }
 
+.texto-vacio {
+  align-self: center;
+  margin-bottom: 10%;
+}
+
+#texto-vacio-raro{
+  margin-top: 20%;
+  margin-bottom: 0;
+}
+
 .contacto-imagen{
   width: 15px;
   height: 15px;

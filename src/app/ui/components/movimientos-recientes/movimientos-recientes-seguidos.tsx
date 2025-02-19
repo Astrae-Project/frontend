@@ -202,7 +202,7 @@ const MovimientosSeguidos = ({ username }) => {
           </ul>
         </div>
       ) : (
-        <p>No hay movimientos recientes.</p>
+        <p className="texto-vacio">No hay movimientos recientes.</p>
       )}
       <Bubble show={!!activeBubble} onClose={handleBubbleClose}>
         {activeBubble === "perfil" && bubbleData && (

@@ -87,8 +87,9 @@ const TablaPortfolio = () => {
       <div className="titulo-principal">
         <p className="titulo-portfolio">Activos</p>
       </div>
-      <div className="contenido-scrollable">
-        {portfolio.length > 0 ? (
+
+      {portfolio.length > 0 ? (
+        <div className="contenido-scrollable">
           <ul>
             {portfolio.map((inversion) => {
               const cambioPorcentualInfo = formatCambioPorcentual(inversion.cambio_porcentual);
@@ -122,10 +123,10 @@ const TablaPortfolio = () => {
               );
             })}
           </ul>
-        ) : (
-          <p>No hay inversiones en el portfolio.</p>
-        )}
-      </div>
+        </div>
+      ) : (
+        <p className="texto-vacio">No hay inversiones en el portfolio</p>
+      )}
 
       <Bubble
         show={!!activeBubble}

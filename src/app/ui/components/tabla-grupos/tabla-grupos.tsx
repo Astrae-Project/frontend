@@ -241,7 +241,7 @@ const TablaGrupos = () => {
         )}
         {activeBubble === "unir-grupo" && !formSubmitted && (
           <div>
-          <p>Selecciona un evento para modificar</p>
+          <p>Selecciona un grupo para unirse</p>
           <div className="contenedor-eventos">
             <ul>
               {todosGrupos.length > 0 ? (
@@ -267,7 +267,7 @@ const TablaGrupos = () => {
                   </li>
                 ))
               ) : (
-                <p>No hay startups disponibles.</p>
+                <p>No hay grupos disponibles.</p>
               )}
             </ul>
           </div>

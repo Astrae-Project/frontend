@@ -58,7 +58,7 @@ const Notificaciones = () => {
 
   if (loading) return <LoadingScreen />;
   if (notificaciones.length === 0)
-    return <div className="notificaciones-container">No tienes notificaciones</div>;
+    return <p>No tienes notificaciones</p>;
 
   const notificacionActual = notificaciones[actualIndex];
 

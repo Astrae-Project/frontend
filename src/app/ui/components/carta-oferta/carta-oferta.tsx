@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './carta-oferta-style.css';
 import Bubble from '../bubble/bubble';
 import customAxios from '@/service/api.mjs';
@@ -29,15 +29,23 @@ export const CartaOferta = ({ oferta }) => {
     return `${monto}€`;
   };
 
+  useEffect(() => {
+    console.log("Datos de la oferta recibida:", oferta);
+  }, [oferta]);  
+
   const handleAccept = async () => {
     if (loading) return;
     setLoading(true);
+    console.log("Iniciando aceptación de oferta:", oferta);
+  
     try {
-      await customAxios.put(
-        `http://localhost:5000/api/invest/oferta/${oferta.id}/aceptar/${oferta.startup.id_usuario}`,
+      const response = await customAxios.put(
+        `http://localhost:5000/api/invest/oferta/${oferta.id}/aceptar/${oferta.startup.usuario.id}`,
         {},
         { withCredentials: true }
       );
+  
+      console.log("Respuesta del servidor (aceptar):", response);
       setConfirmationMessage("Oferta aceptada con éxito!");
       setMessageType("success");
       setFormSubmitted(true);
@@ -48,22 +56,30 @@ export const CartaOferta = ({ oferta }) => {
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   const handleInvestClick = async () => {
     if (loading) return;
     setLoading(true);
-
+    console.log("Iniciando aceptación de oferta:", oferta);
+    console.log("Iniciando contraoferta con:", {
+      id_inversor: oferta.id_inversor,
+      contraoferta_porcentaje: selectedPercentage,
+      contraoferta_monto: selectedAmount,
+    });
+  
     try {
       const response = await customAxios.post(
-        `http://localhost:5000/api/invest/contraoferta/${oferta.id}/${oferta.inversor.id_usuario}`,
+        `http://localhost:5000/api/invest/contraoferta/${oferta.id}/${oferta.startup.usuario.id}`,
         {
-          id_inversor: oferta.inversor.id_usuario,
+          id_inversor: oferta.id_inversor,
           contraoferta_porcentaje: selectedPercentage,
-          contraoderta_monto: selectedAmount,
+          contraoferta_monto: selectedAmount, // <- Corregido
         },
         { withCredentials: true }
       );
+  
+      console.log("Respuesta del servidor (contraoferta):", response);
       setConfirmationMessage("Oferta realizada con éxito!");
       setMessageType("success");
       setFormSubmitted(true);
@@ -76,16 +92,20 @@ export const CartaOferta = ({ oferta }) => {
       setLoading(false);
     }
   };
-
+  
   const handleReject = async () => {
     if (loading) return;
     setLoading(true);
+    console.log("Iniciando rechazo de oferta:", oferta);
+  
     try {
-      await customAxios.put(
-        `http://localhost:5000/api/invest/oferta/${oferta.id}/rechazar/${oferta.startup.id_usuario}`,
+      const response = await customAxios.put(
+        `http://localhost:5000/api/invest/oferta/${oferta.id}/rechazar/${oferta.startup.usuario.id}`,
         {},
         { withCredentials: true }
       );
+  
+      console.log("Respuesta del servidor (rechazar):", response);
       setConfirmationMessage("Oferta rechazada con éxito!");
       setMessageType("success");
       setFormSubmitted(true);
@@ -97,6 +117,7 @@ export const CartaOferta = ({ oferta }) => {
       setLoading(false);
     }
   };
+  
 
   const handleNextStep = () => {
     setStep(2);

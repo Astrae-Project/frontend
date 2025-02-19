@@ -8,6 +8,7 @@ import PerfilOtro from "@/app/perfil-otro/page";
 import customAxios from "@/service/api.mjs";
 import { useState, useEffect } from "react";
 import Bubble from "@/app/ui/components/bubble/bubble";
+import { start } from "repl";
 
 export function StartupsSeguidas() {
   const [startups, setStartups] = useState([]); // Inicializar como un arreglo vacío
@@ -61,6 +62,7 @@ export function StartupsSeguidas() {
     setActiveBubble(false);
     setBubbleData(null);
   };
+
   return (
     <ScrollShadow size={1000} orientation="horizontal" className="contiene" >
       <ScrollShadow size={1000} orientation="horizontal" className="contiene1">
