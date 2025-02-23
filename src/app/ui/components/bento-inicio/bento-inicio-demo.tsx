@@ -25,7 +25,7 @@ export function BentoGridInicio({username}) {
   const [selectedPercentage, setSelectedPercentage] = useState(0); // Porcentaje seleccionado
   const [formSubmitted, setFormSubmitted] = useState(false); // Estado del formulario
   const [confirmationMessage, setConfirmationMessage] = useState(""); // Mensaje de confirmación
-  const [messageType, setMessageType] = useState("success"); // Tipo de mensaje de confirmación
+  const [messageType, setMessageType] = useState(""); // Tipo de mensaje de confirmación
   const [selectedStartup, setSelectedStartup] = useState(null); // Startup seleccionada
   const [startups, setStartups] = useState([]);
   const [step, setStep] = useState(1); // Paso actual (1 = seleccionar evento, 2 = editar evento)

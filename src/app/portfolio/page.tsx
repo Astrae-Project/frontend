@@ -1,3 +1,5 @@
+'use client'
+
 import { BentoGridPortfolio } from "./bento-portfolio/bento-portfolio";
 
 export default function Portfolio() {

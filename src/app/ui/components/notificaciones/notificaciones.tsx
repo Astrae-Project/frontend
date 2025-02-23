@@ -10,9 +10,7 @@ const Notificaciones = () => {
   const [notificaciones, setNotificaciones] = useState([]);
   const [actualIndex, setActualIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  // activeBubble contendrá el tipo de la notificación (por ejemplo, "oferta", "inversion", etc.)
   const [activeBubble, setActiveBubble] = useState(null);
-  // bubbleData contendrá toda la notificación seleccionada
   const [bubbleData, setBubbleData] = useState(null);
 
   useEffect(() => {
@@ -79,6 +77,17 @@ const Notificaciones = () => {
       window.location.href = `/grupos`;
   };
 
+  const handleMarcarLeido = async () => {
+    if (!notificacionActual) return
+    try {
+      // Suponiendo que notificacionActual es la notificación seleccionada
+      await customAxios.put('http://localhost:5000/api/perfil/leido', { id: notificacionActual.id });
+      handleBubbleClose();      
+    } catch (error) {
+      console.error('Error al marcar como leído:', error);
+    }
+  }
+  
   const fechaFormateada = new Date(notificacionActual?.fecha_creacion).toLocaleDateString();
 
   return (
@@ -127,16 +136,22 @@ const Notificaciones = () => {
             <>
               <p className="bubble-contenido">{bubbleData.contenido}</p>
               {activeBubble === "inversion" && (
-                <div className="contenedor-eventos" style={{marginBottom: 0, marginTop: 0}}>
+                <div className="contendor-botn-evento" style={{marginBottom: 0, marginTop: 0}}>
+                  <button className="botn-eventos" onClick={handleMarcarLeido}>
+                    Marcar Leido
+                  </button>
                   <button className="botn-eventos enviar" onClick={handleIrPortfolio}>
-                    Ir a portfolio
+                    Ir a Portfolio
                   </button>
                 </div>
               )}
               {activeBubble === "grupo" && (
-                <div className="contenedor-eventos" style={{marginBottom: 0, marginTop: 0}}>
+                <div className="contendor-botn-evento" style={{marginBottom: 0, marginTop: 0}}>
+                  <button className="botn-eventos" onClick={handleMarcarLeido}>
+                    Marcar Leido
+                  </button>
                   <button className="botn-eventos enviar" onClick={handleVerGrupo}>
-                    Ir a grupos
+                    Ir a Grupos
                   </button>
                 </div>
               )}
