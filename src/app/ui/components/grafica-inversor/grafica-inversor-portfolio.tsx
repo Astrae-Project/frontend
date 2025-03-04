@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, Title, Tooltip, Legend, LineElement, PointElement, Filler } from 'chart.js';
 import '../grafica-startup/grafica-startup-style.css';
-import { IconTriangleFilled, IconTriangleInvertedFilled } from '@tabler/icons-react';
-import MovimientosRecientesSinEventos from '../movimientos-recientes/movimientos-recientes-sin-eventos';
 
 ChartJS.register(CategoryScale, LinearScale, Title, Tooltip, Legend, LineElement, PointElement, Filler);
 

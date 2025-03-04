@@ -41,6 +41,11 @@ body {
   flex: 1; /* Esto hará que cada sección ocupe el espacio disponible */
 }
 
+#tabla-inversores{
+  align-items: normal;
+  overflow-y: auto;
+}
+
 .bento3 .apartado3:nth-child(1) {
   grid-column: 1 / 1;
   grid-row: 1 / 1;
@@ -93,4 +98,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.boton-invertir svg{
+  width: 16px;
+  height: 16px;
 }

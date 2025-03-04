@@ -1,0 +1,62 @@
+/* Contenedor principal del chat */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Área donde se muestran los mensajes */
+  .chat-messages {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+  }
+  
+  /* Estilo para la barra de desplazamiento en navegadores Webkit */
+  .chat-messages::-webkit-scrollbar {
+    width: 8px;
+  }
+  .chat-messages::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Cada mensaje individual */
+  .chat-message {
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    background-color: #e1ffc7;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  /* El nombre del usuario en el mensaje */
+  .chat-message strong {
+    color: #333;
+    font-size: 0.9em;
+  }
+  
+  /* El contenido del mensaje */
+  .chat-message span {
+    display: inline-block;
+    margin-left: 8px;
+    color: #555;
+    font-size: 0.9em;
+  }
+  
+  /* Animación para que los mensajes aparezcan suavemente */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  

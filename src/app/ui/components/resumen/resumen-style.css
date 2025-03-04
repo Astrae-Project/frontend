@@ -1,0 +1,83 @@
+.resumen-portfolio{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: #1a1a1d;
+  border-radius: 10px;
+  padding: 20px;
+  gap: 10px;
+}
+
+.titulos{
+  position: relative;
+  top: -60px;
+  width: auto;
+  display: flex;
+  height: fit-content;
+  gap: 7px;
+  left: -20px;
+}
+
+.titulos-valor{
+  position: relative;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.642);
+  align-self: end;
+  top: -5.5px;
+}
+
+.valor-total{
+  font-size: 24px;
+  color: #efefef;
+}
+
+.cambios-porcentuales {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  margin-top: 5px;
+}
+
+.cambios-porcentuales p {
+  font-size: 13px;
+  color: #efefef;
+}
+
+.progress-container {
+  position: absolute;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+  bottom: 25px;
+}
+
+.sector-labels {
+  display: flex;
+  width: 80%;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.sector-label {
+  text-align: center;
+  font-size: 12px;
+  color: #efefef;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 15px;
+  display: flex;
+  border: 1px solid #151522;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-segment {
+  height: 100%;
+}

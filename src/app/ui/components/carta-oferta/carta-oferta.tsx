@@ -125,20 +125,20 @@ export const CartaOferta = ({ oferta }) => {
 
   return (
     <>
-      <button className="carta" onClick={() => setActiveBubble("oferta")}>
-        <div className="carta-header">
-          <div className="carta-icono">
-            <img src={oferta?.startup?.usuario?.avatar} alt="Avatar de la startup" className="carta-avatar" />
+      <button className="carta-oferta" onClick={() => setActiveBubble("oferta")}>
+        <div className="carta-header-oferta">
+          <div className="carta-icono-oferta">
+            <img src={oferta?.startup?.usuario?.avatar} alt="Avatar de la startup" className="carta-avatar-oferta" />
           </div>
-          <div className="carta-info">
+          <div className="carta-info-oferta">
             <p className="carta-nombre">{oferta?.inversor?.nombre}</p>
-            <p className="carta-username">@{oferta?.inversor?.usuario?.username}</p>
+            <p className="carta-username-oferta">@{oferta?.inversor?.usuario?.username}</p>
           </div>
         </div>
         <div className="carta-detalles">
-          <p className="carta-titulo">Monto Ofrecido</p>
-          <p className="carta-valoracion">{formatInversion(oferta?.monto_ofrecido)}</p>
-          <p className="carta-titulo">Porcentaje Ofrecido</p>
+          <p className="carta-titulo-oferta">Monto Ofrecido</p>
+          <p className="carta-valoracion-oferta">{formatInversion(oferta?.monto_ofrecido)}</p>
+          <p className="carta-titulo-oferta">Porcentaje Ofrecido</p>
           <p className="carta-valoracion">{oferta?.porcentaje_ofrecido}%</p>
           <p className="carta-fecha">
             {oferta?.fecha_creacion ? new Date(oferta.fecha_creacion).toLocaleDateString() : "Fecha no disponible"}

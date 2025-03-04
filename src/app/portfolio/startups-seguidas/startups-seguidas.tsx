@@ -1,35 +1,33 @@
-"use client"
+"use client";
 
-import {ScrollShadow} from "@nextui-org/react";
-import { Carta } from "../../ui/components/carta-startups/carta-startups";
+import { ScrollShadow } from "@nextui-org/react";
+import { CartaSeguidas } from "../../ui/components/carta-startups/carta-startups-seguidas";
 
 import "./startups-seguidas-style.css";
 import PerfilOtro from "@/app/perfil-otro/page";
 import customAxios from "@/service/api.mjs";
 import { useState, useEffect } from "react";
 import Bubble from "@/app/ui/components/bubble/bubble";
-import { start } from "repl";
 
-export function StartupsSeguidas() {
-  const [startups, setStartups] = useState([]); // Inicializar como un arreglo vacío
+const StartupsSeguidas = () => {
+  const [startups, setStartups] = useState([]); // Inicializar como array vacío
   const [displayedStartups, setDisplayedStartups] = useState([]);
   const [bubbleData, setBubbleData] = useState(null);
   const [activeBubble, setActiveBubble] = useState(false);
 
-  // Función para obtener datos de startups desde la API
+  // Función para obtener startups desde la API
   const fetchStartupsData = async () => {
     try {
       const response = await customAxios.get(
         "http://localhost:5000/api/data/startup/seguidas",
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
+      console.log(response.data); // Aquí accedemos correctamente a startups
 
       if (response.data && Array.isArray(response.data.startups)) {
-        setStartups(response.data.startups); // Asegúrate de acceder a la clave "startups"
+        setStartups(response.data.startups); // Aquí accedemos correctamente a startups
       } else {
-        console.error("La respuesta no contiene un arreglo válido en 'startups'.");
+        console.error("La respuesta no contiene un array válido en 'startups'.");
       }
     } catch (error) {
       console.error("Error fetching startups data:", error);
@@ -42,8 +40,8 @@ export function StartupsSeguidas() {
 
   // Función para seleccionar startups aleatorias
   const getRandomStartups = (count) => {
-    if (!Array.isArray(startups) || startups.length === 0) return []; // Validar startups
-    const shuffled = [...startups].sort(() => 0.5 - Math.random()); // Crear una copia antes de ordenar
+    if (!Array.isArray(startups) || startups.length === 0) return [];
+    const shuffled = [...startups].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
   };
 
@@ -64,20 +62,22 @@ export function StartupsSeguidas() {
   };
 
   return (
-      <ScrollShadow size={1000} orientation="horizontal" className="contiene">
-        {displayedStartups.map((startup) => (
-          <Carta
-            key={startup.id} // Usar "id" único de la startup como key
-            startup={startup}
-            onClick={() => handleShowBubble(startup)}
-          />
-        ))}
+    <ScrollShadow size={1000} orientation="horizontal" className="contiene">
+      {displayedStartups.map((startup) => (
+        <CartaSeguidas
+          key={startup.username} // Se usa username como clave (debe ser único)
+          startup={startup}
+          onClick={() => handleShowBubble(startup)}
+        />
+      ))}
 
       {activeBubble && bubbleData && (
         <Bubble show={activeBubble} onClose={closeBubble}>
-          <PerfilOtro username={bubbleData.usuario?.username || "Desconocido"} />
+          <PerfilOtro username={bubbleData.username || "Desconocido"} />
         </Bubble>
       )}
     </ScrollShadow>
   );
 }
+
+export default StartupsSeguidas;

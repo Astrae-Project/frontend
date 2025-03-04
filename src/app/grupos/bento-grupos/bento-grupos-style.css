@@ -68,7 +68,6 @@ body {
 .apartado2 {
   position: relative;
   border-radius: 18px;
-  display: flex;
   background-color: #10101A;
   border: 1px solid #151522;
   overflow: hidden; /* Evita que el contenido desborde */

@@ -24,8 +24,7 @@ const TablaPortfolio = () => {
         });
         setPortfolio(data.inversiones);
       } catch (error) {
-        handleFeedback('Error al cargar el portfolio.', 'error');
-      }
+        console.error('Error fetching portfolio:', error);}
     };
     fetchPortfolio();
   }, []);
@@ -116,7 +115,7 @@ const TablaPortfolio = () => {
                         {cambioPorcentualInfo.text}%
                       </p>
                       <p className="mini-titulo" id="titulo-valor">Valor</p>
-                      <p className="valor">{formatInversion(inversion.valor)}</p>
+                      <p className="valor">{formatInversion(inversion.monto_invertido)}</p>
                     </div>
                   </button>
                 </li>

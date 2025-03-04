@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+'use client'
+
+import React, { useEffect, useState, useCallback } from "react";
 import { io } from "socket.io-client";
-import Input from "../textarea/textarea-demo"; // Asegúrate de que la ruta sea correcta
-import "./chat-style.css"; // Opcional: estilos específicos para el chat
+import Input from "../textarea/textarea-demo"; // Revisa que la ruta sea correcta
+import "./chat-style.css";
 
 const SOCKET_SERVER_URL = "http://localhost:5000"; // Ajusta según tu servidor
 
@@ -12,9 +14,9 @@ const ChatGroup = ({ groupId, user }) => {
   useEffect(() => {
     // Crear conexión al servidor de websockets
     const newSocket = io(SOCKET_SERVER_URL, { withCredentials: true });
-    setSocket(newSocket);
 
     newSocket.on("connect", () => {
+      // Al conectarse, unir a la sala correspondiente
       newSocket.emit("joinRoom", groupId);
       console.log(`Socket ${newSocket.id} se ha unido a la sala ${groupId}`);
     });
@@ -24,25 +26,34 @@ const ChatGroup = ({ groupId, user }) => {
       setMessages((prevMessages) => [...prevMessages, data]);
     });
 
-    // Desconectar al desmontar el componente
+    // Manejar errores de conexión
+    newSocket.on("connect_error", (err) => {
+      console.error("Error de conexión:", err);
+    });
+
+    setSocket(newSocket);
+
+    // Desconectar el socket al desmontar el componente
     return () => {
       newSocket.disconnect();
     };
   }, [groupId]);
 
-  // Función para enviar mensaje, se la pasamos al componente Input
-  const handleSendMessage = (messageContent) => {
-    if (socket) {
-      const messageData = {
-        roomId: groupId,
-        contenido: messageContent,
-        id_usuario: user.id,
-        username: user.username,
-        // Puedes agregar otros campos como fecha, etc.
-      };
-      socket.emit("sendMessage", messageData);
-    }
-  };
+  const handleSendMessage = useCallback(
+    (messageContent) => {
+      if (socket) {
+        const messageData = {
+          roomId: groupId,
+          contenido: messageContent,
+          id_usuario: user.id,
+          username: user.username,
+          // Puedes agregar otros campos como fecha, timestamp, etc.
+        };
+        socket.emit("sendMessage", messageData);
+      }
+    },
+    [socket, groupId, user]
+  );
 
   return (
     <div className="chat-container">

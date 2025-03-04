@@ -1,0 +1,110 @@
+.custom-table-container {
+  width: 100%;
+  max-height: 400px;
+  background: transparent;
+  border-radius: 12px;
+  padding: 1rem;
+  overflow: hidden;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  color: #E5E7EB; /* Texto claro */
+  display: block;
+  max-height: 400px;
+  overflow-y: auto;
+  background: #10101A; /* Fondo principal */
+  border-radius: 8px;
+}
+
+.custom-table p {
+  position: relative;
+  top: 1.2px;
+}
+
+
+.custom-table::-webkit-scrollbar {
+  display: none;
+}
+
+.custom-table-container::-webkit-scrollbar {
+  display: none;
+}
+
+.custom-table thead {
+  position: sticky;
+  top: 0;
+  text-align: center;
+  z-index: 1;
+  background-color: #10101A; /* Encabezado ligeramente más claro */
+  border-bottom: 1px solid #232332; /* Bordes oscuros pero perceptibles */
+}
+
+.custom-table thead th {
+  padding: 10px 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 12px;
+  background-color: #10101A;
+  border-bottom: 1px solid #232332; /* Bordes oscuros pero perceptibles */
+  color: #E5E7EB;
+  min-width: 120px;
+}
+
+.custom-table tr {
+  width: 100%;
+  border-bottom: 1px solid #232332; /* Bordes oscuros pero perceptibles */
+}
+
+.custom-table tbody tr {
+  border-bottom: 1px solid #232332;
+  transition: background 0.2s ease-in-out;
+  height: 42px;
+}
+
+.custom-table tbody td {
+  padding: 10px 16px;
+  border-right: 1px solid #232332;
+  color: #E5E7EB;
+}
+
+.custom-table tbody td:last-child {
+  border-right: none;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+/* Clases para el estado */
+.estado-container {
+  padding: 6px 10px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.estado-aceptado {
+  background-color: #38a169; /* Verde para aceptada */
+}
+  
+.estado-pendiente {
+  background-color: #ed8936; /* Naranja para pendiente */
+}
+  
+.estado-rechazado {
+  background-color: #e53e3e; /* Rojo para rechazado */
+}
+  
+/* Columnas específicas */
+.col-startup, .col-estado, .col-porcentaje, .col-monto, .col-fecha {
+  width: 25%; /* Distribuye el ancho de las columnas por igual */
+}
+ 
+/* Opcional: media queries para pantallas pequeñas */
+@media (max-width: 768px) {
+  .col-startup, .col-estado, .col-porcentaje, .col-monto, .col-fecha {
+    width: 50%;
+  }
+}
+  

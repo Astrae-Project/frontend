@@ -1,4 +1,4 @@
-import { BentoGridGrupos } from "./bento-grupos/bento-grupos";
+import BentoGridGrupos from "./bento-grupos/bento-grupos";
 
 export default function Grupos() {
     return (

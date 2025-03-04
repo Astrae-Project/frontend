@@ -1,4 +1,4 @@
-.carta {
+.carta-oferta {
   position: relative;
   display: inline-grid;
   width: 230px;
@@ -11,14 +11,14 @@
   padding: 1.5%;
 }
 
-.carta-header{
+.carta-header-oferta{
   display: flex;
   position: relative;
   bottom: 0;
   height: fit-content;
 }
 
-.carta-info{
+.carta-info-oferta{
   text-align: left;
   margin-left: 10px;
   display: flex;
@@ -26,7 +26,7 @@
   justify-content: flex-end;
 }
 
-.carta-icono{
+.carta-icono-oferta{
   position: relative;
   display: flex;
   height: 70px;
@@ -39,20 +39,20 @@
   box-sizing: border-box; /* Asegura el tamaño */
 }
 
-.carta-avatar{
+.carta-avatar-oferta{
   position: relative;
   width: 100%;
   height: 100%;
   border-radius: 10px;
 }
 
-.carta-username{
+.carta-username-oferta{
   position: relative;
   color: #888888; /* Un gris claro */
   font-variation-settings: "slnt" 0, "wght" 400;
 }
 
-.carta-titulo{
+.carta-titulo-oferta{
   position: relative;
   font-size: 8.5px;
   color: #888888; 

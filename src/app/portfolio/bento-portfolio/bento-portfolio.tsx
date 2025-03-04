@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./bento-portfolio-style.css"
-import { StartupsSeguidas } from "../startups-seguidas/startups-seguidas";
+import StartupsSeguidas from "../startups-seguidas/startups-seguidas";
 import TablaPortfolio from "@/app/ui/components/tabla-portfolio/tabla-portfolio";
 import Bubble from "@/app/ui/components/bubble/bubble";
 import { IconPlus } from "@tabler/icons-react";
 import customAxios from "@/service/api.mjs";
 import GraficaInversorPortfolio from "@/app/ui/components/grafica-inversor/grafica-inversor-portfolio";
+import ResumenPortfolio from "@/app/ui/components/resumen/resumen";
+import TablaInversiones from "@/app/ui/components/tabla-inversiones/tabla-inversiones";
 
 export function BentoGridPortfolio() {
   const [activeBubble, setActiveBubble] = useState(null); // Estado para mostrar el mensaje de confirmación
@@ -98,26 +100,21 @@ export function BentoGridPortfolio() {
     setRawAmount("");
   };
 
-
-
   return (
     <div className="contenedor3">
         <div className="bento3">
-            <div className="apartado3">
-                <p>1</p>
-            </div>
+            <ResumenPortfolio></ResumenPortfolio>
             <div className="apartado3">
                 <button className="boton-invertir" onClick={() => setActiveBubble("crear-inversion")}><IconPlus></IconPlus></button>
             </div>
             <StartupsSeguidas></StartupsSeguidas>
-            
+  
             <GraficaInversorPortfolio></GraficaInversorPortfolio>
             <div className="apartado3">
                 <TablaPortfolio></TablaPortfolio>
             </div>
-            <div className="apartado3">
-                <p>6</p>
-            </div>
+            
+            <TablaInversiones></TablaInversiones>
         </div>
 
         <Bubble

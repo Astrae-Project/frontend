@@ -424,8 +424,8 @@
   width: 70px;
   font-size: 9px;
   color: #888888; /* Un gris claro */
-  top: 12px;
-  margin-left: -29px;
+  top: 11px;
+  margin-left: -31px;
   text-overflow: ellipsis;
   white-space: nowrap; /* Evita saltos de línea */
   overflow: hidden;
@@ -477,7 +477,7 @@
 
 /* Resplandor para variaciones negativas (rojo) */
 .variacion-negativa {
-  color:rgba(222, 67, 67)
+  color:rgba(222, 67, 67);
 }
 
 /* Sin resplandor (para variaciones neutras o cero) */
