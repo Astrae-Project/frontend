@@ -68,6 +68,13 @@
   color: #9561e3;
 }
 
+#descarga{
+  margin: 0 auto;
+  width: 16px;
+  height: 16px;
+  color:  #9e6fe5;
+}
+
 .morado {
   color: #9561e3;
   text-shadow: 0 0 5px #9561e3;
@@ -239,7 +246,7 @@
 
 .icono2{
   position: relative;
-  color: #8154c4;
+  color: #9e6fe5;
   top: -2.5px;
 }
 

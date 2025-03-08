@@ -1,0 +1,322 @@
+.lista-grupos {
+  display: flex;
+  flex-direction: column;
+  width: 320px;           /* Ancho típico de la columna de chats */
+  height: 100vh;          /* Ocupa toda la altura de la ventana */
+  background-color: #10101A;
+  color: #e9edef;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+/* Cabecera (divisor) */
+.divisor1 {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 58px; /* Altura fija para la cabecera */
+  padding: 0 16px;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+.titulo-divisor {
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 12px;
+  color: #e9edef;
+}
+
+/* Buscador */
+.search-container {
+  padding: 0px 16px 12px 16px;
+  background-color: #10101A;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 15px;
+  border-radius: 20px;
+  background-color: #151522;
+  border: 1px solid #151522;
+  outline: none;
+  color: #e9edef;
+  font-size: 14px;
+}
+
+.search-input::placeholder {
+  font-size: 13px;
+}
+
+/* Contenedor de la lista */
+.grupos {
+  flex-grow: 1;          /* Para que ocupe todo el espacio disponible */
+  overflow-y: auto;      /* Scroll vertical */
+}
+
+/* Lista y elementos de la lista */
+.grupos ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Cada grupo */
+.grupos li {
+  display: flex;
+  align-items: center;
+  gap: 10px;             /* Espacio entre avatar e info */
+  padding: 10px 16px;
+  cursor: pointer;
+  color: #e9edef;
+  width: 100%;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.grupos li:last-child {
+  border-bottom: none;
+}
+
+/* Efecto hover */
+.grupos li:hover {
+  background-color: #151522;
+}
+
+/* Grupo seleccionado */
+.grupos li.selected {
+  background-color: #1f1f2d;
+}
+
+/* Icono y avatar del grupo */
+.grupo-icono {
+  width: 45px;
+  height: 45px;
+  flex-shrink: 0;        /* Para que no se reduzca el tamaño */
+  background-color: #202029;
+  border-radius: 8px;
+}
+
+.grupo-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;      /* Recorta la imagen si no es cuadrada */
+}
+
+/* Información del grupo */
+.grupo-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;           /* Para ocupar todo el espacio restante */
+  margin-left: 7px;
+  margin-top: 3px;
+}
+
+.grupo-info #nombre-grupo {
+  margin: 0;
+  font-size: 13px;
+  color: #e9edef;
+  font-weight: 600;
+}
+
+.ultimo-mensaje {
+  font-size: 12px;
+  color: #b0b0b0;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.grupos-lista:first-child{
+  margin-top: 10px;
+}
+
+.contenido-vacio{
+  display: flex;
+  justify-content: center;
+  height: 75%;
+  width: 100%;
+  gap: 40px;
+}
+
+#grupos-vacio{
+  align-items: center;
+}
+
+.boton-grupo1{
+  position: relative;
+  background-color: inherit;
+  width: 70px;
+  height: 70px;
+  border-radius: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px dashed #202029;
+  flex-direction: column;
+  font-size: 10px;
+  font-variation-settings: "slnt" 0, "wght" 400;
+  gap: 7px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.boton-grupo1 p{
+  position: relative;
+  bottom: -8%;
+  letter-spacing: 0.4px;
+}
+
+.boton-grupo1 svg{
+  position: relative;
+  width: 22px;
+  height: 22px;
+  bottom: -8%;
+}
+
+.boton-grupo1:hover{
+  background-color: #14141f;
+  transition: background-color 0.3s ease;
+}
+
+.contendor-botn-grupo {
+  position: relative;
+  display: flex;
+  width: 95%;
+  justify-content: space-between;
+  margin: 0 auto;
+}
+
+.crear-grupo-form{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  gap: 15px;
+  flex-direction: column;
+}
+
+.form-group{
+  width: 100%;
+
+}
+
+.form-control{
+    width: 90%;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid #202029;
+    padding: 3px 20px 0 20px;
+    font-size: 14px;
+    font-variation-settings: "slnt" 0, "wght" 400;
+    color: #e9e9e9;
+    background-color: transparent;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+#descripcion{
+    height: 100px;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    resize: none;
+}
+
+#descripcion::-webkit-scrollbar{
+    display: none;
+}
+
+.form-control::placeholder{
+    color: #5f5f64;
+}
+
+.form-control:focus-visible{
+    outline: none;
+    border-color: #6e4ba3;
+    box-shadow: 0 0 3px #6e4ba3;
+}
+
+.form-group:first-child{
+    margin-top: 20px;
+}
+
+.tipo-opciones {
+    display: flex;
+    gap: 30px; /* Espaciado entre las opciones */
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    margin-top: -10px;
+  }
+  
+  .tipo-opciones label {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaciado entre el botón y el texto */
+    font-size: 15px;
+    color: #d9d9d9;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    font-variation-settings: "slnt" 0, "wght" 400;
+    top: 10px;
+    position: relative;
+  }
+  
+  .tipo-opciones input[type="radio"] {
+    appearance: none; /* Oculta el radio button predeterminado */
+    width: 17px;
+    height: 17px;
+    border: 2px solid #666;
+    border-radius: 50%; /* Hace el botón redondo */
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #ffffff03;
+  }
+  
+  .tipo-opciones input[type="radio"]:checked {
+    border-color: #202029; /* Color del borde cuando está seleccionado */
+    background-color: #6e4ba3; /* Fondo verde al seleccionarse */
+  }
+  
+  .tipo-opciones input[type="radio"]:hover {
+    border-color: #6e4ba3; /* Color del borde al pasar el mouse */
+  }
+  
+  .tipo-opciones label:hover {
+    color: #6e4ba3; /* Cambia el color del texto al pasar el mouse */
+  }
+  
+  .text-label{
+    position: relative;
+    top: 2.5px;
+  }
+
+  .botn-eventos {
+    position: relative;
+    width: auto;
+    height: 30px;
+    background-color: #1C1C29;
+    border: 1px solid #1E202F;
+    border-radius: 5px;
+    font-size: 13px;
+    padding-top: 1%;
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+
+  .enviar {
+    background-color: #6e4ba3;
+  }
+
+  .contendor-botn-evento {
+    position: relative;
+    display: flex;
+    width: 95%;
+    justify-content: space-between;
+    margin: 0 auto;
+  }
+  

@@ -4,16 +4,16 @@ import React, { useRef, useEffect, useState } from "react";
 import { IconPaperclip, IconAt, IconStar } from "@tabler/icons-react";
 import "./textarea-style.css";
 
-const MIN_HEIGHT = 118;
+const MIN_HEIGHT = 152;
 
 const Input = ({ onSendMessage }) => {
   const textAreaRef = useRef(null);
   const [message, setMessage] = useState("");
 
+  // Ajusta la altura del textarea dinámicamente
   const autoResize = () => {
     const textarea = textAreaRef.current;
     if (textarea) {
-      // Reinicia la altura al mínimo y luego la ajusta al contenido
       textarea.style.height = `${MIN_HEIGHT}px`;
       textarea.style.height = `${textarea.scrollHeight}px`;
     }
@@ -21,18 +21,29 @@ const Input = ({ onSendMessage }) => {
 
   useEffect(() => {
     autoResize();
-  }, []);
+  }, [message]);
 
+  // Enviar mensaje cuando se presiona el botón
   const handleSend = () => {
     const trimmedMessage = message.trim();
-    if (!trimmedMessage) return; // No enviar mensajes vacíos
-    onSendMessage?.(trimmedMessage);
-    setMessage("");
+    if (!trimmedMessage) return; // Evita mensajes vacíos
+
+    onSendMessage?.(trimmedMessage); // Llama a la función de envío
+    setMessage(""); // Limpia el textarea
     if (textAreaRef.current) {
-      textAreaRef.current.style.height = `${MIN_HEIGHT}px`;
+      textAreaRef.current.style.height = `${MIN_HEIGHT}px`; // Restaura la altura mínima
     }
   };
 
+  // Enviar mensaje con "Enter" + evitar salto de línea innecesario
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // Evita el salto de línea
+      handleSend();
+    }
+  };
+
+  // Limpiar el mensaje
   const handleClear = () => {
     setMessage("");
     if (textAreaRef.current) {
@@ -41,7 +52,7 @@ const Input = ({ onSendMessage }) => {
   };
 
   return (
-    <div className="contenedor-mensajes">
+    <div className="chat-input">
       <textarea
         ref={textAreaRef}
         rows={1}
@@ -52,6 +63,7 @@ const Input = ({ onSendMessage }) => {
           setMessage(e.target.value);
           autoResize();
         }}
+        onKeyDown={handleKeyDown} // Permite enviar con Enter
       ></textarea>
       <div className="contenedor-social">
         <button className="btn-social" type="button">

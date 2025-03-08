@@ -35,8 +35,6 @@ export function BentoGridInicio({username}) {
     tipo: "publico",
   });
 
-  
-
   const fetchRol = async () => {
     try {
       const response = await customAxios.get(`http://localhost:5000/api/data/usuario`, {

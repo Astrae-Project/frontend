@@ -42,7 +42,7 @@
 
 .lista-usuarios {
     position: absolute;
-    top: 100%; /* Coloca la lista justo debajo del input */
+    top: 100%; 
     left: 0;
     right: 0;
     height: auto; /* Altura máxima de la lista */

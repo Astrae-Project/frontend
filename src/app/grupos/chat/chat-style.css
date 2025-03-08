@@ -1,62 +1,96 @@
-/* Contenedor principal del chat */
+/* Divisor - Cabezera del chat */
+.divisor {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 6vh; /* Altura fija para el divisor */
+  border-bottom: 1px solid #151522;
+  padding: 0 16px;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+.avatar1 {
+  background-color: #151522;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+}
+
+.nombre-grupo {
+  margin-left: 15px;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.contenedor-iconos {
+  display: flex;
+  margin-left: auto; /* Empuja los iconos a la derecha */
+  gap: 10px;
+}
+
+.iconos {
+  width: 16px;
+  height: 16px;
+}
+
+/* Contenedor principal del chat (mensajes + input) */
 .chat-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  /* La altura se calcula restando la altura del divisor (6vh) */
+  height: calc(100vh - 6vh);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Área donde se muestran los mensajes */
+.chat-messages {
+  flex-grow: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Cada mensaje individual */
+.chat-message {
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: #e1ffc7;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Nombre del usuario en el mensaje */
+.chat-message strong {
+  color: #333;
+  font-size: 0.9em;
+}
+
+/* Contenido del mensaje */
+.chat-message span {
+  display: inline-block;
+  margin-left: 8px;
+  color: #555;
+  font-size: 0.9em;
+}
+
+/* Animación para que los mensajes aparezcan suavemente */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
   }
-  
-  /* Área donde se muestran los mensajes */
-  .chat-messages {
-    flex: 1;
-    padding: 16px;
-    overflow-y: auto;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  /* Estilo para la barra de desplazamiento en navegadores Webkit */
-  .chat-messages::-webkit-scrollbar {
-    width: 8px;
-  }
-  .chat-messages::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 4px;
-  }
-  
-  /* Cada mensaje individual */
-  .chat-message {
-    margin-bottom: 12px;
-    padding: 8px 12px;
-    border-radius: 4px;
-    background-color: #e1ffc7;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 0.3s ease-in-out;
-  }
-  
-  /* El nombre del usuario en el mensaje */
-  .chat-message strong {
-    color: #333;
-    font-size: 0.9em;
-  }
-  
-  /* El contenido del mensaje */
-  .chat-message span {
-    display: inline-block;
-    margin-left: 8px;
-    color: #555;
-    font-size: 0.9em;
-  }
-  
-  /* Animación para que los mensajes aparezcan suavemente */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(5px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
+}
+
+#vacio{
+  align-items: center;
+  height: 89%;
+  font-size: 16px;
+}

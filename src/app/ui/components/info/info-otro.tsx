@@ -6,6 +6,7 @@ import {
   IconBulbFilled,
   IconChartPieFilled,
   IconCurrencyEuro,
+  IconFileDownloadFilled,
   IconMapPinFilled,
   IconMedal,
   IconPercentage,
@@ -184,7 +185,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
     
     
         // Enviar los datos a la API de reseñas
-        const response = await customAxios.post(
+        await customAxios.post(
           "http://localhost:5000/api/perfil/resena",
           {
             id_inversor: idInversor,
@@ -284,32 +285,49 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
           </span>
         </>
       ) : (
-        <span className="contenedor-ancho1">
-          <MiniChipsOtro
-            label={<div className="icon-text"><IconMapPinFilled className="icono2" /> {usuario?.usuario?.ciudad && usuario?.usuario?.pais ? `${usuario.usuario.ciudad}, ${usuario.usuario.pais}` : "Sin ubicación"}</div>}
-            tooltipText="Ubicación"
-          />
-          <MiniChipsOtro
-            label={<div className="icon-text"><IconBulbFilled className="icono2" /> {usuario?.sector || "Desconocido"}</div>}
-            tooltipText="Sector"
-          />
-          <MiniChipsOtro
-            label={<div className="icon-text"><IconChartPieFilled className="icono2" /> {usuario?.estado_financiacion || "Desconocido"}</div>}
-            tooltipText="Ronda de Financiación"
-          />
-          <MiniChipsOtro
-            label={<div className="icon-text"><IconUserFilled className="icono2" /> {usuario?.plantilla || "Desconocida"}</div>}
-            tooltipText="Plantilla"
-          />
-          <MiniChipsOtro
-            label={<div className="icon-text"><IconCurrencyEuro id="icono-pequeño" className="icono2" /> Recaudación Total: {formatInversion(recaudacionTotal ?? "0")}</div>}
-            tooltipText={null}
-          />
-          <MiniChipsOtro
-            label={<div className="icon-text"><IconPercentage id="icono-pequeño2" className="icono2" /> Porcentaje Disponible: {usuario?.porcentaje_disponible || "0"}%</div>}
-            tooltipText={null}
-          />
-        </span>
+        <>
+          <button className="rankear" onClick={() => setActiveBubble("rankear")}>
+            <IconFileDownloadFilled id="descarga" />
+          </button>
+          <span className="contenedor-ancho1">
+              <MiniChipsOtro
+                label={<div className="icon-text">
+                  <IconMapPinFilled className="icono2" />{" "}
+                  {usuario?.usuario?.ciudad && usuario?.usuario?.pais
+                    ? `${usuario.usuario.ciudad}, ${usuario.usuario.pais}`
+                    : "Sin ubicación"}
+                </div>}
+                tooltipText="Ubicación" />
+              <MiniChipsOtro
+                label={<div className="icon-text">
+                  <IconBulbFilled className="icono2" /> {usuario?.sector || "Desconocido"}
+                </div>}
+                tooltipText="Sector" />
+              <MiniChipsOtro
+                label={<div className="icon-text">
+                  <IconChartPieFilled className="icono2" />{" "}
+                  {usuario?.estado_financiacion || "Desconocido"}
+                </div>}
+                tooltipText="Ronda de Financiación" />
+              <MiniChipsOtro
+                label={<div className="icon-text">
+                  <IconUserFilled className="icono2" /> {usuario?.plantilla || "Desconocida"}
+                </div>}
+                tooltipText="Plantilla" />
+              <MiniChipsOtro
+                label={<div className="icon-text">
+                  <IconCurrencyEuro id="icono-pequeño" className="icono2" />{" "}
+                  Recaudación Total: {formatInversion(recaudacionTotal ?? "0")}
+                </div>}
+                tooltipText={null} />
+              <MiniChipsOtro
+                label={<div className="icon-text">
+                  <IconPercentage id="icono-pequeño2" className="icono2" />{" "}
+                  Porcentaje Disponible: {usuario?.porcentaje_disponible || "0"}%
+                </div>}
+                tooltipText={null} />
+            </span>
+          </>
       )}
   
       <BotonesOtro username={username} />
