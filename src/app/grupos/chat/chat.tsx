@@ -14,9 +14,11 @@ const ChatGroup = ({ groupId }) => {
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
   const [groupData, setGroupData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Crear referencia para el contenedor de mensajes
   const messagesEndRef = useRef(null);
+  const chatContainerRef = useRef(null);
 
   // Convertir groupId a número limpiando espacios
   const numericGroupId = groupId ? parseInt(String(groupId).trim(), 10) : null;
@@ -50,40 +52,77 @@ const ChatGroup = ({ groupId }) => {
     fetchGroupData();
   }, [numericGroupId]);
 
+  // Fetch messages when group changes
   useEffect(() => {
     if (!numericGroupId) return;
+    
+    setIsLoading(true); // Start loading
+    
     const fetchMessages = async () => {
       try {
         const response = await customAxios.get(`http://localhost:5000/api/grupos/ver/${numericGroupId}/mensajes`);
-        setMessages(response.data.mensajes); // O ajusta según lo que retorne la API
+        setMessages(response.data.mensajes);
       } catch (error) {
         console.error("Error obteniendo mensajes:", error);
+      } finally {
+        setIsLoading(false); // End loading regardless of success/failure
       }
     };
+    
     fetchMessages();
   }, [numericGroupId]);
 
+  // Scroll to bottom when messages load or change
+  useEffect(() => {
+    if (messages.length > 0 && chatContainerRef.current && !isLoading) {
+      // Scroll instantly (no animation) to the bottom when messages first load
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [messages, isLoading]);
+
+  // Socket connection
   useEffect(() => {
     if (!numericGroupId) return;
     const newSocket = io(SOCKET_SERVER_URL, { withCredentials: true });
+    
     newSocket.on("connect", () => {
       newSocket.emit("joinRoom", numericGroupId);
       console.log(`Socket ${newSocket.id} unido a la sala ${numericGroupId}`);
     });
+    
     newSocket.on("newMessage", (data) => {
       setMessages((prevMessages) => [...prevMessages, data]);
+      // For new messages that arrive while user is in the chat, we can use smooth scroll
+      if (chatContainerRef.current) {
+        // Check if user is already at the bottom before auto-scrolling
+        const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
+        const isAtBottom = scrollHeight - scrollTop - clientHeight < 100; // Within 100px of bottom
+        
+        if (isAtBottom) {
+          // Only auto-scroll if they were already near the bottom
+          setTimeout(() => {
+            chatContainerRef.current.scrollTo({
+              top: chatContainerRef.current.scrollHeight,
+              behavior: 'smooth'
+            });
+          }, 50);
+        }
+      }
     });
+    
     newSocket.on("connect_error", (err) => {
       console.error("Error de conexión:", err);
     });
+    
     setSocket(newSocket);
+    
     return () => {
       newSocket.disconnect();
     };
   }, [numericGroupId]);
 
   const handleSendMessage = useCallback(async (messageContent) => {
-    if (!socket || !numericGroupId) return;
+    if (!socket || !numericGroupId || !currentUser) return;
     try {
       const messageData = {
         contenido: messageContent,
@@ -96,17 +135,15 @@ const ChatGroup = ({ groupId }) => {
       ]);
       await customAxios.post(`http://localhost:5000/api/grupos/enviar/${numericGroupId}/mensajes`, messageData);
       socket.emit("sendMessage", { ...messageData, username: currentUser.username });
+      
+      // Auto-scroll after sending a message
+      if (chatContainerRef.current) {
+        chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      }
     } catch (error) {
       console.error("Error al enviar mensaje:", error);
     }
   }, [socket, numericGroupId, currentUser]);
-
-  // Desplazar al último mensaje solo cuando el chat se abre
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [numericGroupId]); // Ejecutar solo cuando se cambia el grupo (es decir, al abrir un grupo diferente)
 
   return (
     <div className="chat-container">
@@ -128,15 +165,23 @@ const ChatGroup = ({ groupId }) => {
               </button>
             </div>
           </div>
-          <div className="chat-messages">
-            {messages.map((msg, index) => (
-              <div key={index} className="chat-message">
-                <strong>{msg.emisor.username}: </strong>
-                <span>{msg.contenido}</span>
-              </div>
-            ))}
-            {/* Referencia para el último mensaje */}
-            <div ref={messagesEndRef} />
+          <div className="chat-messages" ref={chatContainerRef}>
+            {isLoading ? (
+              <div className="loading-messages">Cargando mensajes...</div>
+            ) : (
+              <>
+                {messages.map((msg, index) => {
+                  const isMyMessage = currentUser && msg.id_emisor === currentUser.id;
+                  return (
+                    <div key={index} className={`chat-message ${isMyMessage ? "my-message" : "other-message"}`}>
+                      <strong>{msg.emisor.username}: </strong>
+                      <span>{msg.contenido}</span>
+                    </div>
+                  );
+                })}
+                <div ref={messagesEndRef} />
+              </>
+            )}
           </div>
           <Input onSendMessage={handleSendMessage} />
         </>

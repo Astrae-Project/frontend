@@ -8,6 +8,8 @@
   padding: 0 16px;
   box-sizing: border-box;
   z-index: 2;
+  background-color: #10101A;
+  position: absolute;
 }
 
 .avatar1 {
@@ -47,7 +49,7 @@
 /* Área donde se muestran los mensajes */
 .chat-messages {
   flex-grow: 1;
-  padding: 16px;
+  padding: 65px 16px 6px 16px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -61,6 +63,24 @@
   background-color: #e1ffc7;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Mensajes del usuario logueado */
+.my-message {
+  background-color: #007bff; /* Azul */
+  color: white;
+  align-self: flex-end;
+  text-align: right;
+  border-top-right-radius: 0;
+}
+
+/* Mensajes de otros usuarios */
+.other-message {
+  background-color: #f1f1f1; /* Gris claro */
+  color: black;
+  align-self: flex-start;
+  text-align: left;
+  border-top-left-radius: 0;
 }
 
 /* Nombre del usuario en el mensaje */
