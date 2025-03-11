@@ -30,7 +30,9 @@ const ChatGroup = ({ groupId }) => {
         `http://localhost:5000/api/data/usuario`,
         { withCredentials: true }
       );
-      setCurrentUser(response.data.inversor?.usuario || response.data.startup?.usuario);
+      setCurrentUser(
+        response.data.inversor?.usuario || response.data.startup?.usuario
+      );
     } catch (error) {
       console.error("Error obteniendo datos del usuario:", error);
     }
@@ -113,7 +115,7 @@ const ChatGroup = ({ groupId }) => {
     return () => newSocket.disconnect();
   }, [numericGroupId]);
 
-  // Al enviar un mensaje, se genera fecha en el frontend
+  // Al enviar un mensaje se genera la fecha actual en el frontend
   const handleSendMessage = useCallback(
     async (messageContent) => {
       if (!socket || !numericGroupId || !currentUser) return;
@@ -126,13 +128,19 @@ const ChatGroup = ({ groupId }) => {
         };
         setMessages((prevMessages) => [
           ...prevMessages,
-          { ...messageData, emisor: { id: currentUser.id, username: currentUser.username } },
+          {
+            ...messageData,
+            emisor: { id: currentUser.id, username: currentUser.username },
+          },
         ]);
         await customAxios.post(
           `http://localhost:5000/api/grupos/enviar/${numericGroupId}/mensajes`,
           messageData
         );
-        socket.emit("sendMessage", { ...messageData, username: currentUser.username });
+        socket.emit("sendMessage", {
+          ...messageData,
+          username: currentUser.username,
+        });
         if (chatContainerRef.current) {
           chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
@@ -143,7 +151,7 @@ const ChatGroup = ({ groupId }) => {
     [socket, numericGroupId, currentUser]
   );
 
-  // Función para formatear la hora y los minutos (HH:mm)
+  // Formatea la hora y minutos (HH:mm)
   function formatHourMinutes(fecha) {
     const date = new Date(fecha);
     const horas = date.getHours().toString().padStart(2, "0");
@@ -151,19 +159,19 @@ const ChatGroup = ({ groupId }) => {
     return `${horas}:${minutos}`;
   }
 
-  // Función para formatear la fecha del separador (ej: "18 de noviembre")
+  // Formatea la fecha para el separador (ej. "18 de noviembre")
   function formatDateSeparator(fecha) {
     const date = new Date(fecha);
     const options = { day: "numeric", month: "long" };
     return date.toLocaleDateString("es-ES", options);
   }
 
-  // Función auxiliar para validar la fecha
+  // Función auxiliar para validar fechas
   function isValidDate(date) {
     return date instanceof Date && !isNaN(date.getTime());
   }
 
-  // Renderiza los mensajes con separadores de fecha
+  // Renderiza los mensajes con separadores de fecha y controla la repetición del header
   const renderMessagesWithSeparators = () => {
     const elements = [];
     let lastDateKey = "";
@@ -175,7 +183,7 @@ const ChatGroup = ({ groupId }) => {
         if (msgDateKey !== lastDateKey) {
           elements.push(
             <div key={`sep-${msgDateKey}`} className="date-separator">
-              {formatDateSeparator(msg.fecha_envio)}
+              <p>{formatDateSeparator(msg.fecha_envio)}</p>
             </div>
           );
           lastDateKey = msgDateKey;
@@ -183,33 +191,49 @@ const ChatGroup = ({ groupId }) => {
       } else {
         console.error("Fecha inválida en mensaje:", msg.fecha_envio);
       }
-      
+
       const isMyMessage = currentUser && msg.emisor.id === currentUser.id;
+      // Para mensajes de otros, si el mensaje anterior es del mismo usuario y en el mismo día, no se muestra el header
+      let showHeader = true;
+      if (!isMyMessage && index > 0) {
+        const prevMsg = messages[index - 1];
+        if (prevMsg.emisor.id === msg.emisor.id) {
+          const prevDateKey = new Date(prevMsg.fecha_envio).toISOString().split("T")[0];
+          if (prevDateKey === msgDateKey) {
+            showHeader = false;
+          }
+        }
+      }
+
       if (isMyMessage) {
         elements.push(
           <div key={`msg-${index}`} className="chat-message-container my-message-container">
             <div className="message-content">
               <div className="chat-message my-message">
-                <span>{msg.contenido}</span>
-                <span className="message-time">{formatHourMinutes(msg.fecha_envio)}</span>
+                <span className="contenido">{msg.contenido}</span>
+                <span className="message-time" id="time">{formatHourMinutes(msg.fecha_envio)}</span>
               </div>
             </div>
           </div>
         );
       } else {
+        // Para mensajes consecutivos sin header, agregamos la clase "consecutive-message"
+        const messageClass = showHeader ? "other-message" : "other-message consecutive-message";
         elements.push(
           <div key={`msg-${index}`} className="chat-message-container other-message-container">
-            <div className="avatar">
-              <img
-                src={`https://api.dicebear.com/7.x/identicon/svg?seed=${msg.emisor.username}`}
-                alt="Avatar"
-              />
-            </div>
+            {showHeader && (
+              <div className="avatar">
+                <img
+                  src={`https://api.dicebear.com/7.x/identicon/svg?seed=${msg.emisor.username}`}
+                  alt="Avatar"
+                />
+              </div>
+            )}
             <div className="message-content">
-              <p className="username">{msg.emisor.username}</p>
-              <div className="chat-message other-message">
-                <span>{msg.contenido}</span>
-                <span className="message-time">{formatHourMinutes(msg.fecha_envio)}</span>
+              {showHeader && <p className="username">{msg.emisor.username}</p>}
+              <div className={`chat-message ${messageClass}`}>
+                <span className="contenido">{msg.contenido}</span>
+                <span className="message-time" id="time1">{formatHourMinutes(msg.fecha_envio)}</span>
               </div>
             </div>
           </div>
@@ -221,7 +245,7 @@ const ChatGroup = ({ groupId }) => {
 
   return (
     <div className="chat-container">
-      { !numericGroupId ? (
+      {!numericGroupId ? (
         <div className="contenido-vacio" id="vacio">
           <p>Selecciona un grupo para empezar a chatear.</p>
         </div>
