@@ -31,6 +31,13 @@ const InfoGrupos = ({ groupId }) => {
     fetchGrupo();
   }, [groupId]);
 
+  const formatFecha = (fecha) => {
+    const date = new Date(fecha);
+    const opcionesMes = { month: 'long' };
+    const nombreMes = new Intl.DateTimeFormat('es-ES', opcionesMes).format(date);
+    return `${date.getDate()} de ${nombreMes} de ${date.getFullYear()}`;
+  };
+
   return (
     <>
       {!groupId ? (
@@ -45,6 +52,9 @@ const InfoGrupos = ({ groupId }) => {
         <div className="info-grupo">
           <h1>{grupo.nombre}</h1>
           <p>{grupo.descripcion}</p>
+          <p>Fecha de creación:{formatFecha(grupo.fecha_creacion)}</p>
+          <p>Tipo: {grupo.tipo}</p>
+          
         </div>
       )}
     </>
