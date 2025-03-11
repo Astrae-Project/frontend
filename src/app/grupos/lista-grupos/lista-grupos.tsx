@@ -14,8 +14,9 @@ const ListaGrupos = ({ onGroupSelect }) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formData, setFormData] = useState({ nombre: "", descripcion: "", tipo: "publico" });
   const [selectedGroup, setSelectedGroup] = useState(null);
+  const [grupoSeleccionado, setGrupoSeleccionado] = useState(null);
   const [messageType, setMessageType] = useState("");
-  const [ultimoMensajePorGrupo, setUltimoMensajePorGrupo] = useState({}); // Nuevo estado para guardar el último mensaje de cada grupo
+  const [ultimoMensajePorGrupo, setUltimoMensajePorGrupo] = useState({});
 
   useEffect(() => {
     // Obtener los mensajes de cada grupo
@@ -89,7 +90,7 @@ const ListaGrupos = ({ onGroupSelect }) => {
 
   // Seleccionar un grupo (desde la lista principal o el modal de unir)
   const handleSelectGroup = (grupo) => {
-    setSelectedGroup((prevSelected) => {
+    setGrupoSeleccionado((prevSelected) => {
       const newSelected = prevSelected?.id === grupo.id ? null : grupo;
       if (newSelected && onGroupSelect) {
         // Retrasamos la actualización para evitar modificar el padre durante el render
@@ -170,8 +171,9 @@ const ListaGrupos = ({ onGroupSelect }) => {
             {grupos.map((grupo) => (
               <li 
                 key={grupo.grupo.id}
-                className={selectedGroup?.id === grupo.grupo.id ? "selected" : ""}
+                className={grupoSeleccionado?.id === grupo.grupo.id ? "seleccionado" : ""}
                 onClick={() => handleSelectGroup(grupo.grupo)}
+                id="grupo"
               >
                 <div className="grupo-icono">
                   <img

@@ -62,7 +62,7 @@
 }
 
 /* Cada grupo */
-.grupos li {
+.grupos #grupo {
   display: flex;
   align-items: center;
   gap: 10px;             /* Espacio entre avatar e info */
@@ -74,17 +74,17 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.grupos li:last-child {
+.grupos #grupo:last-child {
   border-bottom: none;
 }
 
 /* Efecto hover */
-.grupos li:hover {
+.grupos #grupo:hover {
   background-color: #151522;
 }
 
 /* Grupo seleccionado */
-.grupos li.selected {
+.grupos #grupo.seleccionado {
   background-color: #1f1f2d;
 }
 
@@ -111,6 +111,7 @@
   flex-grow: 1;           /* Para ocupar todo el espacio restante */
   margin-left: 7px;
   margin-top: 3px;
+  width: 80%;
 }
 
 .grupo-info #nombre-grupo {

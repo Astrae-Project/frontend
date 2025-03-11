@@ -1,15 +1,21 @@
-/* Divisor - Cabezera del chat */
-.divisor {
+/* ===== Header del chat ===== */
+.chat-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  width: 100%;
-  height: 6vh; /* Altura fija para el divisor */
-  border-bottom: 1px solid #151522;
+  height: 6vh; 
   padding: 0 16px;
   box-sizing: border-box;
-  z-index: 2;
   background-color: #10101A;
+  border-bottom: 1px solid #151522;
   position: absolute;
+  width: 100%;
+  z-index: 2;
+}
+
+.group-info {
+  display: flex;
+  align-items: center;
 }
 
 .avatar1 {
@@ -25,28 +31,29 @@
   margin-top: 4px;
 }
 
-.contenedor-iconos {
+.header-icons {
   display: flex;
-  margin-left: auto; /* Empuja los iconos a la derecha */
-  gap: 10px;
+  margin-left: auto;
+  gap: 16px;
 }
 
 .iconos {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
+  color: white;
+  cursor: pointer;
 }
 
-/* Contenedor principal del chat (mensajes + input) */
+/* ===== Contenedor principal del chat ===== */
 .chat-container {
   display: flex;
   flex-direction: column;
-  /* La altura se calcula restando la altura del divisor (6vh) */
   height: calc(100vh - 6vh);
-  border-radius: 8px;
+  border-radius: 0 0 8px 8px;
   overflow: hidden;
 }
 
-/* Área donde se muestran los mensajes */
+/* ===== Área de mensajes ===== */
 .chat-messages {
   flex-grow: 1;
   padding: 65px 16px 6px 16px;
@@ -54,50 +61,118 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  background-color: inherit; /* Conserva el color de fondo original */
 }
 
-/* Cada mensaje individual */
-.chat-message {
-  padding: 8px 12px;
+/* Para navegadores basados en WebKit */
+.chat-messages::-webkit-scrollbar {
+  width: 0;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  display: none;
+}
+
+/* ===== Contenedores de mensajes ===== */
+.chat-message-container {
+  display: flex;
+  align-items: flex-end;
+}
+
+.my-message-container {
+  justify-content: flex-end;
+}
+
+.other-message-container {
+  justify-content: flex-start;
+}
+
+/* ===== Avatar para mensajes de otros ===== */
+.avatar img {
+  width: 40px;
+  height: 40px;
   border-radius: 4px;
-  background-color: #e1ffc7;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  animation: fadeIn 0.3s ease-in-out;
+  margin-right: 8px;
 }
 
-/* Mensajes del usuario logueado */
+/* ===== Contenido del mensaje ===== */
+.message-content {
+  display: flex;
+  flex-direction: column;
+  max-width: 75%;
+}
+
+/* Nombre del usuario (arriba de la burbuja) */
+.username {
+  font-size: 12px;
+  font-weight: bold;
+  color: #d1d1d1;
+  margin-bottom: 4px;
+}
+
+/* ===== Burbujas de mensaje estilo WhatsApp ===== */
+.chat-message {
+  padding: 10px 14px;
+  font-size: 14px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  display: flex;  
+}
+
+/* Mensajes propios: burbuja con "cola" en la esquina superior derecha */
 .my-message {
-  background-color: #007bff; /* Azul */
+  background-color: #6e4ba3;
   color: white;
+  border-radius: 18px 2px 18px 18px;
   align-self: flex-end;
   text-align: right;
-  border-top-right-radius: 0;
 }
 
-/* Mensajes de otros usuarios */
+.my-message span {
+  position: relative;
+  top: 1.5px;
+}
+
+/* Mensajes de otros: burbuja con "cola" en la esquina superior izquierda */
 .other-message {
-  background-color: #f1f1f1; /* Gris claro */
-  color: black;
+  background-color: #151522;
+  color: #e9e9e9;
+  border-radius: 2px 18px 18px 18px;
   align-self: flex-start;
   text-align: left;
-  border-top-left-radius: 0;
 }
 
-/* Nombre del usuario en el mensaje */
-.chat-message strong {
-  color: #333;
-  font-size: 0.9em;
+.other-message span {
+  position: relative;
+  top: 1.5px;
 }
 
-/* Contenido del mensaje */
-.chat-message span {
-  display: inline-block;
-  margin-left: 8px;
-  color: #555;
-  font-size: 0.9em;
+/* ===== Separador de fecha (rectangulito) ===== */
+.date-separator {
+  align-self: center;
+  background-color: #202c33;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  margin: 10px 0;
 }
 
-/* Animación para que los mensajes aparezcan suavemente */
+/* ===== Hora en el mensaje ===== */
+.message-time {
+  display: block;
+  font-size: 10px;
+  color: rgb(188, 188, 188);
+  margin-top: 4px;
+  text-align: right;
+}
+
+
+/* ===== Animación de aparición 
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -107,10 +182,14 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
+}===== */
 
-#vacio{
+/* ===== Estilo para contenido vacío ===== */
+#vacio {
+  display: flex;
   align-items: center;
+  justify-content: center;
   height: 89%;
   font-size: 16px;
+  color: white;
 }
