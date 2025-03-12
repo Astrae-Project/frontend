@@ -152,7 +152,6 @@
   word-wrap: break-word;
   display: flex;
   gap: 5px;
-  animation: fadeIn 0.3s ease-in-out;
 }
 
 /* Mensajes propios: burbuja con "cola" en la esquina superior derecha */

@@ -3,10 +3,12 @@
 import customAxios from "@/service/api.mjs";
 import { useState, useEffect } from "react";
 import "./info-grupos-style.css";
+import { IconArrowsDiagonal, IconArrowsDiagonal2, IconArrowsDiagonalMinimize2, IconDotsVertical } from "@tabler/icons-react";
 
 const InfoGrupos = ({ groupId }) => {
   const [grupo, setGrupo] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [expanded, setExpanded] = useState(false); // Estado para controlar la vista expandida
 
   useEffect(() => {
     // Si no hay grupo seleccionado, reseteamos y salimos
@@ -50,11 +52,48 @@ const InfoGrupos = ({ groupId }) => {
         <p>No se encontró información del grupo.</p>
       ) : (
         <div className="info-grupo">
-          <h1>{grupo.nombre}</h1>
           <p>{grupo.descripcion}</p>
-          <p>Fecha de creación:{formatFecha(grupo.fecha_creacion)}</p>
+          <p>Fecha de creación: {formatFecha(grupo.fecha_creacion)}</p>
           <p>Tipo: {grupo.tipo}</p>
-          
+          <div className="miembros">
+            <p className="titulo-miembros">Miembros</p>
+            <div className={`miembros-container ${expanded ? 'expanded' : ''}`}>
+              {!expanded ? (
+                <div className="miembros-resumen">
+                  <button onClick={() => setExpanded(true)} className="collapse-button">
+                    <IconArrowsDiagonal/>
+                  </button>
+                  {grupo.miembros.map((miembro) => (
+                    <div key={miembro.id} className="avatar1">
+                      {miembro.avatar ? miembro.avatar : miembro.username.charAt(0).toUpperCase()}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                // Vista expandida: se muestran avatar, username, rol y botón de acciones
+                <div className="miembros-expandido">
+                  <button onClick={() => setExpanded(false)} className="collapse-button">
+                    <IconArrowsDiagonalMinimize2/>
+                  </button>
+                  <ul>
+                    {grupo.miembros.map((miembro) => (
+                      <li key={miembro.id} className="miembro">
+                        <div className="avatar1">
+                          {miembro.avatar ? miembro.avatar : miembro.username.charAt(0).toUpperCase()}
+                        </div>
+                        <div className="info-miembro">
+                          <p>{miembro.username}</p> - <p>{miembro.rol}</p>
+                        </div>
+                        <div className="acciones">
+                          <button className="btn-acciones"><IconDotsVertical /></button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import customAxios from "@/service/api.mjs";
 import LoadingScreen from "../loading-screen/loading-screen";
 import Bubble from "../bubble/bubble";
-import { IconStar, IconMoneybag, IconCalendarEvent } from "@tabler/icons-react";
+import { IconStar, IconMoneybag, IconCalendarEvent, IconMessage, IconUser, IconRefresh } from "@tabler/icons-react";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import "./notificaciones-style.css";
 
@@ -67,6 +67,12 @@ const Notificaciones = () => {
     iconoNotificacion = <IconMoneybag className="iconos1" />;
   } else if (notificacionActual.tipo === "evento") {
     iconoNotificacion = <IconCalendarEvent className="iconos1" />;
+  } else if (notificacionActual.tipo === "grupo") {
+    iconoNotificacion = <IconMessage className="iconos1" />;
+  } else if (notificacionActual.tipo === "seguimiento") {
+    iconoNotificacion = <IconUser className="iconos1" />;
+  } else if (notificacionActual.tipo === "contraoferta") {
+    iconoNotificacion = <IconRefresh className="iconos1" />;
   }
 
   const handleIrPortfolio = () => {
@@ -95,7 +101,7 @@ const Notificaciones = () => {
       <div className="notificaciones-container">
       <li
         className={`movimiento-item-notificaciones ${
-          ["inversion", "grupo"].includes(notificacionActual.tipo) ? "" : "sin-bubble"
+          ["inversion", "grupo", "contraoferta"].includes(notificacionActual.tipo) ? "" : "sin-bubble"
         }`}
         onClick={() => {
           if (["inversion", "grupo"].includes(notificacionActual.tipo)) {
@@ -135,7 +141,7 @@ const Notificaciones = () => {
           {bubbleData && (
             <>
               <p className="bubble-contenido">{bubbleData.contenido}</p>
-              {activeBubble === "inversion" && (
+              {(activeBubble === "inversion" || activeBubble === "contraoferta") && (
                 <div className="contendor-botn-evento" style={{marginBottom: 0, marginTop: 0}}>
                   <button className="botn-eventos" onClick={handleMarcarLeido}>
                     Marcar Leido
