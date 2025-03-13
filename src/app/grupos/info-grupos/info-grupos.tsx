@@ -40,6 +40,11 @@ const InfoGrupos = ({ groupId }) => {
     return `${date.getDate()} de ${nombreMes} de ${date.getFullYear()}`;
   };
 
+  // Función para capitalizar la primera letra
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+  };
+
   return (
     <>
       {!groupId ? (
@@ -56,7 +61,9 @@ const InfoGrupos = ({ groupId }) => {
           <p>Fecha de creación: {formatFecha(grupo.fecha_creacion)}</p>
           <p>Tipo: {grupo.tipo}</p>
           <div className="miembros">
-            <p className="titulo-miembros">Miembros</p>
+            <p className="titulo-miembros">
+              Miembros <span className="contador-miembros">({grupo.miembros.length})</span>
+            </p>
             <div className={`miembros-container ${expanded ? 'expanded' : ''}`}>
               {!expanded ? (
                 <div className="miembros-resumen">
@@ -82,11 +89,9 @@ const InfoGrupos = ({ groupId }) => {
                           {miembro.avatar ? miembro.avatar : miembro.username.charAt(0).toUpperCase()}
                         </div>
                         <div className="info-miembro">
-                          <p>{miembro.username}</p> - <p>{miembro.rol}</p>
+                          <p>{miembro.username}</p> <div className="rol-grupos"><p>{capitalizeFirstLetter(miembro.rol)}</p></div>
                         </div>
-                        <div className="acciones">
-                          <button className="btn-acciones"><IconDotsVertical /></button>
-                        </div>
+                        <button className="btn-acciones"><IconDotsVertical /></button>
                       </li>
                     ))}
                   </ul>
