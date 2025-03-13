@@ -54,6 +54,7 @@
     padding: 40px 10px 10px 10px;
     gap: 7px;
     transition: opacity 0.3s ease;
+    animation: fadeOut 0.3s ease forwards;
 }
 
 .miembros-expandido {
@@ -70,6 +71,17 @@
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 0.6;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(-3px);
     }
 }
 
