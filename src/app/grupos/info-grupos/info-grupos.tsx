@@ -4,11 +4,16 @@ import customAxios from "@/service/api.mjs";
 import { useState, useEffect } from "react";
 import "./info-grupos-style.css";
 import { IconArrowsDiagonal, IconArrowsDiagonal2, IconArrowsDiagonalMinimize2, IconDotsVertical } from "@tabler/icons-react";
+import Bubble from "@/app/ui/components/bubble/bubble";
 
 const InfoGrupos = ({ groupId }) => {
   const [grupo, setGrupo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState(false); // Estado para controlar la vista expandida
+  const [activeBubble, setActiveBubble] = useState(null);
+  const [confirmationMessage, setConfirmationMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
+
 
   useEffect(() => {
     // Si no hay grupo seleccionado, reseteamos y salimos
@@ -44,6 +49,10 @@ const InfoGrupos = ({ groupId }) => {
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   };
+
+  const closeBubble = () => {
+    setActiveBubble(false);
+  }
 
   return (
     <>
@@ -83,13 +92,28 @@ const InfoGrupos = ({ groupId }) => {
                     <IconArrowsDiagonalMinimize2/>
                   </button>
                   <ul>
+                    <li className="miembro añadir-miembro" onClick={() => setActiveBubble("añadir-miembro")}>
+                      <div className="avatar1">
+                        <IconArrowsDiagonal2/>
+                      </div>
+                      <div className="info-miembro">
+                        <div className="contendor-username">
+                          Añadir miembro
+                        </div>
+                      </div>
+                    </li>
                     {grupo.miembros.map((miembro) => (
                       <li key={miembro.id} className="miembro">
                         <div className="avatar1">
                           {miembro.avatar ? miembro.avatar : miembro.username.charAt(0).toUpperCase()}
                         </div>
                         <div className="info-miembro">
-                          <p>{miembro.username}</p> <div className="rol-grupos"><p>{capitalizeFirstLetter(miembro.rol)}</p></div>
+                          <div className="contendor-username" title={miembro.username}>
+                            {miembro.username}
+                          </div>
+                        </div>
+                        <div className="rol-grupos">
+                          <p>{capitalizeFirstLetter(miembro.rol)}</p>
                         </div>
                         <button className="btn-acciones"><IconDotsVertical /></button>
                       </li>
@@ -101,6 +125,23 @@ const InfoGrupos = ({ groupId }) => {
           </div>
         </div>
       )}
+      <Bubble
+        show={!!activeBubble}
+        onClose={closeBubble}
+        message={confirmationMessage} // Pasar el mensaje de confirmación
+        type={messageType} // Pasar el tipo de mensaje (success o error)
+      >
+        {activeBubble === 'añadir-miembro' && (
+          <div className="añadir-miembro">
+            <h3>Añadir miembro</h3>
+            <form>
+              <label htmlFor="username">Nombre de usuario:</label>
+              <input type="text" id="username" name="username" />
+              <button type="submit">Añadir</button>
+            </form>
+          </div>
+        )}
+      </Bubble>
     </>
   );
 };

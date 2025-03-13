@@ -19,6 +19,13 @@
     z-index: 2;
 }
 
+/* Añadir estilo para el contador de miembros */
+.contador-miembros {
+    font-size: 0.9em;
+    color: #666;
+    margin-left: 5px;
+}
+
 /* Contenedor general de miembros */
 .miembros{
     position: relative;
@@ -51,7 +58,7 @@
 .miembros-resumen {
     display: flex;
     align-items: center;
-    padding: 40px 10px 10px 10px;
+    padding: 44px 10px 10px 10px;
     gap: 7px;
     transition: opacity 0.3s ease;
     animation: fadeOut 0.3s ease forwards;
@@ -59,7 +66,7 @@
 
 .miembros-expandido {
     width: 100%;
-    padding: 30px 10px 10px 10px;
+    padding: 40px 10px 10px 10px;
     animation: fadeIn 0.3s ease forwards;
 }
 
@@ -86,9 +93,9 @@
 }
 
 .miembros-resumen .avatar1 {
-    width: 40px;
-    height: 40px;
-    border-radius: 13px;
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
     background-color: #333;
     display: flex;
     align-items: center;
@@ -111,18 +118,39 @@
     padding: 8px 0;
     border-bottom: 1px solid #333;
     transition: background-color 0.2s ease;
+    position: relative;
+    width: 100%;
+}
+
+.añadir-miembro{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #333;
+    transition: background-color 0.2s ease;
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+}
+
+.añadir-miembro:hover{
+    background-color: #1E1E2E;
+    cursor: pointer;
 }
 
 .miembros-expandido .avatar1 {
-    width: 40px;
-    height: 40px;
-    border-radius: 13px;
+    width: 36px;
+    height: 36px;
+    min-width: 36px; /* Asegura que el ancho mínimo sea siempre 40px */
+    min-height: 36px; /* Asegura que la altura mínima sea siempre 40px */
+    border-radius: 11px;
     background-color: #333;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
-    flex-shrink: 0;
+    flex-shrink: 0; /* Evita que el avatar se comprima */
 }
 
 /* Información del miembro (username y rol) */
@@ -130,16 +158,37 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    font-size: 12px;
-    gap: 5px;
     flex-grow: 1;
+    overflow: hidden; /* Importante para que funcione text-overflow */
+    max-width: 50%; /* Limita el ancho máximo */
+}
+
+.contendor-username {
+    font-size: 12px;
+    width: 100%;
+    white-space: nowrap; /* Cambiado a nowrap para que funcione con ellipsis */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rol-grupos {
+    padding: 5px 9px;
+    border-radius: 6px;
+    text-align: center;
+    background-color: #222430;
+    margin-right: -7px;
+    margin-left: auto; /* Empuja el rol hacia la derecha */
+    margin-top: -1px;
+    flex-shrink: 0; /* Evita que el rol se comprima */
+}
+
+.rol-grupos p {
+    font-size: 10px;
+    top: 1.5px;
+    margin: 0;
 }
 
 /* Contenedor para las acciones (tres puntitos) */
-.acciones {
-    margin-left: auto;
-}
-
 .btn-acciones {
     background: none;
     border: none;
@@ -148,6 +197,9 @@
     font-size: 1.2em;
     opacity: 0.7;
     transition: opacity 0.2s ease, transform 0.2s ease;
+    flex-shrink: 0; /* Evita que el botón se comprima */
+    margin-left: 0; /* Elimina cualquier margen automático que pueda tener */
+    padding: 0; /* Elimina el padding por defecto del botón */
 }
 
 .btn-acciones svg {
@@ -186,31 +238,9 @@
     width: 18px;
 }
 
-/* Estilos heredados de la lista original de miembros */
-.miembro{
-    display: flex;
-    align-items: center;
-    margin: 10px 0;
-    gap: 10px;
-}
-
-.miembro p{
+/* Estilos para los párrafos dentro de los miembros */
+.miembro p {
     position: relative;
     top: 1.5px;
-}
-
-.rol-grupos{
-    padding: 5px 9px;
-    border-radius: 6px;
-    text-align: center;
-    background-color: #222430;
-    margin-right: -5px;
-    margin-left: auto;
-    margin-top: -1px;
-}
-
-.rol-grupos p {
-    font-size: 10px;
-    top: 1.5px;
-    margin: 0;
+    margin: 0; /* Elimina los márgenes por defecto */
 }
