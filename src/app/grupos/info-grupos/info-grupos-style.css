@@ -67,7 +67,7 @@
 .miembros-expandido {
     width: 100%;
     padding: 40px 10px 10px 10px;
-    animation: fadeIn 0.3s ease forwards;
+    animation: fadeIn 0.5s ease forwards;
 }
 
 @keyframes fadeIn {
@@ -120,6 +120,7 @@
     transition: background-color 0.2s ease;
     position: relative;
     width: 100%;
+    border-radius: 6px;
 }
 
 .añadir-miembro{
@@ -131,11 +132,20 @@
     transition: background-color 0.2s ease;
     position: relative;
     width: 100%;
+    height: 46px;
+    justify-content: center;
     cursor: pointer;
+    text-align: center;
+}
+
+.añadir-miembro p{
+    font-size: 12px;
+    position: relative;
+    top: 1.5px;
 }
 
 .añadir-miembro:hover{
-    background-color: #1E1E2E;
+    background-color: #222430;
     cursor: pointer;
 }
 
