@@ -24,7 +24,7 @@
     border-radius: 15px;
     transform: scale(0.9);
     animation: popIn 0.3s ease-in-out;
-    overflow-y: hidden;
+    overflow: hidden;
     margin-left: 80px;
     text-align: center;
   }

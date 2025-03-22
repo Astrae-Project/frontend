@@ -23,13 +23,13 @@
   }
   
   .navegacion-puntos {
-    margin-top: 7.5px;
+    margin-top: 6px;
     display: flex;
     justify-content: center;
     gap: 7px;
     display: flex;
     flex-direction: column;
-    margin-bottom: 7.5px;
+    margin-bottom: 6px;
   }
   
   .punto {
@@ -90,11 +90,6 @@
     background-color: transparent;
   }
 
-  .sin-bubble {
-    cursor: default; /* Cursor normal cuando no tiene Bubble */
-    pointer-events: none; /* Opcional: evita que sea clickeable */
-  }
-
   .notificacion-detalles{
     position: relative;
     font-size: 13px;
@@ -127,7 +122,81 @@
     font-size: 12.5px;
   }
   
-  .bubble-contenido{
-    min-height: 100px;
-    align-content: center;
+  .bubble-notificaciones {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 90px;
+    gap: 10px;
+    flex-shrink: 0;
+    background-color: transparent;
+    padding: 0;
+    position: relative;
+    bottom: 4px;
+    overflow: hidden;
+    margin: 15px;
+  }
+
+  .notificacion-detalles-bubble{
+    position: relative;
+    font-size: 15px;
+    margin-left: 5px;
+    width: 100%;
+    gap: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    z-index: 10;
+  }
+
+  .contenido-notificacion-bubble {
+    white-space: normal; /* Permite el salto de línea */
+    overflow-wrap: break-word; /* Rompe palabras largas si es necesario */
+    word-wrap: break-word;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 400px;
+    display: block; /* Evita comportamiento de flexbox */
+    text-align: left; /* Asegura alineación a la izquierda */
+    position: relative;
+    top: 3%;
+    font-size: 14px;
+  }
+
+  #borde-grande-bubble {
+    width: 45px;
+    height: 45px;
+    border: 1px solid #1C1C29;
+    border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .movimiento-icono3-bubble{
+    width: 95%;
+    height: 95%;
+    background-color: #1C1C29;
+    border-radius: 12px;
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.15); /* Sombra ligera */
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
+
+  .movimiento-icono3-bubble svg{
+    width: 23px;
+    height: 22px;
+  }
+
+  .movimiento-fecha3-bubble{
+    position: absolute;
+    bottom: 0%;
+    color: #888888;
+    font-size: 10px;
   }

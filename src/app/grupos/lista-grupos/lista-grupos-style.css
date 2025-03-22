@@ -307,10 +307,17 @@
     padding-top: 1%;
     padding-left: 5%;
     padding-right: 5%;
+    transition: background-color 0.3s ease;
   }
 
+  /* Estilo específico para el botón de enviar */
   .enviar {
     background-color: #6e4ba3;
+    transition: background-color 0.3s ease;
+  }
+
+  .enviar:hover {
+    background-color: #563085;
   }
 
   .contendor-botn-evento {

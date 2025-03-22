@@ -74,6 +74,7 @@
 /* Estilo específico para el botón de enviar */
 .enviar {
   background-color: #6e4ba3;
+  transition: background-color 0.3s ease;
 }
 
 .enviar:hover {

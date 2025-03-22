@@ -3,6 +3,7 @@
 import customAxios from "@/service/api.mjs";
 import { useState, useEffect } from "react";
 import "./info-grupos-style.css";
+import "../../ui/components/bento-inicio/bento-inicio-style.css";
 import { IconArrowsDiagonal, IconArrowsDiagonalMinimize2, IconDotsVertical } from "@tabler/icons-react";
 import Bubble from "@/app/ui/components/bubble/bubble";
 
@@ -16,6 +17,8 @@ const InfoGrupos = ({ groupId }) => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [availableUsers, setAvailableUsers] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
+  // Nuevo estado para la pestaña activa en la barra superior
+  const [activeTab, setActiveTab] = useState('info');
 
   useEffect(() => {
     // Si no hay grupo seleccionado, reseteamos y salimos
@@ -105,9 +108,10 @@ const InfoGrupos = ({ groupId }) => {
 
   const formatFecha = (fecha) => {
     const date = new Date(fecha);
-    const opcionesMes = { month: 'long' };
-    const nombreMes = new Intl.DateTimeFormat('es-ES', opcionesMes).format(date);
-    return `${date.getDate()} de ${nombreMes} de ${date.getFullYear()}`;
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Los meses comienzan desde 0
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
   };
 
   // Función para capitalizar la primera letra
@@ -128,7 +132,7 @@ const InfoGrupos = ({ groupId }) => {
   return (
     <>
       {!groupId ? (
-        <div className="contenido-vacio" id="info-vacio">
+        <div className="contenido-vacio info-vacio">
           <p>Selecciona un grupo para ver la información.</p>
         </div>
       ) : loading ? (
@@ -137,60 +141,117 @@ const InfoGrupos = ({ groupId }) => {
         <p>No se encontró información del grupo.</p>
       ) : (
         <div className="info-grupo">
-          <p>{grupo.descripcion}</p>
-          <p>Fecha de creación: {formatFecha(grupo.fecha_creacion)}</p>
-          <p>Tipo: {grupo.tipo}</p>
-          <div className="miembros">
-            <p className="titulo-miembros">
-              Miembros <span className="contador-miembros">({grupo.miembros.length})</span>
-            </p>
-            <div className={`miembros-container ${expanded ? 'expanded' : ''}`}>
-              {!expanded ? (
-                <div className="miembros-resumen">
-                  <button onClick={() => setExpanded(true)} className="collapse-button">
-                    <IconArrowsDiagonal/>
-                  </button>
-                  {grupo.miembros.map((miembro) => (
-                    <div key={miembro.id} className="avatar1">
-                      {miembro.avatar ? miembro.avatar : miembro.username.charAt(0).toUpperCase()}
-                    </div>
-                  ))}
+          {/* Barra superior con pestañas */}
+          <nav className="top-bar">
+            <ul className="tabs-list">
+              {['info', 'ofertas', 'archivos'].map((tab) => (
+                <li
+                  key={tab}
+                  className={`tab-item ${activeTab === tab ? 'active' : ''}`}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  <p>{tab.charAt(0).toUpperCase() + tab.slice(1)}</p> 
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Se muestra el contenido según la pestaña activa */}
+          {activeTab === 'info' && (
+            <>
+              <div className="info-grupo-container">
+                <p className="titulo-informacion">Información principal</p>
+
+                <div className="espacio">
+                  <p className="titulo-primero">Creador</p>
+                  <div className="creador-info">
+                    <div className="avatar-creador">
+                      {grupo.creador?.avatar ? grupo.creador.avatar : grupo.creador.username.charAt(0).toUpperCase()}
+                    </div>  
+                    <p className="titulo-segundo">{grupo.creador?.username}</p>
+                  </div>
                 </div>
-              ) : (
-                // Vista expandida: se muestran avatar, username, rol y botón de acciones
-                <div className="miembros-expandido">
-                  <button onClick={() => setExpanded(false)} className="collapse-button">
-                    <IconArrowsDiagonalMinimize2/>
-                  </button>
-                  <ul>
-                    <li className="miembro añadir-miembro" onClick={handleOpenAddMemberBubble}>
-                      <div className="info-miembro">
-                        <div className="contendor-username">
-                          <p>Añadir miembros</p>
-                        </div>
-                      </div>
-                    </li>
-                    {grupo.miembros.map((miembro) => (
-                      <li key={miembro.id} className="miembro">
-                        <div className="avatar1">
+
+                <div className="espacio">
+                  <p className="titulo-primero">Fecha de creación</p>
+                  <p className="titulo-segundo">{formatFecha(grupo.fecha_creacion)}</p>
+                </div>
+
+                <div className="espacio">
+                  <p className="titulo-primero">Tipo</p>
+                  <p className="titulo-segundo">{capitalizeFirstLetter(grupo.tipo)}</p>
+                </div>
+              </div>
+
+                <p className="titulo-informacion" id="titulo-descripcion">Descripción</p>
+                <div className="descripcion-container">
+                  <p className="descripcion">{grupo.descripcion}</p>
+                </div>
+
+              <div className="miembros">
+                <p className="titulo-miembros">
+                  Miembros <span className="contador-miembros">({grupo.miembros.length})</span>
+                </p>
+                <div className={`miembros-container ${expanded ? 'expanded' : ''}`}>
+                  {!expanded ? (
+                    <div className="miembros-resumen">
+                      <button onClick={() => setExpanded(true)} className="collapse-button">
+                        <IconArrowsDiagonal/>
+                      </button>
+                      {grupo.miembros.map((miembro) => (
+                        <div key={miembro.id} className="avatar-miembro">
                           {miembro.avatar ? miembro.avatar : miembro.username.charAt(0).toUpperCase()}
                         </div>
-                        <div className="info-miembro">
-                          <div className="contendor-username" title={miembro.username}>
-                            {miembro.username}
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="miembros-expandido">
+                      <button onClick={() => setExpanded(false)} className="collapse-button">
+                        <IconArrowsDiagonalMinimize2/>
+                      </button>
+                      <ul>
+                        <li className="miembro añadir-miembro" onClick={handleOpenAddMemberBubble}>
+                          <div className="info-miembro">
+                            <div className="contendor-username" id="añadir-miembro">
+                              <p>Añadir miembros</p>
+                            </div>
                           </div>
-                        </div>
-                        <div className="rol-grupos">
-                          <p>{capitalizeFirstLetter(miembro.rol)}</p>
-                        </div>
-                        <button className="btn-acciones"><IconDotsVertical /></button>
-                      </li>
-                    ))}
-                  </ul>
+                        </li>
+                        {grupo.miembros.map((miembro) => (
+                          <li key={miembro.id} className="miembro">
+                            <div className="avatar-miembro">
+                              {miembro.avatar ? miembro.avatar : miembro.username.charAt(0).toUpperCase()}
+                            </div>
+                            <div className="info-miembro">
+                              <div className="contendor-username">
+                                {miembro.username}
+                              </div>
+                            </div>
+                            <div className="rol-grupos">
+                              <p>{capitalizeFirstLetter(miembro.rol)}</p>
+                            </div>
+                            <button className="btn-acciones"><IconDotsVertical /></button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
+            </>
+          )}
+          {activeTab === 'ofertas' && (
+            <div>
+              <p>Contenido de ofertas</p>
+              {/* Aquí puedes implementar el contenido relacionado a Files */}
             </div>
-          </div>
+          )}
+          {activeTab === 'archivos' && (
+            <div>
+              <p>Contenido de archivos</p>
+              {/* Aquí puedes implementar el contenido relacionado a Pins */}
+            </div>
+          )}
         </div>
       )}
       <Bubble
@@ -205,17 +266,19 @@ const InfoGrupos = ({ groupId }) => {
             {loadingUsers ? (
               <p>Cargando usuarios disponibles...</p>
             ) : availableUsers.length === 0 ? (
-              <p>No hay usuarios disponibles para añadir</p>
+              <div className="espacio-vacio">
+                <p>No hay usuarios disponibles para añadir</p>
+              </div>
             ) : (
               <div className="lista-usuarios-disponibles">
-                <ul>
+                <ul className="lista-usuarios">
                   {availableUsers.map(user => (
                     <li 
                       key={user.id} 
-                      className={`usuario-item ${selectedUser && selectedUser.id === user.id ? 'seleccionado' : ''}`}
+                      className={`usuario-disponible ${selectedUser && selectedUser.id === user.id ? 'seleccionado' : ''}`}
                       onClick={() => selectUser(user)}
                     >
-                      <div className="avatar1">
+                      <div className="disponible-avatar">
                         {user.avatar ? user.avatar : user.username.charAt(0).toUpperCase()}
                       </div>
                       <div className="info-usuario">

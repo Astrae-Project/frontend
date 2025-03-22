@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import customAxios from "@/service/api.mjs";
 import LoadingScreen from "../loading-screen/loading-screen";
 import Bubble from "../bubble/bubble";
@@ -12,6 +12,10 @@ const Notificaciones = () => {
   const [loading, setLoading] = useState(true);
   const [activeBubble, setActiveBubble] = useState(null);
   const [bubbleData, setBubbleData] = useState(null);
+
+  // Refs para el contenido y la fecha dentro de la Bubble
+  const contenidoRef = useRef(null);
+  const fechaRef = useRef(null);
 
   useEffect(() => {
     const fetchNotificaciones = async () => {
@@ -28,10 +32,18 @@ const Notificaciones = () => {
     fetchNotificaciones();
   }, []);
 
-  // Al hacer clic en una notificación, se abre la Bubble
+  // Se usa useLayoutEffect para medir la altura del contenido después de renderizar la Bubble
+  useLayoutEffect(() => {
+    if (bubbleData && contenidoRef.current && fechaRef.current) {
+      const alturaContenido = contenidoRef.current.scrollHeight;
+      // Si el contenido supera los 25px (más de una línea), se baja la fecha
+      fechaRef.current.style.bottom = alturaContenido > 25 ? "0%" : "7%";
+    }
+  }, [bubbleData]);
+
+  // Funciones para abrir y cerrar la Bubble y navegar entre notificaciones
   const handleBubbleOpen = (data) => {
     setBubbleData(data);
-    // Asigna el tipo de la notificación para mostrar las acciones adecuadas
     setActiveBubble(data.tipo);
   };
 
@@ -55,10 +67,10 @@ const Notificaciones = () => {
   };
 
   if (loading) return <LoadingScreen />;
-  if (notificaciones.length === 0)
-    return <p>No tienes notificaciones</p>;
+  if (notificaciones.length === 0) return <p>No tienes notificaciones</p>;
 
   const notificacionActual = notificaciones[actualIndex];
+  const fechaFormateada = new Date(notificacionActual?.fecha_creacion).toLocaleDateString();
 
   let iconoNotificacion;
   if (notificacionActual.tipo === "inversion") {
@@ -80,35 +92,26 @@ const Notificaciones = () => {
   };
 
   const handleVerGrupo = () => {
-      window.location.href = `/grupos`;
+    window.location.href = `/grupos`;
   };
 
   const handleMarcarLeido = async () => {
-    if (!notificacionActual) return
+    if (!notificacionActual) return;
     try {
-      // Suponiendo que notificacionActual es la notificación seleccionada
       await customAxios.put('http://localhost:5000/api/perfil/leido', { id: notificacionActual.id });
-      handleBubbleClose();      
+      handleBubbleClose();
     } catch (error) {
       console.error('Error al marcar como leído:', error);
     }
-  }
-  
-  const fechaFormateada = new Date(notificacionActual?.fecha_creacion).toLocaleDateString();
+  };
 
   return (
     <div className="seccion" id="notificaciones">
       <div className="notificaciones-container">
-      <li
-        className={`movimiento-item-notificaciones ${
-          ["inversion", "grupo", "contraoferta"].includes(notificacionActual.tipo) ? "" : "sin-bubble"
-        }`}
-        onClick={() => {
-          if (["inversion", "grupo"].includes(notificacionActual.tipo)) {
-            handleBubbleOpen(notificacionActual);
-          }
-        }}
-      >
+        <li
+          className="movimiento-item-notificaciones"
+          onClick={() => handleBubbleOpen(notificacionActual)}
+        >
           <div className="borde-icono3" id="borde-grande">
             <div className="movimiento-icono3">{iconoNotificacion}</div>
           </div>
@@ -140,9 +143,32 @@ const Notificaciones = () => {
         <Bubble show={bubbleData !== null} onClose={handleBubbleClose}>
           {bubbleData && (
             <>
-              <p className="bubble-contenido">{bubbleData.contenido}</p>
+              <div className="bubble-notificaciones">
+                <div className="borde-icono3" id="borde-grande-bubble">
+                  <div className="movimiento-icono3-bubble">{iconoNotificacion}</div>
+                </div>
+                <div className="notificacion-detalles-bubble">
+                  <p className="contenido-notificacion-bubble" ref={contenidoRef}>
+                    {notificacionActual.contenido}
+                  </p>
+                  <p className="movimiento-fecha3-bubble" ref={fechaRef}>
+                    {fechaFormateada}
+                  </p>
+                </div>
+              </div>
+
+              {(activeBubble === "evento" ||
+                activeBubble === "oferta" ||
+                activeBubble === "seguimiento") && (
+                <div className="contendor-botn-evento" style={{ marginBottom: 0, marginTop: 0 }}>
+                  <button className="botn-eventos" onClick={handleMarcarLeido}>
+                    Marcar Leido
+                  </button>
+                </div>
+              )}
+
               {(activeBubble === "inversion" || activeBubble === "contraoferta") && (
-                <div className="contendor-botn-evento" style={{marginBottom: 0, marginTop: 0}}>
+                <div className="contendor-botn-evento" style={{ marginBottom: 0, marginTop: 0 }}>
                   <button className="botn-eventos" onClick={handleMarcarLeido}>
                     Marcar Leido
                   </button>
@@ -152,7 +178,7 @@ const Notificaciones = () => {
                 </div>
               )}
               {activeBubble === "grupo" && (
-                <div className="contendor-botn-evento" style={{marginBottom: 0, marginTop: 0}}>
+                <div className="contendor-botn-evento" style={{ marginBottom: 0, marginTop: 0 }}>
                   <button className="botn-eventos" onClick={handleMarcarLeido}>
                     Marcar Leido
                   </button>
