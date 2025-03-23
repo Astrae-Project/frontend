@@ -183,10 +183,10 @@ const InfoGrupos = ({ groupId }) => {
                 </div>
               </div>
 
-                <p className="titulo-informacion" id="titulo-descripcion">Descripción</p>
-                <div className="descripcion-container">
-                  <p className="descripcion">{grupo.descripcion}</p>
-                </div>
+              <p className="titulo-informacion" id="titulo-descripcion">Descripción</p>
+              <div className="descripcion-container">
+                <p className="descripcion">{grupo.descripcion}</p>
+              </div>
 
               <div className="miembros">
                 <p className="titulo-miembros">
@@ -236,6 +236,39 @@ const InfoGrupos = ({ groupId }) => {
                       </ul>
                     </div>
                   )}
+                </div>
+              </div>
+
+              <div className="permisos-seccion">
+                <p className="titulo-informacion">Permisos</p>
+                <div className="permisos-resumen">
+                  <div className="espacio">
+                    <p className="titulo-primero">Permisos por defecto</p>
+                    <div className="permisos-defecto">
+                      <div className="permiso-item">
+                        <span className="icono-permiso">📝</span>
+                        <p className="titulo-segundo">Editar información: {grupo.permisosDefecto?.editarInfo ? 'Sí' : 'No'}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="espacio">
+                    <p className="titulo-primero">Permisos por defecto</p>
+                    <div className="permisos-defecto">
+                      <div className="permiso-item">
+                        <span className="icono-permiso">👥</span>
+                        <p className="titulo-segundo">Invitar miembros: {grupo.permisosDefecto?.invitarMiembros ? 'Sí' : 'No'}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="espacio">
+                    <p className="titulo-primero">Permisos por defecto</p>
+                    <div className="permisos-defecto">
+                      <div className="permiso-item">
+                        <span className="icono-permiso">📂</span>
+                        <p className="titulo-segundo">Subir archivos: {grupo.permisosDefecto?.subirArchivos ? 'Sí' : 'No'}</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </>

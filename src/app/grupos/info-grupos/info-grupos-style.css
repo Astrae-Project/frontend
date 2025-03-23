@@ -8,7 +8,6 @@
 /* Estilos para la barra superior (tab bar) */
 .top-bar {
     background-color: #161823;
-    margin-bottom: 16px;
     padding: 2.5px 0;
     align-items: center;
     justify-content: center;
@@ -16,7 +15,6 @@
     width: 100%;
     align-self: center;
     border-radius: 8px;
-    margin-top: 12px;
 }
   
 .tabs-list {
@@ -39,7 +37,7 @@
 
 .tab-item p {
     position: relative;
-    top: 1.5px;
+    top: 1.75px;
 }
   
 .tab-item:hover {
@@ -73,8 +71,6 @@
     font-size: 12.5px;
     font-weight: 600;
     color: #fff;
-    margin-top: 5px;
-    margin-bottom: 7px;
     left: 3px;
 }
 
@@ -89,16 +85,14 @@
 }
 
 #titulo-descripcion {
-    margin-top: 12px;
 }
 
 .descripcion {
     position: relative;
-    font-size: 12.5px;
+    font-size: 12px;
     width: 100%;
     padding: 2px 3px;
-    margin-top: -3px;
-    margin-bottom: 10px;
+    line-height: 20px;
 }
 
 .titulo-primero {
@@ -151,7 +145,6 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 5px;
     overflow: hidden;
     max-height: 215px;
     width: 101%;
