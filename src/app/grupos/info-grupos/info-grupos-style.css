@@ -303,8 +303,6 @@
     border-radius: 6px;
     text-align: center;
     background-color: #222430;
-    margin-right: -7px;
-    margin-left: auto; /* Empuja el rol hacia la derecha */
     margin-top: -1px;
     flex-shrink: 0; /* Evita que el rol se comprima */
 }
@@ -324,9 +322,9 @@
     font-size: 1.2em;
     opacity: 0.7;
     transition: opacity 0.2s ease, transform 0.2s ease;
-    flex-shrink: 0; /* Evita que el botón se comprima */
-    margin-left: 0; /* Elimina cualquier margen automático que pueda tener */
-    padding: 0; /* Elimina el padding por defecto del botón */
+    flex-shrink: 0;
+    margin-left: 0;
+    padding: 0;
 }
 
 .btn-acciones svg {

@@ -8,6 +8,7 @@ import { IconArrowsDiagonal, IconArrowsDiagonalMinimize2, IconDotsVertical } fro
 import Bubble from "@/app/ui/components/bubble/bubble";
 
 const InfoGrupos = ({ groupId }) => {
+  const [usuario, setUsuario] = useState(null);
   const [grupo, setGrupo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState(false); // Vista expandida de miembros
@@ -40,6 +41,30 @@ const InfoGrupos = ({ groupId }) => {
     };
     fetchGrupo();
   }, [groupId]);
+
+  const fetchUsuario = async () => {
+    try {
+      const response = await customAxios.get("http://localhost:5000/api/data/usuario", {
+        withCredentials: true,
+      });
+      setUsuario(response.data);
+    } catch (error) {
+      console.error("Error al obtener el usuario actual:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsuario();
+  }, []);
+
+  // Definir el id del usuario actual, ya sea inversor o startup
+  const currentUserId = usuario?.inversor?.id_usuario || usuario?.startup?.id_usuario;
+
+  // Función para determinar si el usuario actual es administrador en el grupo
+  const isCurrentUserAdmin = () => {
+    const currentMember = grupo?.miembros.find(miembro => miembro.id === currentUserId);
+    return currentMember && currentMember.rol.toLowerCase() === 'administrador';
+  };
 
   // Función para obtener usuarios disponibles para añadir al grupo
   const fetchAvailableUsers = async () => {
@@ -118,6 +143,11 @@ const InfoGrupos = ({ groupId }) => {
   const selectUser = (user) => {
     setSelectedUser(user);
   };
+
+  // Se define la condición para mostrar el botón de "Añadir miembros":
+  // Se muestra si el permiso "invitar_miembros" está abierto o si el usuario actual es administrador
+  const canInviteMembers =
+    grupo?.permisos?.find(p => p.permiso === "invitar_miembros")?.abierto || isCurrentUserAdmin();
 
   return (
     <>
@@ -200,15 +230,15 @@ const InfoGrupos = ({ groupId }) => {
                         <IconArrowsDiagonalMinimize2/>
                       </button>
                       <ul>
-                      {grupo.permisos?.find(p => p.permiso === "invitar_miembros") && (
-                        <li className="miembro añadir-miembro" onClick={handleOpenAddMemberBubble}>
-                          <div className="info-miembro">
-                            <div className="contendor-username" id="añadir-miembro">
-                              <p>Añadir miembros</p>
+                        {canInviteMembers && (
+                          <li className="miembro añadir-miembro" onClick={handleOpenAddMemberBubble}>
+                            <div className="info-miembro">
+                              <div className="contendor-username" id="añadir-miembro">
+                                <p>Añadir miembros</p>
+                              </div>
                             </div>
-                          </div>
-                        </li>
-                      )}
+                          </li>
+                        )}
                         {grupo.miembros.map((miembro) => (
                           <li key={miembro.id} className="miembro">
                             <div className="avatar-miembro">
@@ -222,7 +252,7 @@ const InfoGrupos = ({ groupId }) => {
                             <div className="rol-grupos">
                               <p>{capitalizeFirstLetter(miembro.rol)}</p>
                             </div>
-                            {miembro.id !== userId && (
+                            {miembro.id !== currentUserId && (
                               <button className="btn-acciones">
                                 <IconDotsVertical />
                               </button>
