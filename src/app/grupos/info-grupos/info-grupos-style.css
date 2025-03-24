@@ -15,6 +15,7 @@
     width: 100%;
     align-self: center;
     border-radius: 8px;
+    margin-top: 12px;
 }
   
 .tabs-list {
@@ -55,7 +56,7 @@
     padding: 0 2.5px;
 }
 
-.info-grupo-container :last-child {
+.info-grupo-container :last-child, .permisos-seccion :last-child {
     border-bottom: none;
 }
 
@@ -72,6 +73,8 @@
     font-weight: 600;
     color: #fff;
     left: 3px;
+    margin-top: 20px;
+    margin-bottom: 5px;
 }
 
 .espacio {
@@ -82,9 +85,6 @@
     font-size: 12px;
     border-bottom: 1px solid #222430;
     height: 39px;
-}
-
-#titulo-descripcion {
 }
 
 .descripcion {
@@ -151,6 +151,7 @@
     background-color: #161823;
     align-self: center;
     border-radius: 12px;
+    margin-top: 20px;
 }
 
 /* Contenedor con la animación */

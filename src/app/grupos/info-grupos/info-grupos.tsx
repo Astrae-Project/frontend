@@ -6,22 +6,22 @@ import "./info-grupos-style.css";
 import "../../ui/components/bento-inicio/bento-inicio-style.css";
 import { IconArrowsDiagonal, IconArrowsDiagonalMinimize2, IconDotsVertical } from "@tabler/icons-react";
 import Bubble from "@/app/ui/components/bubble/bubble";
+import { userHasPermission } from "@/service/api.mjs";
 
 const InfoGrupos = ({ groupId }) => {
   const [grupo, setGrupo] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [expanded, setExpanded] = useState(false); // Estado para controlar la vista expandida
+  const [expanded, setExpanded] = useState(false); // Vista expandida de miembros
   const [activeBubble, setActiveBubble] = useState(null);
   const [confirmationMessage, setConfirmationMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [selectedUser, setSelectedUser] = useState(null);
   const [availableUsers, setAvailableUsers] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
-  // Nuevo estado para la pestaña activa en la barra superior
+  // Estado para la pestaña activa en la barra superior
   const [activeTab, setActiveTab] = useState('info');
 
   useEffect(() => {
-    // Si no hay grupo seleccionado, reseteamos y salimos
     if (!groupId) {
       setGrupo(null);
       return;
@@ -29,6 +29,8 @@ const InfoGrupos = ({ groupId }) => {
     setLoading(true);
     const fetchGrupo = async () => {
       try {
+        // Se asume que el backend devuelve además de los datos básicos,
+        // la configuración de permisos en la propiedad "permisosDefecto"
         const response = await customAxios.get(
           `http://localhost:5000/api/grupos/data/${groupId}`,
           { withCredentials: true }
@@ -46,7 +48,6 @@ const InfoGrupos = ({ groupId }) => {
   // Función para obtener usuarios disponibles para añadir al grupo
   const fetchAvailableUsers = async () => {
     if (!groupId) return;
-    
     setLoadingUsers(true);
     try {
       const response = await customAxios.get(
@@ -62,7 +63,7 @@ const InfoGrupos = ({ groupId }) => {
     }
   };
 
-  // Función para manejar la apertura del bubble de añadir miembro
+  // Función para abrir el bubble de añadir miembro
   const handleOpenAddMemberBubble = () => {
     setActiveBubble("añadir-miembro");
     setSelectedUser(null);
@@ -73,32 +74,24 @@ const InfoGrupos = ({ groupId }) => {
   const handleAddMember = async (e) => {
     e.preventDefault();
     if (!selectedUser || !groupId) return;
-
     try {
       await customAxios.post(
         `http://localhost:5000/api/grupos/${groupId}/miembros`,
         { userId: selectedUser.id },
         { withCredentials: true }
       );
-      
-      // Actualizar el grupo después de añadir un miembro
+      // Actualizamos la información del grupo
       const response = await customAxios.get(
         `http://localhost:5000/api/grupos/data/${groupId}`,
         { withCredentials: true }
       );
       setGrupo(response.data);
-      
       setConfirmationMessage('Usuario añadido correctamente');
       setMessageType('success');
-      
-      // Resetear el usuario seleccionado
       setSelectedUser(null);
-      
-      // Cerrar el bubble después de un tiempo
       setTimeout(() => {
         closeBubble();
       }, 2000);
-      
     } catch (error) {
       console.error("Error al añadir miembro:", error);
       setConfirmationMessage('Error al añadir el usuario');
@@ -106,15 +99,16 @@ const InfoGrupos = ({ groupId }) => {
     }
   };
 
+  // Formatea la fecha en dd/mm/yyyy
   const formatFecha = (fecha) => {
     const date = new Date(fecha);
     const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Los meses comienzan desde 0
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
 
-  // Función para capitalizar la primera letra
+  // Capitaliza la primera letra de un string
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   };
@@ -150,39 +144,39 @@ const InfoGrupos = ({ groupId }) => {
                   className={`tab-item ${activeTab === tab ? 'active' : ''}`}
                   onClick={() => setActiveTab(tab)}
                 >
-                  <p>{tab.charAt(0).toUpperCase() + tab.slice(1)}</p> 
+                  <p>{tab.charAt(0).toUpperCase() + tab.slice(1)}</p>
                 </li>
               ))}
             </ul>
           </nav>
 
-          {/* Se muestra el contenido según la pestaña activa */}
+          {/* Contenido según la pestaña activa */}
           {activeTab === 'info' && (
             <>
               <div className="info-grupo-container">
                 <p className="titulo-informacion">Información principal</p>
-
                 <div className="espacio">
                   <p className="titulo-primero">Creador</p>
                   <div className="creador-info">
                     <div className="avatar-creador">
-                      {grupo.creador?.avatar ? grupo.creador.avatar : grupo.creador.username.charAt(0).toUpperCase()}
-                    </div>  
+                      {grupo.creador?.avatar ? (
+                        <img src={grupo.creador.avatar} alt="Avatar del creador" />
+                      ) : (
+                        grupo.creador.username.charAt(0).toUpperCase()
+                      )}
+                    </div>
                     <p className="titulo-segundo">{grupo.creador?.username}</p>
                   </div>
                 </div>
-
                 <div className="espacio">
                   <p className="titulo-primero">Fecha de creación</p>
                   <p className="titulo-segundo">{formatFecha(grupo.fecha_creacion)}</p>
                 </div>
-
                 <div className="espacio">
                   <p className="titulo-primero">Tipo</p>
                   <p className="titulo-segundo">{capitalizeFirstLetter(grupo.tipo)}</p>
                 </div>
               </div>
-
               <p className="titulo-informacion" id="titulo-descripcion">Descripción</p>
               <div className="descripcion-container">
                 <p className="descripcion">{grupo.descripcion}</p>
@@ -210,6 +204,7 @@ const InfoGrupos = ({ groupId }) => {
                         <IconArrowsDiagonalMinimize2/>
                       </button>
                       <ul>
+                      {userHasPermission(grupo, "invitarMiembros") && (
                         <li className="miembro añadir-miembro" onClick={handleOpenAddMemberBubble}>
                           <div className="info-miembro">
                             <div className="contendor-username" id="añadir-miembro">
@@ -217,6 +212,7 @@ const InfoGrupos = ({ groupId }) => {
                             </div>
                           </div>
                         </li>
+                      )}
                         {grupo.miembros.map((miembro) => (
                           <li key={miembro.id} className="miembro">
                             <div className="avatar-miembro">
@@ -230,7 +226,9 @@ const InfoGrupos = ({ groupId }) => {
                             <div className="rol-grupos">
                               <p>{capitalizeFirstLetter(miembro.rol)}</p>
                             </div>
-                            <button className="btn-acciones"><IconDotsVertical /></button>
+                            <button className="btn-acciones">
+                              <IconDotsVertical />
+                            </button>
                           </li>
                         ))}
                       </ul>
@@ -241,57 +239,49 @@ const InfoGrupos = ({ groupId }) => {
 
               <div className="permisos-seccion">
                 <p className="titulo-informacion">Permisos</p>
-                <div className="permisos-resumen">
-                  <div className="espacio">
-                    <p className="titulo-primero">Permisos por defecto</p>
-                    <div className="permisos-defecto">
-                      <div className="permiso-item">
-                        <span className="icono-permiso">📝</span>
-                        <p className="titulo-segundo">Editar información: {grupo.permisosDefecto?.editarInfo ? 'Sí' : 'No'}</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="espacio">
-                    <p className="titulo-primero">Permisos por defecto</p>
-                    <div className="permisos-defecto">
-                      <div className="permiso-item">
-                        <span className="icono-permiso">👥</span>
-                        <p className="titulo-segundo">Invitar miembros: {grupo.permisosDefecto?.invitarMiembros ? 'Sí' : 'No'}</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="espacio">
-                    <p className="titulo-primero">Permisos por defecto</p>
-                    <div className="permisos-defecto">
-                      <div className="permiso-item">
-                        <span className="icono-permiso">📂</span>
-                        <p className="titulo-segundo">Subir archivos: {grupo.permisosDefecto?.subirArchivos ? 'Sí' : 'No'}</p>
-                      </div>
-                    </div>
-                  </div>
+                <div className="espacio">
+                  <p className="titulo-primero">Editar información</p>
+                  <p className="titulo-segundo">
+                    {grupo.permisosDefecto?.editarInfo ? 'Sí' : 'No'}
+                  </p>
+                </div>
+                <div className="espacio">
+                  <p className="titulo-primero">Invitar miembros</p>
+                  <p className="titulo-segundo">
+                    {grupo.permisosDefecto?.invitarMiembros ? 'Sí' : 'No'}
+                  </p>
+                </div>
+                <div className="espacio">
+                  <p className="titulo-primero">Subir archivos</p>
+                  <p className="titulo-segundo">
+                    {grupo.permisosDefecto?.subirArchivos ? 'Sí' : 'No'}
+                  </p>
                 </div>
               </div>
             </>
           )}
+
           {activeTab === 'ofertas' && (
             <div>
               <p>Contenido de ofertas</p>
-              {/* Aquí puedes implementar el contenido relacionado a Files */}
+              {/* Aquí puedes implementar el contenido relacionado a ofertas */}
             </div>
           )}
+
           {activeTab === 'archivos' && (
             <div>
               <p>Contenido de archivos</p>
-              {/* Aquí puedes implementar el contenido relacionado a Pins */}
+              {/* Aquí puedes implementar el contenido relacionado a archivos */}
             </div>
           )}
         </div>
       )}
+
       <Bubble
         show={!!activeBubble}
         onClose={closeBubble}
-        message={confirmationMessage} // Pasar el mensaje de confirmación
-        type={messageType} // Pasar el tipo de mensaje (success o error)
+        message={confirmationMessage}
+        type={messageType}
       >
         {activeBubble === 'añadir-miembro' && (
           <div className="bubble-añadir">
