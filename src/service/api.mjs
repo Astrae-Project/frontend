@@ -44,11 +44,3 @@ customAxios.interceptors.response.use(
   };
   
 export default customAxios;
-
-
-export function userHasPermission(user, group, permission) {
-  if (!user || !group || !group.miembros) return false;
-
-  const miembro = group.miembros.find(m => m.id_usuario === user.id);
-  return miembro?.rol?.permisos?.includes(permission) || false;
-}

@@ -6,7 +6,6 @@ import "./info-grupos-style.css";
 import "../../ui/components/bento-inicio/bento-inicio-style.css";
 import { IconArrowsDiagonal, IconArrowsDiagonalMinimize2, IconDotsVertical } from "@tabler/icons-react";
 import Bubble from "@/app/ui/components/bubble/bubble";
-import { userHasPermission } from "@/service/api.mjs";
 
 const InfoGrupos = ({ groupId }) => {
   const [grupo, setGrupo] = useState(null);
@@ -18,7 +17,6 @@ const InfoGrupos = ({ groupId }) => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [availableUsers, setAvailableUsers] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
-  // Estado para la pestaña activa en la barra superior
   const [activeTab, setActiveTab] = useState('info');
 
   useEffect(() => {
@@ -29,8 +27,6 @@ const InfoGrupos = ({ groupId }) => {
     setLoading(true);
     const fetchGrupo = async () => {
       try {
-        // Se asume que el backend devuelve además de los datos básicos,
-        // la configuración de permisos en la propiedad "permisosDefecto"
         const response = await customAxios.get(
           `http://localhost:5000/api/grupos/data/${groupId}`,
           { withCredentials: true }
@@ -204,7 +200,7 @@ const InfoGrupos = ({ groupId }) => {
                         <IconArrowsDiagonalMinimize2/>
                       </button>
                       <ul>
-                      {userHasPermission(grupo, "invitarMiembros") && (
+                      {grupo.permisos?.find(p => p.permiso === "invitar_miembros") && (
                         <li className="miembro añadir-miembro" onClick={handleOpenAddMemberBubble}>
                           <div className="info-miembro">
                             <div className="contendor-username" id="añadir-miembro">
@@ -226,9 +222,11 @@ const InfoGrupos = ({ groupId }) => {
                             <div className="rol-grupos">
                               <p>{capitalizeFirstLetter(miembro.rol)}</p>
                             </div>
-                            <button className="btn-acciones">
-                              <IconDotsVertical />
-                            </button>
+                            {miembro.id !== userId && (
+                              <button className="btn-acciones">
+                                <IconDotsVertical />
+                              </button>
+                            )}
                           </li>
                         ))}
                       </ul>
@@ -239,22 +237,25 @@ const InfoGrupos = ({ groupId }) => {
 
               <div className="permisos-seccion">
                 <p className="titulo-informacion">Permisos</p>
+
                 <div className="espacio">
                   <p className="titulo-primero">Editar información</p>
                   <p className="titulo-segundo">
-                    {grupo.permisosDefecto?.editarInfo ? 'Sí' : 'No'}
+                    {grupo.permisos?.find(p => p.permiso === "editar_grupo")?.abierto ? 'Sí' : 'No'}
                   </p>
                 </div>
+
                 <div className="espacio">
                   <p className="titulo-primero">Invitar miembros</p>
                   <p className="titulo-segundo">
-                    {grupo.permisosDefecto?.invitarMiembros ? 'Sí' : 'No'}
+                    {grupo.permisos?.find(p => p.permiso === "invitar_miembros")?.abierto ? 'Sí' : 'No'}
                   </p>
                 </div>
+
                 <div className="espacio">
-                  <p className="titulo-primero">Subir archivos</p>
+                  <p className="titulo-primero">Subir documentos</p>
                   <p className="titulo-segundo">
-                    {grupo.permisosDefecto?.subirArchivos ? 'Sí' : 'No'}
+                    {grupo.permisos?.find(p => p.permiso === "subir_documentos")?.abierto ? 'Sí' : 'No'}
                   </p>
                 </div>
               </div>
