@@ -98,7 +98,7 @@ const TablaPortfolioOtro = ({ username }) => {
             {portfolio.map((inversion) => {
               const cambioPorcentualInfo = formatCambioPorcentual(inversion.roi);
               return (
-                <li key={inversion.id}>
+                <li key={inversion.id} className='portfolio-item'>
                   <button
                     className="relleno-btn"
                     onClick={() => {

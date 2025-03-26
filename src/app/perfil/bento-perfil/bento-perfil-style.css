@@ -150,7 +150,7 @@
 
 #contacto,#grupos-perfil{
   padding-bottom: 12px;
-  padding-top: 15%;
+  padding-top: 17%;
   padding-left: 3%;
   padding-right: 3%;
   border: none;
@@ -441,7 +441,7 @@
   top: -7px;
   text-align: left;
   font-variation-settings: "slnt" 0, "wght" 400;
-  margin-left: 9%;
+  margin-left: 5%;
 }
 
 .porcentaje, .valor, .variacion {
@@ -528,19 +528,6 @@ ul {
   font-size: 0.95rem;
 }
 
-li {
-  display: flex;
-  align-items: center;
-  padding: 8px 10px;
-  width: 100%;
-  height: 50px;
-  background-color: #14141f;
-  margin-top: 14.3px;  
-  border-radius: 10px;
-  flex-shrink: 0;
-  transition: background-color 0.2s ease ;
-}
-
 .relleno-btn{
   width: 100%;
   height: 100%;
@@ -586,6 +573,17 @@ li {
   margin-top: 14.3px;  
   border-radius: 10px;
   flex-shrink: 0;
+}
+
+.movimiento-item{
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  margin-top: 14.3px;  
+  border-radius: 10px;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease ;
 }
 
 .movimiento-item, .movimiento-item-sin-eventos{
@@ -702,6 +700,14 @@ li {
 .contacto-item{
   width: 90%;
   font-size: 12px;
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  height: 50px;
+  background-color: #14141f;
+  margin-top: 14.3px;  
+  border-radius: 10px;
+  flex-shrink: 0;
 }
 
 svg{
@@ -729,6 +735,28 @@ svg{
 .grupo-item{
   width: 96%;
   font-size: 12px;
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  height: 50px;
+  background-color: #14141f;
+  margin-top: 14.3px;  
+  border-radius: 10px;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease ;
+}
+
+.portfolio-item{
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  width: 100%;
+  height: 50px;
+  background-color: #14141f;
+  margin-top: 14.3px;  
+  border-radius: 10px;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease ;
 }
 
 .contacto-item p, #nombre-grupo{

@@ -638,20 +638,20 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
             ) : (
               <ul>
                 {eventosArray.map((evento) => (
-                  <li
+                    <li
                     key={evento.id}
-                    className={selectedEvent?.id === evento.id ? 'selected' : ''}
+                    className={`calendario-item ${selectedEvent?.id === evento.id ? 'selected' : ''}`}
                     onClick={() => handleSelectEvent(evento.id)} // Cambiar estado al hacer clic
-                  >
+                    >
                     <div className="portfolio-icono">
                       <img src={evento.creador.avatar} className="avatar-imagen" />
                     </div>
                     <div className="evento-detalles">
-                        <p className="evento-creador">{evento.creador.username}</p>
-                        <p className="evento-titulo">{evento.titulo}</p>
-                        <p className="evento-fecha">{formatDateTime(evento.fecha_evento)}</p>
+                      <p className="evento-creador">{evento.creador.username}</p>
+                      <p className="evento-titulo">{evento.titulo}</p>
+                      <p className="evento-fecha">{formatDateTime(evento.fecha_evento)}</p>
                     </div>
-                  </li>
+                    </li>
                 ))}
               </ul>
             )}

@@ -1,17 +1,21 @@
 'use client';
 
 import customAxios from "@/service/api.mjs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import "./info-grupos-style.css";
 import "../../ui/components/bento-inicio/bento-inicio-style.css";
-import { IconArrowsDiagonal, IconArrowsDiagonalMinimize2, IconDotsVertical } from "@tabler/icons-react";
+import {
+  IconArrowsDiagonal,
+  IconArrowsDiagonalMinimize2,
+  IconDotsVertical
+} from "@tabler/icons-react";
 import Bubble from "@/app/ui/components/bubble/bubble";
 
 const InfoGrupos = ({ groupId }) => {
   const [usuario, setUsuario] = useState(null);
   const [grupo, setGrupo] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [expanded, setExpanded] = useState(false); // Vista expandida de miembros
+  const [expanded, setExpanded] = useState(false);
   const [activeBubble, setActiveBubble] = useState(null);
   const [confirmationMessage, setConfirmationMessage] = useState('');
   const [messageType, setMessageType] = useState('');
@@ -19,7 +23,9 @@ const InfoGrupos = ({ groupId }) => {
   const [availableUsers, setAvailableUsers] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [activeTab, setActiveTab] = useState('info');
+  const [openDropdownId, setOpenDropdownId] = useState(null);
 
+  // Cargar información del grupo según groupId
   useEffect(() => {
     if (!groupId) {
       setGrupo(null);
@@ -28,11 +34,11 @@ const InfoGrupos = ({ groupId }) => {
     setLoading(true);
     const fetchGrupo = async () => {
       try {
-        const response = await customAxios.get(
+        const { data } = await customAxios.get(
           `http://localhost:5000/api/grupos/data/${groupId}`,
           { withCredentials: true }
         );
-        setGrupo(response.data);
+        setGrupo(data);
       } catch (error) {
         console.error("Error al obtener la información del grupo:", error);
       } finally {
@@ -42,40 +48,41 @@ const InfoGrupos = ({ groupId }) => {
     fetchGrupo();
   }, [groupId]);
 
-  const fetchUsuario = async () => {
+  // Cargar información del usuario actual
+  const fetchUsuario = useCallback(async () => {
     try {
-      const response = await customAxios.get("http://localhost:5000/api/data/usuario", {
+      const { data } = await customAxios.get("http://localhost:5000/api/data/usuario", {
         withCredentials: true,
       });
-      setUsuario(response.data);
+      setUsuario(data);
     } catch (error) {
       console.error("Error al obtener el usuario actual:", error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchUsuario();
-  }, []);
+  }, [fetchUsuario]);
 
   // Definir el id del usuario actual, ya sea inversor o startup
   const currentUserId = usuario?.inversor?.id_usuario || usuario?.startup?.id_usuario;
 
-  // Función para determinar si el usuario actual es administrador en el grupo
+  // Determinar si el usuario actual es administrador en el grupo
   const isCurrentUserAdmin = () => {
     const currentMember = grupo?.miembros.find(miembro => miembro.id === currentUserId);
     return currentMember && currentMember.rol.toLowerCase() === 'administrador';
   };
 
-  // Función para obtener usuarios disponibles para añadir al grupo
+  // Obtener usuarios disponibles para añadir al grupo
   const fetchAvailableUsers = async () => {
     if (!groupId) return;
     setLoadingUsers(true);
     try {
-      const response = await customAxios.get(
+      const { data } = await customAxios.get(
         `http://localhost:5000/api/grupos/disponible/${groupId}`,
         { withCredentials: true }
       );
-      setAvailableUsers(response.data);
+      setAvailableUsers(data);
     } catch (error) {
       console.error("Error al obtener usuarios disponibles:", error);
       setAvailableUsers([]);
@@ -84,14 +91,14 @@ const InfoGrupos = ({ groupId }) => {
     }
   };
 
-  // Función para abrir el bubble de añadir miembro
+  // Abrir bubble para añadir miembro
   const handleOpenAddMemberBubble = () => {
     setActiveBubble("añadir-miembro");
     setSelectedUser(null);
     fetchAvailableUsers();
   };
 
-  // Función para añadir un miembro al grupo
+  // Añadir un miembro al grupo
   const handleAddMember = async (e) => {
     e.preventDefault();
     if (!selectedUser || !groupId) return;
@@ -101,18 +108,16 @@ const InfoGrupos = ({ groupId }) => {
         { userId: selectedUser.id },
         { withCredentials: true }
       );
-      // Actualizamos la información del grupo
-      const response = await customAxios.get(
+      // Actualizar la información del grupo
+      const { data } = await customAxios.get(
         `http://localhost:5000/api/grupos/data/${groupId}`,
         { withCredentials: true }
       );
-      setGrupo(response.data);
+      setGrupo(data);
       setConfirmationMessage('Usuario añadido correctamente');
       setMessageType('success');
       setSelectedUser(null);
-      setTimeout(() => {
-        closeBubble();
-      }, 2000);
+      setTimeout(() => closeBubble(), 2000);
     } catch (error) {
       console.error("Error al añadir miembro:", error);
       setConfirmationMessage('Error al añadir el usuario');
@@ -120,7 +125,36 @@ const InfoGrupos = ({ groupId }) => {
     }
   };
 
-  // Formatea la fecha en dd/mm/yyyy
+  // Eliminar un miembro del grupo (corregido)
+  const handleRemoveMember = async () => {
+    if (!selectedUser || !groupId) return;
+    
+    try {
+      // Eliminar al usuario del grupo usando DELETE y pasando el id en la URL
+      await customAxios.delete(
+        `http://localhost:5000/api/grupos/eliminar/${groupId}/miembros/${selectedUser.id}`,
+        { withCredentials: true }
+      );
+  
+      // Actualizar la información del grupo
+      const { data } = await customAxios.get(
+        `http://localhost:5000/api/grupos/data/${groupId}`,
+        { withCredentials: true }
+      );
+  
+      setGrupo(data);
+      setConfirmationMessage('Usuario eliminado correctamente');
+      setMessageType('success');
+      setSelectedUser(null);
+      setTimeout(() => closeBubble(), 2000);
+    } catch (error) {
+      console.error("Error al eliminar miembro:", error);
+      setConfirmationMessage('Error al eliminar el usuario');
+      setMessageType('error');
+    }
+  };
+
+  // Función para formatear la fecha en dd/mm/yyyy
   const formatFecha = (fecha) => {
     const date = new Date(fecha);
     const day = String(date.getDate()).padStart(2, '0');
@@ -129,10 +163,8 @@ const InfoGrupos = ({ groupId }) => {
     return `${day}/${month}/${year}`;
   };
 
-  // Capitaliza la primera letra de un string
-  const capitalizeFirstLetter = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-  };
+  // Capitalizar la primera letra del string
+  const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 
   const closeBubble = () => {
     setActiveBubble(null);
@@ -140,12 +172,9 @@ const InfoGrupos = ({ groupId }) => {
     setSelectedUser(null);
   };
 
-  const selectUser = (user) => {
-    setSelectedUser(user);
-  };
+  const selectUser = (user) => setSelectedUser(user);
 
-  // Se define la condición para mostrar el botón de "Añadir miembros":
-  // Se muestra si el permiso "invitar_miembros" está abierto o si el usuario actual es administrador
+  // Condición para mostrar el botón de "Añadir miembros"
   const canInviteMembers =
     grupo?.permisos?.find(p => p.permiso === "invitar_miembros")?.abierto || isCurrentUserAdmin();
 
@@ -160,7 +189,7 @@ const InfoGrupos = ({ groupId }) => {
       ) : !grupo ? (
         <p>No se encontró información del grupo.</p>
       ) : (
-        <div className="info-grupo">
+        <div className="informacion-grupo">
           {/* Barra superior con pestañas */}
           <nav className="top-bar">
             <ul className="tabs-list">
@@ -170,7 +199,7 @@ const InfoGrupos = ({ groupId }) => {
                   className={`tab-item ${activeTab === tab ? 'active' : ''}`}
                   onClick={() => setActiveTab(tab)}
                 >
-                  <p>{tab.charAt(0).toUpperCase() + tab.slice(1)}</p>
+                  <p>{capitalizeFirstLetter(tab)}</p>
                 </li>
               ))}
             </ul>
@@ -216,9 +245,9 @@ const InfoGrupos = ({ groupId }) => {
                   {!expanded ? (
                     <div className="miembros-resumen">
                       <button onClick={() => setExpanded(true)} className="collapse-button">
-                        <IconArrowsDiagonal/>
+                        <IconArrowsDiagonal />
                       </button>
-                      {grupo.miembros.map((miembro) => (
+                      {grupo.miembros.map(miembro => (
                         <div key={miembro.id} className="avatar-miembro">
                           {miembro.avatar ? miembro.avatar : miembro.username.charAt(0).toUpperCase()}
                         </div>
@@ -227,7 +256,7 @@ const InfoGrupos = ({ groupId }) => {
                   ) : (
                     <div className="miembros-expandido">
                       <button onClick={() => setExpanded(false)} className="collapse-button">
-                        <IconArrowsDiagonalMinimize2/>
+                        <IconArrowsDiagonalMinimize2 />
                       </button>
                       <ul>
                         {canInviteMembers && (
@@ -239,7 +268,7 @@ const InfoGrupos = ({ groupId }) => {
                             </div>
                           </li>
                         )}
-                        {grupo.miembros.map((miembro) => (
+                        {grupo.miembros.map(miembro => (
                           <li key={miembro.id} className="miembro">
                             <div className="avatar-miembro">
                               {miembro.avatar ? miembro.avatar : miembro.username.charAt(0).toUpperCase()}
@@ -249,13 +278,42 @@ const InfoGrupos = ({ groupId }) => {
                                 {miembro.username}
                               </div>
                             </div>
-                            <div className="rol-grupos">
+                            <div className={`rol-grupos ${miembro.rol === "administrador" ? "rol-admin" : "rol-miembro"}`}>
                               <p>{capitalizeFirstLetter(miembro.rol)}</p>
                             </div>
                             {miembro.id !== currentUserId && (
-                              <button className="btn-acciones">
+                              <button
+                                onClick={() =>
+                                  setOpenDropdownId(
+                                    openDropdownId === miembro.id ? null : miembro.id
+                                  )
+                                }
+                                className="btn-acciones"
+                              >
                                 <IconDotsVertical />
                               </button>
+                            )}
+                            {openDropdownId === miembro.id && (
+                              <div className="dropdown">
+                                <button
+                                  onClick={() => {
+                                    setActiveBubble({ type: 'perfil-miembro', miembro });
+                                    setOpenDropdownId(null);
+                                  }}
+                                >
+                                  Editar
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    // Para eliminar, se asigna el miembro seleccionado y se llama a la función
+                                    selectUser(miembro);
+                                    handleRemoveMember();
+                                    setOpenDropdownId(null);
+                                  }}
+                                >
+                                  Eliminar
+                                </button>
+                              </div>
                             )}
                           </li>
                         ))}
@@ -267,26 +325,17 @@ const InfoGrupos = ({ groupId }) => {
 
               <div className="permisos-seccion">
                 <p className="titulo-informacion">Permisos</p>
-
-                <div className="espacio">
-                  <p className="titulo-primero">Editar información</p>
-                  <p className="titulo-segundo">
-                    {grupo.permisos?.find(p => p.permiso === "editar_grupo")?.abierto ? 'Sí' : 'No'}
-                  </p>
-                </div>
-
                 <div className="espacio">
                   <p className="titulo-primero">Invitar miembros</p>
-                  <p className="titulo-segundo">
-                    {grupo.permisos?.find(p => p.permiso === "invitar_miembros")?.abierto ? 'Sí' : 'No'}
-                  </p>
+                  <div className={`rol-grupos ${grupo.permisos?.find(p => p.permiso === "invitar_miembros")?.abierto ? "rol-miembro" : "rol-admin"}`}>
+                    <p>{grupo.permisos?.find(p => p.permiso === "invitar_miembros")?.abierto ? 'Miembro' : 'Administrador'}</p>
+                  </div>
                 </div>
-
                 <div className="espacio">
                   <p className="titulo-primero">Subir documentos</p>
-                  <p className="titulo-segundo">
-                    {grupo.permisos?.find(p => p.permiso === "subir_documentos")?.abierto ? 'Sí' : 'No'}
-                  </p>
+                  <div className={`rol-grupos ${grupo.permisos?.find(p => p.permiso === "subir_documentos")?.abierto ? "rol-miembro" : "rol-admin"}`}>
+                    <p>{grupo.permisos?.find(p => p.permiso === "subir_documentos")?.abierto ? 'Miembro' : 'Administrador'}</p>
+                  </div>
                 </div>
               </div>
             </>
@@ -295,14 +344,14 @@ const InfoGrupos = ({ groupId }) => {
           {activeTab === 'ofertas' && (
             <div>
               <p>Contenido de ofertas</p>
-              {/* Aquí puedes implementar el contenido relacionado a ofertas */}
+              {/* Implementar contenido relacionado a ofertas */}
             </div>
           )}
 
           {activeTab === 'archivos' && (
             <div>
               <p>Contenido de archivos</p>
-              {/* Aquí puedes implementar el contenido relacionado a archivos */}
+              {/* Implementar contenido relacionado a archivos */}
             </div>
           )}
         </div>
@@ -314,7 +363,7 @@ const InfoGrupos = ({ groupId }) => {
         message={confirmationMessage}
         type={messageType}
       >
-        {activeBubble === 'añadir-miembro' && (
+        {activeBubble === "añadir-miembro" && (
           <div className="bubble-añadir">
             <h3>Añadir miembro</h3>
             {loadingUsers ? (

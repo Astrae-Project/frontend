@@ -1,7 +1,3 @@
-.grupos-lista:first-child{
-    margin-top: 10px;
-}
-
 .contenido-vacio{
     display: flex;
     justify-content: center;

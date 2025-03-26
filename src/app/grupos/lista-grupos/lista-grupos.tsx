@@ -182,7 +182,7 @@ const ListaGrupos = ({ onGroupSelect }) => {
                     className="grupo-avatar"
                   />
                 </div>
-                <div className="grupo-info">
+                <div className="info-grupo">
                   <p id="nombre-grupo">{grupo.grupo.nombre}</p>
                   {grupo.grupo.tipo === "privado" && (
                     <IconLockFilled className="icono-candado" />

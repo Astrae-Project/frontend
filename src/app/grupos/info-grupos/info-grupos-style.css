@@ -24,16 +24,20 @@
     gap: 0px;
     margin: 0;
     padding: 0;
+    flex-direction: row;
+    justify-content: center;
 }
   
 .tab-item {
     cursor: pointer;
-    padding: 3px 23px;
+    padding: 3px 0px;
     font-size: 11px;
     color: #989797;
     font-weight: 500;
     border-radius: 4px;
     transition: background-color 0.2s, color 0.2s;
+    width: 90px;
+    text-align: center;
 }
 
 .tab-item p {
@@ -43,6 +47,7 @@
   
 .tab-item:hover {
     color: #fff;
+    background-color: transparent;
 }
   
 .tab-item.active {
@@ -60,7 +65,7 @@
     border-bottom: none;
 }
 
-.info-grupo{
+.informacion-grupo{
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -180,10 +185,10 @@
 .miembros-expandido {
     width: 100%;
     padding: 40px 10px 5px 13px;
-    animation: fadeIn 0.5s ease forwards;
+    animation: expand 0.5s ease forwards;
 }
 
-@keyframes fadeIn {
+@keyframes expand {
     from {
         opacity: 0.6;
         transform: translateY(-3px);
@@ -302,12 +307,20 @@
     padding: 5px 9px;
     border-radius: 6px;
     text-align: center;
-    background-color: #222430;
     margin-top: -1px;
     flex-shrink: 0; /* Evita que el rol se comprima */
 }
 
+.rol-admin {
+    background-color: #6e4ba3; /* Rojo para administradores */
+}
+
+.rol-miembro {
+    background-color: #222430; /* Azul para miembros */
+}
+
 .rol-grupos p {
+    position: relative;
     font-size: 10px;
     top: 1.5px;
     margin: 0;
@@ -336,6 +349,37 @@
     opacity: 1;
     transform: scale(1.1);
 }
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  width: 120px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  padding: 5px 0;
+}
+  
+.dropdown button {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #333;
+  transition: background 0.2s ease-in-out;
+}
+
+.dropdown button:hover {
+  background-color: #f5f5f5;
+}  
 
 /* Botón para colapsar la vista expandida */
 .collapse-button {

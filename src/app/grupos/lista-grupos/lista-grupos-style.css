@@ -104,7 +104,7 @@
 }
 
 /* Información del grupo */
-.grupo-info {
+.info-grupo {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -114,7 +114,7 @@
   width: 80%;
 }
 
-.grupo-info #nombre-grupo {
+.info-grupo #nombre-grupo {
   margin: 0;
   font-size: 13px;
   color: #e9edef;
@@ -128,10 +128,6 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.grupos-lista:first-child{
-  margin-top: 10px;
 }
 
 .contenido-vacio{

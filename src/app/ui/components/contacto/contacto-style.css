@@ -16,6 +16,11 @@
     gap: 5px;
     border: 2px dashed #202029;
     background-color: transparent;
+    padding: 8px 10px;
+    height: 50px;
+    margin-top: 14.3px;  
+    border-radius: 10px;
+    flex-shrink: 0;
 }
 
 #añadir-contacto{

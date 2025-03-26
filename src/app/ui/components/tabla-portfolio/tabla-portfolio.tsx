@@ -93,7 +93,7 @@ const TablaPortfolio = () => {
             {portfolio.map((inversion) => {
               const cambioPorcentualInfo = formatCambioPorcentual(inversion.cambio_porcentual);
               return (
-                <li key={inversion.id}>
+                <li key={inversion.id} className='portfolio-item'>
                   <button
                     className="relleno-btn"
                     onClick={() => {
