@@ -7,7 +7,10 @@ import "../../ui/components/bento-inicio/bento-inicio-style.css";
 import {
   IconArrowsDiagonal,
   IconArrowsDiagonalMinimize2,
-  IconDotsVertical
+  IconDotsVertical,
+  IconEye,
+  IconTrash,
+  IconUserCog
 } from "@tabler/icons-react";
 import Bubble from "@/app/ui/components/bubble/bubble";
 import PerfilOtro from "@/app/perfil-otro/page";
@@ -25,9 +28,11 @@ const InfoGrupos = ({ groupId }) => {
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [activeTab, setActiveTab] = useState('info');
   const [openDropdownId, setOpenDropdownId] = useState(null);
+  const [formData, setFormData] = useState({
+    role: "miembro",
+  });
   const dropdownRef = useRef(null);
 
-  // Cargar información del grupo según groupId
   useEffect(() => {
     if (!groupId) {
       setGrupo(null);
@@ -152,7 +157,40 @@ const InfoGrupos = ({ groupId }) => {
     }
   };
 
-  // Función para formatear la fecha en dd/mm/yyyy
+  const handleChangeRole = async (newRole) => {
+    if (!selectedUser || !groupId) {
+      return;
+    }
+  
+    try {
+      console.log("Enviando solicitud para cambiar el rol...");
+      await customAxios.put(
+        `http://localhost:5000/api/grupos/cambio-rol/${groupId}/miembros/${selectedUser.id}`,
+        { newRole },
+        { withCredentials: true }
+      );
+  
+      // Actualizar la información del grupo
+      console.log("Obteniendo la información del grupo...");
+      const { data } = await customAxios.get(
+        `http://localhost:5000/api/grupos/data/${groupId}`,
+        { withCredentials: true }
+      );
+  
+      setGrupo(data);
+      setConfirmationMessage('Rol actualizado correctamente');
+      setMessageType('success');
+      setSelectedUser(null);
+      setActiveBubble(null);
+      
+    } catch (error) {
+      console.error("Error al cambiar el rol del miembro:", error);
+      setConfirmationMessage('Error al cambiar el rol del usuario');
+      setMessageType('error');
+    }
+  };
+  
+
   const formatFecha = (fecha) => {
     const date = new Date(fecha);
     const day = String(date.getDate()).padStart(2, '0');
@@ -170,14 +208,13 @@ const InfoGrupos = ({ groupId }) => {
     setSelectedUser(null);
   };
 
-
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Only close if the click is outside ALL dropdown-related elements
+      // Solo cerrar si el clic es fuera de todos los elementos relacionados al dropdown
       if (
         dropdownRef.current && 
         !dropdownRef.current.contains(event.target) &&
-        // Check that the click is not on the dropdown toggle button
+        // Verifica que el clic no sea en el botón del dropdown
         !event.target.closest('.btn-dropdown')
       ) {
         setOpenDropdownId(null);
@@ -196,7 +233,7 @@ const InfoGrupos = ({ groupId }) => {
 
   // Nuevos manejadores de eventos para dropdown
   const handleDropdownClick = (e, miembro) => {
-    e.stopPropagation(); // Stop the click from propagating
+    e.stopPropagation(); // Evitar la propagación del clic
     setOpenDropdownId(openDropdownId === miembro.id ? null : miembro.id);
   };
 
@@ -319,20 +356,38 @@ const InfoGrupos = ({ groupId }) => {
                                 >
                                 <button
                                   className="btn-dropdown"
+                                  id="ver-perfil"
                                   onClick={() => {
                                     setSelectedUser(miembro); // Guardamos el miembro seleccionado
                                     setActiveBubble("perfil-miembro");
                                   }}
                                   >
-                                    Editar
-                                  </button>
-                                  <button
-                                    className="btn-dropdown"
-                                    id="eliminar"
-                                    onClick={() => handleRemoveMember}
-                                  >
-                                    Eliminar
-                                  </button>
+                                    <IconEye/>
+                                    <p>Ver perfil</p>
+                                  </button> 
+                                                                 
+                                    {isCurrentUserAdmin() && (
+                                    <>
+                                      <button
+                                      className="btn-dropdown"
+                                      onClick={() => {
+                                        setActiveBubble("cambiar-rol")
+                                        setSelectedUser(miembro); // Guardamos el miembro seleccionado
+                                        }}
+                                      >
+                                      <IconUserCog/>
+                                      <p>Asignar rol</p>
+                                      </button>
+                                      <button
+                                      className="btn-dropdown"
+                                      id="eliminar"
+                                      onClick={handleRemoveMember}
+                                      >
+                                      <IconTrash/>
+                                      <p>Eliminar</p>
+                                      </button>
+                                    </>
+                                    )}
                                 </div>
                               )}
                             </div>
@@ -386,6 +441,55 @@ const InfoGrupos = ({ groupId }) => {
       >
         {activeBubble === "perfil-miembro" && (
           <PerfilOtro username={selectedUser.username}></PerfilOtro>
+        )}
+
+        {activeBubble === "cambiar-rol" && (
+          <div className="bubble-cambiar-rol">
+            <h2>Selecciona un rol</h2>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+              }}
+              className="crear-grupo-form"
+            >
+              <div className="form-group">
+                <div className="tipo-opciones">
+                  <label>
+                    <input
+                      type="radio"
+                      name="role"
+                      value="administrador"
+                      checked={formData.role === "administrador"}
+                      onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                    />
+                    <p className="text-label">Administrador</p>
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="role"
+                      value="miembro"
+                      checked={formData.role === "miembro"}
+                      onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                    />
+                    <p className="text-label">Miembro</p>
+                  </label>
+                </div>
+              </div>
+              <div className="contendor-botn-grupo">
+                <button
+                  type="button"
+                  className="botn-eventos"
+                  onClick={closeBubble}
+                >
+                  Cancelar
+                </button>
+                <button type="submit" className="botn-eventos enviar" onClick={() => handleChangeRole(formData.role)}>
+                  Asignar
+                </button>
+              </div>
+            </form>
+          </div>
         )}
 
         {activeBubble === "añadir-miembro" && (

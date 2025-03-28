@@ -375,12 +375,24 @@
 }
   
 .dropdown button {
+    display: flex;
+    gap: 4px;
     background: none;
     border: none;
     text-align: left;
-    padding: 9px 12px 8px 12px;
-    font-size: 12px;
+    padding: 9px 12px 8px 8px;
+    font-size: 11px;
     transition: background 0.2s ease-in-out;
+}
+
+#ver-perfil p {
+    position: relative;
+    top: 1.75px;
+}
+
+#eliminar {
+    gap: 5.5px;
+    color: #ff4d4d;
 }
 
 .dropdown :first-child {
