@@ -200,19 +200,6 @@ const InfoGrupos = ({ groupId }) => {
     setOpenDropdownId(openDropdownId === miembro.id ? null : miembro.id);
   };
 
-  const handleDropdownActionClick = (e, action, miembro) => {
-    e.stopPropagation(); // Prevent closing the dropdown
-    
-    if (action === 'edit') {
-      setActiveBubble({ type: "perfil-miembro", miembro });
-      setOpenDropdownId(null);
-    } else if (action === 'remove') {
-      selectUser(miembro);
-      handleRemoveMember();
-      setOpenDropdownId(null);
-    }
-  };
-
   return (
     <>
       {!groupId ? (
@@ -330,16 +317,19 @@ const InfoGrupos = ({ groupId }) => {
                                   className="dropdown" 
                                   onClick={(e) => e.stopPropagation()}
                                 >
-                                  <button
-                                    className="btn-dropdown"
-                                    onClick={(e) => handleDropdownActionClick(e, 'edit', miembro)}
+                                <button
+                                  className="btn-dropdown"
+                                  onClick={() => {
+                                    setSelectedUser(miembro); // Guardamos el miembro seleccionado
+                                    setActiveBubble("perfil-miembro");
+                                  }}
                                   >
                                     Editar
                                   </button>
                                   <button
                                     className="btn-dropdown"
                                     id="eliminar"
-                                    onClick={(e) => handleDropdownActionClick(e, 'remove', miembro)}
+                                    onClick={() => handleRemoveMember}
                                   >
                                     Eliminar
                                   </button>
@@ -395,7 +385,7 @@ const InfoGrupos = ({ groupId }) => {
         type={messageType}
       >
         {activeBubble === "perfil-miembro" && (
-          <PerfilOtro username={miembro.username}></PerfilOtro>
+          <PerfilOtro username={selectedUser.username}></PerfilOtro>
         )}
 
         {activeBubble === "añadir-miembro" && (

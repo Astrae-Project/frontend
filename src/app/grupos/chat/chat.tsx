@@ -222,7 +222,7 @@ const ChatGroup = ({ groupId }) => {
         elements.push(
           <div key={`msg-${index}`} className="chat-message-container other-message-container">
             {showHeader && (
-              <div className="avatar">
+              <div className="avatar-miembro">
                 <img
                   src={`https://api.dicebear.com/7.x/identicon/svg?seed=${msg.emisor.username}`}
                   alt="Avatar"

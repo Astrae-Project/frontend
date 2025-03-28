@@ -345,6 +345,8 @@
     flex-shrink: 0;
     margin-left: 0;
     padding: 0;
+    position: relative;
+    top: 5px;
 }
 
 .btn-acciones svg {
