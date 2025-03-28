@@ -169,7 +169,6 @@ export function BentoGridInicio({username}) {
       
       {rol === "inversor" ? (
         <>
-        // Contenido para inversores
         <button id="pequeño1" className="apartado" onClick={() => setActiveBubble("crear-inversion")}><IconPlus></IconPlus></button>
         <button id="pequeño2" className="apartado" onClick={() => setActiveBubble("crear-grupo")}><IconUsersPlus></IconUsersPlus></button>
   

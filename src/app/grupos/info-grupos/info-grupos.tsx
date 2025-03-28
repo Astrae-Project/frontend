@@ -1,7 +1,7 @@
 'use client';
 
 import customAxios from "@/service/api.mjs";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import "./info-grupos-style.css";
 import "../../ui/components/bento-inicio/bento-inicio-style.css";
 import {
@@ -10,6 +10,7 @@ import {
   IconDotsVertical
 } from "@tabler/icons-react";
 import Bubble from "@/app/ui/components/bubble/bubble";
+import PerfilOtro from "@/app/perfil-otro/page";
 
 const InfoGrupos = ({ groupId }) => {
   const [usuario, setUsuario] = useState(null);
@@ -24,6 +25,7 @@ const InfoGrupos = ({ groupId }) => {
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [activeTab, setActiveTab] = useState('info');
   const [openDropdownId, setOpenDropdownId] = useState(null);
+  const dropdownRef = useRef(null);
 
   // Cargar información del grupo según groupId
   useEffect(() => {
@@ -99,13 +101,11 @@ const InfoGrupos = ({ groupId }) => {
   };
 
   // Añadir un miembro al grupo
-  const handleAddMember = async (e) => {
-    e.preventDefault();
+  const handleAddMember = async () => {
     if (!selectedUser || !groupId) return;
     try {
       await customAxios.post(
-        `http://localhost:5000/api/grupos/${groupId}/miembros`,
-        { userId: selectedUser.id },
+        `http://localhost:5000/api/grupos/anadir/${groupId}/miembro/${selectedUser.id}`,
         { withCredentials: true }
       );
       // Actualizar la información del grupo
@@ -117,7 +117,6 @@ const InfoGrupos = ({ groupId }) => {
       setConfirmationMessage('Usuario añadido correctamente');
       setMessageType('success');
       setSelectedUser(null);
-      setTimeout(() => closeBubble(), 2000);
     } catch (error) {
       console.error("Error al añadir miembro:", error);
       setConfirmationMessage('Error al añadir el usuario');
@@ -132,7 +131,7 @@ const InfoGrupos = ({ groupId }) => {
     try {
       // Eliminar al usuario del grupo usando DELETE y pasando el id en la URL
       await customAxios.delete(
-        `http://localhost:5000/api/grupos/eliminar/${groupId}/miembros/${selectedUser.id}`,
+        `http://localhost:5000/api/grupos/eliminar/${groupId}/miembro/${selectedUser.id}`,
         { withCredentials: true }
       );
   
@@ -146,7 +145,6 @@ const InfoGrupos = ({ groupId }) => {
       setConfirmationMessage('Usuario eliminado correctamente');
       setMessageType('success');
       setSelectedUser(null);
-      setTimeout(() => closeBubble(), 2000);
     } catch (error) {
       console.error("Error al eliminar miembro:", error);
       setConfirmationMessage('Error al eliminar el usuario');
@@ -172,11 +170,48 @@ const InfoGrupos = ({ groupId }) => {
     setSelectedUser(null);
   };
 
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Only close if the click is outside ALL dropdown-related elements
+      if (
+        dropdownRef.current && 
+        !dropdownRef.current.contains(event.target) &&
+        // Check that the click is not on the dropdown toggle button
+        !event.target.closest('.btn-dropdown')
+      ) {
+        setOpenDropdownId(null);
+      }
+    };
+  
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const selectUser = (user) => setSelectedUser(user);
 
   // Condición para mostrar el botón de "Añadir miembros"
   const canInviteMembers =
     grupo?.permisos?.find(p => p.permiso === "invitar_miembros")?.abierto || isCurrentUserAdmin();
+
+  // Nuevos manejadores de eventos para dropdown
+  const handleDropdownClick = (e, miembro) => {
+    e.stopPropagation(); // Stop the click from propagating
+    setOpenDropdownId(openDropdownId === miembro.id ? null : miembro.id);
+  };
+
+  const handleDropdownActionClick = (e, action, miembro) => {
+    e.stopPropagation(); // Prevent closing the dropdown
+    
+    if (action === 'edit') {
+      setActiveBubble({ type: "perfil-miembro", miembro });
+      setOpenDropdownId(null);
+    } else if (action === 'remove') {
+      selectUser(miembro);
+      handleRemoveMember();
+      setOpenDropdownId(null);
+    }
+  };
 
   return (
     <>
@@ -190,7 +225,6 @@ const InfoGrupos = ({ groupId }) => {
         <p>No se encontró información del grupo.</p>
       ) : (
         <div className="informacion-grupo">
-          {/* Barra superior con pestañas */}
           <nav className="top-bar">
             <ul className="tabs-list">
               {['info', 'ofertas', 'archivos'].map((tab) => (
@@ -240,13 +274,17 @@ const InfoGrupos = ({ groupId }) => {
               <div className="miembros">
                 <p className="titulo-miembros">
                   Miembros <span className="contador-miembros">({grupo.miembros.length})</span>
+                    <button 
+                    onClick={() => setExpanded(!expanded)} 
+                    className="collapse-button"
+                    >
+                    {expanded ? <IconArrowsDiagonalMinimize2 /> : <IconArrowsDiagonal />}
+                    </button>
+
                 </p>
                 <div className={`miembros-container ${expanded ? 'expanded' : ''}`}>
                   {!expanded ? (
                     <div className="miembros-resumen">
-                      <button onClick={() => setExpanded(true)} className="collapse-button">
-                        <IconArrowsDiagonal />
-                      </button>
                       {grupo.miembros.map(miembro => (
                         <div key={miembro.id} className="avatar-miembro">
                           {miembro.avatar ? miembro.avatar : miembro.username.charAt(0).toUpperCase()}
@@ -255,9 +293,6 @@ const InfoGrupos = ({ groupId }) => {
                     </div>
                   ) : (
                     <div className="miembros-expandido">
-                      <button onClick={() => setExpanded(false)} className="collapse-button">
-                        <IconArrowsDiagonalMinimize2 />
-                      </button>
                       <ul>
                         {canInviteMembers && (
                           <li className="miembro añadir-miembro" onClick={handleOpenAddMemberBubble}>
@@ -281,41 +316,37 @@ const InfoGrupos = ({ groupId }) => {
                             <div className={`rol-grupos ${miembro.rol === "administrador" ? "rol-admin" : "rol-miembro"}`}>
                               <p>{capitalizeFirstLetter(miembro.rol)}</p>
                             </div>
-                            {miembro.id !== currentUserId && (
-                              <button
-                                onClick={() =>
-                                  setOpenDropdownId(
-                                    openDropdownId === miembro.id ? null : miembro.id
-                                  )
-                                }
-                                className="btn-acciones"
-                              >
-                                <IconDotsVertical />
-                              </button>
-                            )}
-                            {openDropdownId === miembro.id && (
-                              <div className="dropdown">
+                            <div ref={dropdownRef}>
+                              {miembro.id !== currentUserId && (
                                 <button
-                                  onClick={() => {
-                                    setActiveBubble({ type: 'perfil-miembro', miembro });
-                                    setOpenDropdownId(null);
-                                  }}
+                                  onClick={(e) => handleDropdownClick(e, miembro)}
+                                  className="btn-acciones"
                                 >
-                                  Editar
+                                  <IconDotsVertical />
                                 </button>
-                                <button
-                                  onClick={() => {
-                                    // Para eliminar, se asigna el miembro seleccionado y se llama a la función
-                                    selectUser(miembro);
-                                    handleRemoveMember();
-                                    setOpenDropdownId(null);
-                                  }}
+                              )}
+                              {openDropdownId === miembro.id && (
+                                <div 
+                                  className="dropdown" 
+                                  onClick={(e) => e.stopPropagation()}
                                 >
-                                  Eliminar
-                                </button>
-                              </div>
-                            )}
-                          </li>
+                                  <button
+                                    className="btn-dropdown"
+                                    onClick={(e) => handleDropdownActionClick(e, 'edit', miembro)}
+                                  >
+                                    Editar
+                                  </button>
+                                  <button
+                                    className="btn-dropdown"
+                                    id="eliminar"
+                                    onClick={(e) => handleDropdownActionClick(e, 'remove', miembro)}
+                                  >
+                                    Eliminar
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                        </li>
                         ))}
                       </ul>
                     </div>
@@ -363,6 +394,10 @@ const InfoGrupos = ({ groupId }) => {
         message={confirmationMessage}
         type={messageType}
       >
+        {activeBubble === "perfil-miembro" && (
+          <PerfilOtro username={miembro.username}></PerfilOtro>
+        )}
+
         {activeBubble === "añadir-miembro" && (
           <div className="bubble-añadir">
             <h3>Añadir miembro</h3>
