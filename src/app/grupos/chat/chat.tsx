@@ -4,8 +4,9 @@ import React, { useEffect, useState, useCallback, useRef } from "react";
 import { io } from "socket.io-client";
 import Input from "../textarea/textarea-demo";
 import "./chat-style.css";
-import { IconDotsVertical, IconPin } from "@tabler/icons-react";
+import { IconDotsVertical, IconLogout2, IconPencil, IconPin } from "@tabler/icons-react";
 import customAxios from "@/service/api.mjs";
+import Bubble from "@/app/ui/components/bubble/bubble";
 
 const SOCKET_SERVER_URL = "http://localhost:5000";
 
@@ -15,6 +16,18 @@ const ChatGroup = ({ groupId }) => {
   const [messages, setMessages] = useState([]);
   const [groupData, setGroupData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [openDropdownId, setOpenDropdownId] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState(null); // Estado para el grupo seleccionado
+  const [activeBubble, setActiveBubble] = useState(null); // Estado para el componente activo
+  const [confirmationMessage, setConfirmationMessage] = useState(""); // Mensaje de confirmación
+  const [messageType, setMessageType] = useState(""); // Tipo de mensaje (info, error, etc.)
+  const [formData, setFormData] = useState({
+    nombre: groupData ? groupData.nombre : "",
+    descripcion: groupData ? groupData.descripcion : "",
+    tipo: groupData ? groupData.tipo : "privado",
+  });
+  const dropdownRef = useRef(null);
+  
 
   // Referencias para el scroll
   const chatContainerRef = useRef(null);
@@ -22,6 +35,13 @@ const ChatGroup = ({ groupId }) => {
 
   // Convertir groupId a número
   const numericGroupId = groupId ? parseInt(String(groupId).trim(), 10) : null;
+
+  const isCurrentUserAdmin = () => {
+    const currentMember = groupData?.miembros.find(miembro => miembro.id === currentUserId);
+    return currentMember && currentMember.rol.toLowerCase() === 'administrador';
+  };
+
+  const currentUserId = currentUser ? currentUser.id : null;
 
   // Obtener datos del usuario
   const fetchRol = async () => {
@@ -114,6 +134,60 @@ const ChatGroup = ({ groupId }) => {
     setSocket(newSocket);
     return () => newSocket.disconnect();
   }, [numericGroupId]);
+
+  const handleDropdownClick = (e, miembro) => {
+    e.stopPropagation(); // Evitar la propagación del clic
+    setOpenDropdownId(openDropdownId === miembro.id ? null : miembro.id);
+  };
+
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        // Solo cerrar si el clic es fuera de todos los elementos relacionados al dropdown
+        if (
+          dropdownRef.current && 
+          !dropdownRef.current.contains(event.target) &&
+          // Verifica que el clic no sea en el botón del dropdown
+          !event.target.closest('.btn-dropdown')
+        ) {
+          setOpenDropdownId(null);
+        }
+      };
+    
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+  
+  const closeBubble = () => {
+    setActiveBubble(null);
+    setConfirmationMessage("");
+    setMessageType("");
+  }
+
+  useEffect(() => {
+    if (activeBubble === "editar-grupo" && selectedGroup) {
+      setFormData({
+        nombre: selectedGroup.nombre || "",
+        descripcion: selectedGroup.descripcion || "",
+        tipo: selectedGroup.tipo || "publico"
+      });
+    }
+  }, [activeBubble, selectedGroup]);
+  
+  const handleEditarGrupo = async () => {
+    try {
+      const response = await customAxios.put(
+        `http://localhost:5000/api/grupos/datos/${groupId}`,
+        formData
+      );
+      setActiveBubble(null);
+      setGroupData(response.data);
+    }
+    catch (error) {
+      console.error("Error editando grupo:", error);
+      setConfirmationMessage("Error editando grupo.");
+      setMessageType("error");
+    }
+  }
 
   // Al enviar un mensaje se genera la fecha actual en el frontend
   const handleSendMessage = useCallback(
@@ -260,9 +334,41 @@ const ChatGroup = ({ groupId }) => {
               <button type="button" aria-label="Fijar grupo">
                 <IconPin className="iconos" />
               </button>
-              <button type="button" aria-label="Más opciones">
-                <IconDotsVertical className="iconos" />
-              </button>
+              <div ref={dropdownRef}>
+                  <button
+                    onClick={(e) => handleDropdownClick(e, groupData)}
+                    className="btn-acciones"
+                    >
+                    <IconDotsVertical />
+                  </button>
+                {openDropdownId && (
+                  <div 
+                    className="dropdown1" 
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                  {isCurrentUserAdmin() && (
+                    
+                  <button
+                    className="btn-dropdown1"
+                    id="ver-perfil1"
+                    onClick={() => {
+                      setSelectedGroup(groupData); // Guardamos el miembro seleccionado
+                      setActiveBubble("editar-grupo");
+                    }}
+                    >
+                      <IconPencil/>
+                      <p>Editar</p>
+                    </button>)}                             
+                    <button
+                      className="btn-dropdown1"
+                      id="eliminar1"
+                      >
+                      <IconLogout2/>
+                      <p>Salir</p>
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
           <div className="chat-messages" ref={chatContainerRef}>
@@ -278,6 +384,93 @@ const ChatGroup = ({ groupId }) => {
           <Input onSendMessage={handleSendMessage} />
         </>
       )}
+
+      <Bubble
+        show={!!activeBubble}
+        onClose={closeBubble}
+        message={confirmationMessage}
+        type={messageType}
+      >
+      {activeBubble === "editar-grupo" && selectedGroup && (
+        <div className="crear-grupo-container">
+          <h2>Editar Grupo</h2>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleEditarGrupo();
+            }}
+            className="crear-grupo-form"
+          >
+            <div className="form-group">
+              <input
+                type="text"
+                className="form-control"
+                value={formData.nombre}
+                onChange={(e) =>
+                  setFormData({ ...formData, nombre: e.target.value })
+                }
+                required
+                placeholder="Nombre del grupo"
+              />
+            </div>
+            <div className="form-group">
+              <textarea
+                id="descripcion"
+                className="form-control"
+                value={formData.descripcion}
+                onChange={(e) =>
+                  setFormData({ ...formData, descripcion: e.target.value })
+                }
+                required
+                placeholder="Descripción del grupo"
+                rows={4}
+              />
+            </div>
+            <div className="form-group">
+              <div className="tipo-opciones">
+                <label>
+                  <input
+                    type="radio"
+                    name="tipo"
+                    value="publico"
+                    checked={formData.tipo === "publico"}
+                    onChange={(e) =>
+                      setFormData({ ...formData, tipo: e.target.value })
+                    }
+                  />
+                  <p className="text-label">Público</p>
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="tipo"
+                    value="privado"
+                    checked={formData.tipo === "privado"}
+                    onChange={(e) =>
+                      setFormData({ ...formData, tipo: e.target.value })
+                    }
+                  />
+                  <p className="text-label">Privado</p>
+                </label>
+              </div>
+            </div>
+            <div className="contendor-botn-grupo">
+              <button
+                type="button"
+                className="botn-eventos"
+                onClick={closeBubble}
+              >
+                Cancelar
+              </button>
+              <button type="submit" className="botn-eventos enviar">
+                Guardar
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      </Bubble>
     </div>
   );
 };

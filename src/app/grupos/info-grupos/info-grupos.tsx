@@ -178,8 +178,6 @@ const InfoGrupos = ({ groupId }) => {
       );
   
       setGrupo(data);
-      setConfirmationMessage('Rol actualizado correctamente');
-      setMessageType('success');
       setSelectedUser(null);
       setActiveBubble(null);
       
