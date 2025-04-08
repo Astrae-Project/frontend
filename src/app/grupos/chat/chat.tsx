@@ -189,6 +189,20 @@ const ChatGroup = ({ groupId }) => {
     }
   }
 
+  const handleSalirGrupo = async () => {
+    try {
+      await customAxios.delete(
+        `http://localhost:5000/api/grupos/salir/${groupId}`
+      );
+      setActiveBubble(null);
+      setGroupData(null);
+    } catch (error) {
+      console.error("Error saliendo del grupo:", error);
+      setConfirmationMessage(error.message);
+      setMessageType("error");
+    }
+  }
+
   // Al enviar un mensaje se genera la fecha actual en el frontend
   const handleSendMessage = useCallback(
     async (messageContent) => {
@@ -331,13 +345,13 @@ const ChatGroup = ({ groupId }) => {
               <p className="nombre-grupo">{groupData ? groupData.nombre : "Cargando..."}</p>
             </div>
             <div className="header-icons">
-              <button type="button" aria-label="Fijar grupo">
-                <IconPin className="iconos" />
+              <button className="iconos">
+                <IconPin />
               </button>
-              <div ref={dropdownRef}>
+              <div className="dropdown-ref" ref={dropdownRef}>
                   <button
                     onClick={(e) => handleDropdownClick(e, groupData)}
-                    className="btn-acciones"
+                    className="iconos"
                     >
                     <IconDotsVertical />
                   </button>
@@ -362,6 +376,13 @@ const ChatGroup = ({ groupId }) => {
                     <button
                       className="btn-dropdown1"
                       id="eliminar1"
+                      onClick={() => {
+                        setActiveBubble("confirmacion");
+                        setConfirmationMessage("¿Estás seguro de que deseas salir del grupo?");
+                        setMessageType("confirmacion");
+                        setActiveBubble("confirmacion");
+                      }
+                      }
                       >
                       <IconLogout2/>
                       <p>Salir</p>
@@ -470,6 +491,28 @@ const ChatGroup = ({ groupId }) => {
         </div>
       )}
 
+      {activeBubble === "confirmacion" && (
+        <div className="confirmacion-container">
+          <div className="botones-confirmacion">
+            <button
+              className="botn-eventos"
+              onClick={() => {
+                setActiveBubble(null);
+                setConfirmationMessage("");
+                setMessageType("");
+              }}
+            >
+              Cancelar
+            </button>
+            <button
+              className="botn-eventos" id="salir"
+              onClick={handleSalirGrupo}
+            >
+              Confirmar
+            </button>
+          </div>
+        </div>
+      )}
       </Bubble>
     </div>
   );

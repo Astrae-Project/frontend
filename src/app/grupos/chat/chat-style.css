@@ -49,12 +49,27 @@
   gap: 16px;
 }
 
+.dropdown-ref {
+  display: flex;
+}
+
+.header-icons svg {
+  width: 18px;
+  height: 18px;
+}
+
+.iconos:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
 .iconos {
   width: 20px;
   height: 20px;
   color: white;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  opacity: 0.7;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .iconos:hover {
@@ -247,7 +262,8 @@
   border: 1px solid #2d2e37;
   border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  height: 100px;
+  height: auto;
+  max-height: 100px;
   width: 100px;
   z-index: 100;
   display: flex;
@@ -255,24 +271,36 @@
 }
   
 .dropdown1 button {
-    display: flex;
-    gap: 6px;
-    background: none;
-    border: none;
-    text-align: left;
-    padding: 9px 12px 8px 8px;
-    font-size: 12.5px;
-    transition: background 0.2s ease-in-out;
+  display: flex;
+  gap: 6px;
+  background: none;
+  border: none;
+  border-radius: 0;
+  text-align: left;
+  padding: 9px 12px 8px 8px;
+  font-size: 12.5px;
+  transition: background 0.2s ease-in-out;
+  font-size: 13px;
 }
 
-#ver-perfil1 p {
-    position: relative;
-    top: 1.75px;
+.btn-dropdown1 svg {
+  width: 17px;
+  height: 17px;
+}
+
+#salir{
+  background-color: rgba(222, 67, 67);
 }
 
 #eliminar1 {
-    gap: 7.5px;
-    color: #ff4d4d;
+  gap: 8px;
+  color: rgba(222, 67, 67);
+  margin-left: -1px;
+}
+
+#eliminar1 p, #eliminar1 svg, #ver-perfil1 p {
+  position: relative;
+  top: 1.75px;
 }
 
 .dropdown1 :first-child {
@@ -288,3 +316,9 @@
 .dropdown1 button:hover {
   background-color: #2b2b36;
 }  
+
+.botones-confirmacion{
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px;
+}
