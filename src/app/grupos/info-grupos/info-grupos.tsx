@@ -247,7 +247,7 @@ const InfoGrupos = ({ groupId }) => {
         <p>No se encontró información del grupo.</p>
       ) : (
         <div className="informacion-grupo">
-          <nav className="top-bar">
+          <nav className="top-bar" style={{display: 'none'}}>
             <ul className="tabs-list">
               {['info', 'ofertas', 'archivos'].map((tab) => (
                 <li

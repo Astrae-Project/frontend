@@ -7,7 +7,7 @@ import customAxios from "@/service/api.mjs";
 
 const MIN_HEIGHT = 152;
 
-const Input = ({ onSendMessage , groupId}) => {
+const Input = ({ onSendMessage, groupId }) => {
   const textAreaRef = useRef(null);
   const fileInputRef = useRef(null);
   const [message, setMessage] = useState("");
@@ -17,7 +17,6 @@ const Input = ({ onSendMessage , groupId}) => {
   const [members, setMembers] = useState([]);
 
   const numericGroupId = groupId ? parseInt(String(groupId).trim(), 10) : null;
-  // Verificamos que el ID del grupo sea un número válido
   if (isNaN(numericGroupId)) {
     console.error("El ID del grupo no es un número válido.");
   }
@@ -39,7 +38,6 @@ const Input = ({ onSendMessage , groupId}) => {
     fetchGroupData();
   }, [numericGroupId]);
 
-  // Función para ajustar la altura del textarea
   const autoResize = () => {
     const textarea = textAreaRef.current;
     if (textarea) {
@@ -55,15 +53,12 @@ const Input = ({ onSendMessage , groupId}) => {
   // Función para enviar mensaje
   const handleSend = () => {
     const trimmedMessage = message.trim();
-    // Verificamos que haya un mensaje o un archivo adjunto
-    if (!trimmedMessage && !attachedFile) return;
-
-    const payload = {
-      text: trimmedMessage,
-      file: attachedFile // Puedes luego gestionar el archivo en el backend o crear la lógica de subida
-    };
-
-    onSendMessage?.(payload);
+    if (!trimmedMessage && !attachedFile) {
+      return; // No enviar si no hay mensaje ni archivo adjunto
+    }
+    
+    // Llama a la función del componente padre con el contenido del mensaje.
+    onSendMessage(trimmedMessage);
 
     // Reinicia estados
     setMessage("");
@@ -96,14 +91,10 @@ const Input = ({ onSendMessage , groupId}) => {
   };
 
   const selectMention = (username) => {
-    // Añade la mención al final del contenido actual con un espacio al final
     setMessage((prev) => prev + `@${username} `);
     setShowMentionList(false);
-    // Opcional: reenfoca el textarea
     textAreaRef.current.focus();
   };
-
-  
 
   // --- Funcionalidad Adjuntar Archivo (clip) ---
   const handleFileClick = () => {
@@ -167,18 +158,18 @@ const Input = ({ onSendMessage , groupId}) => {
         </div>
       )}
 
-      <div className="contenedor-social">
+      <div className="contenedor-social" style={{ display: "none" }}>
         <button className="btn-social" type="button" onClick={handleMentionClick}>
-          <IconAt className="icon2" size={18} />
+          <IconAt className="icon2" />
         </button>
         <button className="btn-social" type="button" onClick={handleFileClick}>
-          <IconPaperclip className="icon2" size={18} />
+          <IconPaperclip className="icon2" />
         </button>
         <button className="btn-social" type="button" onClick={handleStarClick}>
-          <IconStar className="icon2" size={18} />
+          <IconStar className="icon2" />
         </button>
       </div>
-
+  
       <div className="contenedor-enviar">
         <button className="btn-enviar" id="borrar" onClick={handleClear}>
           Borrar

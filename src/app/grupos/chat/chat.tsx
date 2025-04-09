@@ -4,7 +4,7 @@ import React, { useEffect, useState, useCallback, useRef } from "react";
 import { io } from "socket.io-client";
 import Input from "../textarea/textarea-demo";
 import "./chat-style.css";
-import { IconDotsVertical, IconLogout2, IconPencil, IconPin } from "@tabler/icons-react";
+import { IconDotsVertical, IconLogout2, IconPencil, IconPin, IconUserShield } from "@tabler/icons-react";
 import customAxios from "@/service/api.mjs";
 import Bubble from "@/app/ui/components/bubble/bubble";
 
@@ -17,23 +17,23 @@ const ChatGroup = ({ groupId }) => {
   const [groupData, setGroupData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [openDropdownId, setOpenDropdownId] = useState(null);
-  const [selectedGroup, setSelectedGroup] = useState(null); // Estado para el grupo seleccionado
-  const [activeBubble, setActiveBubble] = useState(null); // Estado para el componente activo
-  const [confirmationMessage, setConfirmationMessage] = useState(""); // Mensaje de confirmación
-  const [messageType, setMessageType] = useState(""); // Tipo de mensaje (info, error, etc.)
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [activeBubble, setActiveBubble] = useState(null);
+  const [confirmationMessage, setConfirmationMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
   const [formData, setFormData] = useState({
     nombre: groupData ? groupData.nombre : "",
     descripcion: groupData ? groupData.descripcion : "",
     tipo: groupData ? groupData.tipo : "privado",
   });
   const dropdownRef = useRef(null);
-  
+  const [permisos, setPermisos] = useState([]);
 
+  
   // Referencias para el scroll
   const chatContainerRef = useRef(null);
   const messagesEndRef = useRef(null);
 
-  // Convertir groupId a número
   const numericGroupId = groupId ? parseInt(String(groupId).trim(), 10) : null;
 
   const isCurrentUserAdmin = () => {
@@ -69,6 +69,7 @@ const ChatGroup = ({ groupId }) => {
         `http://localhost:5000/api/grupos/data/${numericGroupId}`
       );
       setGroupData(response.data);
+      setPermisos(response.data.permisos);
     } catch (error) {
       console.error("Error obteniendo datos del grupo:", error);
     }
@@ -77,8 +78,15 @@ const ChatGroup = ({ groupId }) => {
   useEffect(() => {
     fetchGroupData();
   }, [numericGroupId]);
-  
 
+  const togglePermiso = (id) => {
+    setPermisos((prev) =>
+      prev.map((permiso) =>
+        permiso.id === id ? { ...permiso, soloAdmins: !permiso.soloAdmins } : permiso
+      )
+    );
+  };
+  
   // Obtener mensajes
   useEffect(() => {
     if (!numericGroupId) return;
@@ -137,32 +145,30 @@ const ChatGroup = ({ groupId }) => {
   }, [numericGroupId]);
 
   const handleDropdownClick = (e, miembro) => {
-    e.stopPropagation(); // Evitar la propagación del clic
+    e.stopPropagation();
     setOpenDropdownId(openDropdownId === miembro.id ? null : miembro.id);
   };
 
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        // Solo cerrar si el clic es fuera de todos los elementos relacionados al dropdown
-        if (
-          dropdownRef.current && 
-          !dropdownRef.current.contains(event.target) &&
-          // Verifica que el clic no sea en el botón del dropdown
-          !event.target.closest('.btn-dropdown')
-        ) {
-          setOpenDropdownId(null);
-        }
-      };
-    
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRef.current && 
+        !dropdownRef.current.contains(event.target) &&
+        !event.target.closest('.btn-dropdown')
+      ) {
+        setOpenDropdownId(null);
+      }
+    };
+  
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
   
   const closeBubble = () => {
     setActiveBubble(null);
     setConfirmationMessage("");
     setMessageType("");
-  }
+  };
 
   useEffect(() => {
     if (activeBubble === "editar-grupo" && selectedGroup) {
@@ -180,7 +186,6 @@ const ChatGroup = ({ groupId }) => {
         `http://localhost:5000/api/grupos/datos/${groupId}`,
         formData
       );
-      // Se vuelve a consultar el grupo actualizado
       await fetchGroupData();
       setActiveBubble(null);
     } catch (error) {
@@ -204,9 +209,9 @@ const ChatGroup = ({ groupId }) => {
       setConfirmationMessage(error.response.data.message);
       setMessageType("error");
     }
-  }
+  };
 
-  // Al enviar un mensaje se genera la fecha actual en el frontend
+  // Función para enviar el mensaje. Recibe el contenido como argumento.
   const handleSendMessage = useCallback(
     async (messageContent) => {
       if (!socket || !numericGroupId || !currentUser) return;
@@ -215,7 +220,7 @@ const ChatGroup = ({ groupId }) => {
           contenido: messageContent,
           id_emisor: currentUser.id,
           id_grupo: numericGroupId,
-          fecha_envio: new Date().toISOString(), // Genera la fecha al enviar
+          fecha_envio: new Date().toISOString(),
         };
         setMessages((prevMessages) => [
           ...prevMessages,
@@ -242,7 +247,6 @@ const ChatGroup = ({ groupId }) => {
     [socket, numericGroupId, currentUser]
   );
 
-  // Formatea la hora y minutos (HH:mm)
   function formatHourMinutes(fecha) {
     const date = new Date(fecha);
     const horas = date.getHours().toString().padStart(2, "0");
@@ -250,19 +254,16 @@ const ChatGroup = ({ groupId }) => {
     return `${horas}:${minutos}`;
   }
 
-  // Formatea la fecha para el separador (ej. "18 de noviembre")
   function formatDateSeparator(fecha) {
     const date = new Date(fecha);
     const options = { day: "numeric", month: "long" };
     return date.toLocaleDateString("es-ES", options);
   }
 
-  // Función auxiliar para validar fechas
   function isValidDate(date) {
     return date instanceof Date && !isNaN(date.getTime());
   }
 
-  // Renderiza los mensajes con separadores de fecha y controla la repetición del header
   const renderMessagesWithSeparators = () => {
     const elements = [];
     let lastDateKey = "";
@@ -270,7 +271,7 @@ const ChatGroup = ({ groupId }) => {
       const msgDate = new Date(msg.fecha_envio);
       let msgDateKey = "";
       if (isValidDate(msgDate)) {
-        msgDateKey = msgDate.toISOString().split("T")[0]; // Formato: YYYY-MM-DD
+        msgDateKey = msgDate.toISOString().split("T")[0];
         if (msgDateKey !== lastDateKey) {
           elements.push(
             <div key={`sep-${msgDateKey}`} className="date-separator">
@@ -284,7 +285,6 @@ const ChatGroup = ({ groupId }) => {
       }
 
       const isMyMessage = currentUser && msg.emisor.id === currentUser.id;
-      // Para mensajes de otros, si el mensaje anterior es del mismo usuario y en el mismo día, no se muestra el header
       let showHeader = true;
       if (!isMyMessage && index > 0) {
         const prevMsg = messages[index - 1];
@@ -308,7 +308,6 @@ const ChatGroup = ({ groupId }) => {
           </div>
         );
       } else {
-        // Para mensajes consecutivos sin header, agregamos la clase "consecutive-message"
         const messageClass = showHeader ? "other-message" : "other-message consecutive-message";
         elements.push(
           <div key={`msg-${index}`} className="chat-message-container other-message-container">
@@ -348,34 +347,44 @@ const ChatGroup = ({ groupId }) => {
               <p className="nombre-grupo">{groupData ? groupData.nombre : "Cargando..."}</p>
             </div>
             <div className="header-icons">
-              <button className="iconos">
-                <IconPin />
-              </button>
               <div className="dropdown-ref" ref={dropdownRef}>
-                  <button
-                    onClick={(e) => handleDropdownClick(e, groupData)}
-                    className="iconos"
-                    >
-                    <IconDotsVertical />
-                  </button>
+                <button
+                  onClick={(e) => handleDropdownClick(e, groupData)}
+                  className="iconos"
+                >
+                  <IconDotsVertical />
+                </button>
                 {openDropdownId && (
                   <div 
                     className="dropdown1" 
                     onClick={(e) => e.stopPropagation()}
                   >
-                  {isCurrentUserAdmin() && (
-                    
-                  <button
-                    className="btn-dropdown1"
-                    id="ver-perfil1"
-                    onClick={() => {
-                      setSelectedGroup(groupData); // Guardamos el miembro seleccionado
-                      setActiveBubble("editar-grupo");
-                    }}
-                    >
-                      <IconPencil/>
-                      <p>Editar</p>
-                    </button>)}                             
+                    {isCurrentUserAdmin() && (
+                    <>
+                      <button
+                        className="btn-dropdown1"
+                        id="ver-perfil1"
+                        onClick={() => {
+                          setSelectedGroup(groupData);
+                          setActiveBubble("editar-grupo");
+                        }}
+                      >
+                        <IconPencil />
+                        <p>Editar</p>
+                      </button>
+                      <button
+                        className="btn-dropdown1"
+                        id="permisos1"
+                        onClick={() => {
+                          setSelectedGroup(groupData);
+                          setActiveBubble("permisos");
+                        }}
+                      >
+                        <IconUserShield />
+                        <p>Permisos</p>
+                      </button>
+                    </>
+                    )}                             
                     <button
                       className="btn-dropdown1"
                       id="eliminar1"
@@ -383,11 +392,9 @@ const ChatGroup = ({ groupId }) => {
                         setActiveBubble("confirmacion");
                         setConfirmationMessage("¿Estás seguro de que deseas salir del grupo?");
                         setMessageType("neutral");
-                        setActiveBubble("confirmacion");
-                      }
-                      }
-                      >
-                      <IconLogout2/>
+                      }}
+                    >
+                      <IconLogout2 />
                       <p>Salir</p>
                     </button>
                   </div>
@@ -405,7 +412,7 @@ const ChatGroup = ({ groupId }) => {
               </>
             )}
           </div>
-          <Input onSendMessage={handleSendMessage} groupId={groupId}/>
+          <Input onSendMessage={handleSendMessage} groupId={groupId} />
         </>
       )}
 
@@ -415,107 +422,132 @@ const ChatGroup = ({ groupId }) => {
         message={confirmationMessage}
         type={messageType}
       >
-      {activeBubble === "editar-grupo" && selectedGroup && (
-        <div className="crear-grupo-container">
-          <h2>Editar Grupo</h2>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleEditarGrupo();
-            }}
-            className="crear-grupo-form"
-          >
-            <div className="form-group">
-              <input
-                type="text"
-                className="form-control"
-                value={formData.nombre}
-                onChange={(e) =>
-                  setFormData({ ...formData, nombre: e.target.value })
-                }
-                required
-                placeholder="Nombre del grupo"
-              />
-            </div>
-            <div className="form-group">
-              <textarea
-                id="descripcion"
-                className="form-control"
-                value={formData.descripcion}
-                onChange={(e) =>
-                  setFormData({ ...formData, descripcion: e.target.value })
-                }
-                required
-                placeholder="Descripción del grupo"
-                rows={4}
-              />
-            </div>
-            <div className="form-group">
-              <div className="tipo-opciones">
-                <label>
-                  <input
-                    type="radio"
-                    name="tipo"
-                    value="publico"
-                    checked={formData.tipo === "publico"}
-                    onChange={(e) =>
-                      setFormData({ ...formData, tipo: e.target.value })
-                    }
-                  />
-                  <p className="text-label">Público</p>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="tipo"
-                    value="privado"
-                    checked={formData.tipo === "privado"}
-                    onChange={(e) =>
-                      setFormData({ ...formData, tipo: e.target.value })
-                    }
-                  />
-                  <p className="text-label">Privado</p>
-                </label>
+        {activeBubble === "editar-grupo" && selectedGroup && (
+          <div className="crear-grupo-container">
+            <h2>Editar Grupo</h2>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleEditarGrupo();
+              }}
+              className="crear-grupo-form"
+            >
+              <div className="form-group">
+                <input
+                  type="text"
+                  className="form-control"
+                  value={formData.nombre}
+                  onChange={(e) =>
+                    setFormData({ ...formData, nombre: e.target.value })
+                  }
+                  required
+                  placeholder="Nombre del grupo"
+                />
               </div>
-            </div>
-            <div className="contendor-botn-grupo">
+              <div className="form-group">
+                <textarea
+                  id="descripcion"
+                  className="form-control"
+                  value={formData.descripcion}
+                  onChange={(e) =>
+                    setFormData({ ...formData, descripcion: e.target.value })
+                  }
+                  required
+                  placeholder="Descripción del grupo"
+                  rows={4}
+                />
+              </div>
+              <div className="form-group">
+                <div className="tipo-opciones">
+                  <label>
+                    <input
+                      type="radio"
+                      name="tipo"
+                      value="publico"
+                      checked={formData.tipo === "publico"}
+                      onChange={(e) =>
+                        setFormData({ ...formData, tipo: e.target.value })
+                      }
+                    />
+                    <p className="text-label">Público</p>
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="tipo"
+                      value="privado"
+                      checked={formData.tipo === "privado"}
+                      onChange={(e) =>
+                        setFormData({ ...formData, tipo: e.target.value })
+                      }
+                    />
+                    <p className="text-label">Privado</p>
+                  </label>
+                </div>
+              </div>
+              <div className="contendor-botn-grupo">
+                <button
+                  type="button"
+                  className="botn-eventos"
+                  onClick={closeBubble}
+                >
+                  Cancelar
+                </button>
+                <button type="submit" className="botn-eventos enviar">
+                  Guardar
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {activeBubble === "confirmacion" && (
+          <div className="confirmacion-container">
+            <div className="botones-confirmacion">
               <button
-                type="button"
-                className="botn-eventos"
-                onClick={closeBubble}
+                className="botn-confirmar"
+                onClick={() => {
+                  setActiveBubble(null);
+                  setConfirmationMessage("");
+                  setMessageType("");
+                }}
               >
                 Cancelar
               </button>
-              <button type="submit" className="botn-eventos enviar">
-                Guardar
+              <button
+                className="botn-confirmar"
+                id="salir"
+                onClick={handleSalirGrupo}
+              >
+                Confirmar
               </button>
             </div>
-          </form>
-        </div>
-      )}
-
-      {activeBubble === "confirmacion" && (
-        <div className="confirmacion-container">
-          <div className="botones-confirmacion">
-            <button
-              className="botn-confirmar"
-              onClick={() => {
-                setActiveBubble(null);
-                setConfirmationMessage("");
-                setMessageType("");
-              }}
-            >
-              Cancelar
-            </button>
-            <button
-              className="botn-confirmar" id="salir"
-              onClick={handleSalirGrupo}
-            >
-              Confirmar
-            </button>
           </div>
-        </div>
-      )}
+        )}
+
+        {activeBubble === "permisos" && selectedGroup && (
+          <div className="permisos-container">
+            <h2>Permisos</h2>
+            <p>Gestiona los permisos de los miembros del grupo.</p>
+            <ul className="lista-permisos">
+              {permisos.map((permiso) => (
+                <li key={permiso.id} className="permiso-item">
+                  <span className="permiso-nombre">{permiso.nombre}</span>
+                  <label className="toggle-label">
+                    <span>Solo admins</span>
+                    <input
+                      type="checkbox"
+                      className="toggle-input"
+                      checked={permiso.soloAdmins}
+                      onChange={() => togglePermiso(permiso.id)}
+                    />
+                    <span className="slider"></span>
+                  </label>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </Bubble>
     </div>
   );
