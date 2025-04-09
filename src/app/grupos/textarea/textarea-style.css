@@ -1,13 +1,15 @@
+/* Contenedor principal del input */
 .chat-input {
   position: relative;
   display: flex;
-  justify-content: center;
-  align-items: flex-end; /* Alinea el textarea al final del contenedor */
+  flex-direction: column;
+  justify-content: flex-end;
   width: 95%;
-  margin: 0 auto; 
-  margin-bottom: 13px; /* Margen inferior para separación */
+  margin: 0 auto;
+  margin-bottom: 13px; /* Separación inferior */
 }
-  
+
+/* Estilos para el textarea */
 .mensajes {
   position: relative;
   min-height: 150px;
@@ -18,54 +20,118 @@
   color: #e9e9e9;
   width: 100%;
   outline: none;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-top: 15px;
-  padding-bottom: 65px;
+  padding: 15px 20px 65px;
   font-size: 13.5px;
   resize: none;
   overflow-y: hidden;
 }
-  
+
 .mensajes::placeholder {
   background-color: transparent;
   color: #b0b0b0;
   opacity: 0.8;
 }
 
+/* Contenedor para los íconos (mencionar, adjuntar, estrella) */
 .contenedor-social {
   position: absolute;
   display: flex;
-  border: none;
-  right: 84%;
   gap: 15px;
-  bottom: 20px;
+  bottom: 21.5px;
+  left: 20px;
 }
 
-.icon2{
+.icon2 {
   color: #b0b0b0;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
 }
 
+/* Contenedor para los botones de enviar y limpiar */
 .contenedor-enviar {
   position: absolute;
   display: flex;
-  border: none; /* Sin borde */
-  left: 72.5%;
+  gap: 10px;
   bottom: 15px;
+  right: 20px;
 }
 
-.btn-enviar{
-  position: relative;
+.btn-enviar {
   width: 75px;
   height: 30px;
-  margin-right: 10px;
   background-color: #1C1C29;
   border: 1px solid #1E202F;
   border-radius: 5px;
   font-size: 13px;
-  padding-top: 1.8%;
+  cursor: pointer;
 }
 
-#enviar{
+#enviar {
   background-color: #6e4ba3;
+}
+
+/* Vista previa del archivo adjunto */
+.attached-file {
+  position: absolute;
+  width: 50%;
+  height: 30px;
+  bottom: 15px; /* Ubicación arriba del área de íconos; ajusta según convenga */
+  left: 121px;
+  background-color: #1E202F;
+  border: 1px solid #272938;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  color: #e9e9e9;
+  text-overflow: ellipsis;
+}
+
+.attached-file p {
+  position: relative;
+  top: 2px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin: 0;
+  padding: 0;
+}
+
+/* Mensaje temporal para el ícono estrella */
+.star-message {
+  margin-top: 10px;
+  background-color: #333;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  color: #fff;
+  width: fit-content;
+}
+
+/* Lista desplegable para menciones */
+.mention-list {
+  position: absolute;
+  bottom: 60px; /* Ubicación arriba del área de íconos; ajusta según convenga */
+  left: 20px;
+  background-color: #161823;
+  border: 1px solid #2d2e37;
+  border-radius: 8px;
+  max-height: 150px;
+  max-width: 150px;
+  overflow-y: auto;
+  z-index: 100;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para cada item de la lista de menciones */
+.mention-item {
+  padding: 8px 20px 8px 10px;
+  cursor: pointer;
+  color: #e9e9e9;
+  font-size: 12.5px;
+  transition: background 0.2s ease-in-out;
+}
+
+.mention-item:hover {
+  background-color: #2b2b36;
 }

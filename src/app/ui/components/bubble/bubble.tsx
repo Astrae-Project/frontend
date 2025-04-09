@@ -1,6 +1,6 @@
 import React from "react";
 import "./bubble-style.css"; // Archivo CSS para el diseño y animaciones
-import { IconCircleCheck, IconCircleX } from "@tabler/icons-react";
+import { IconCircleCheck, IconCircleX, IconHelp } from "@tabler/icons-react";
 
 const Bubble = ({ show, onClose, children, message, type }) => {
   if (!show) return null; // No renderiza nada si `show` es false
@@ -12,8 +12,10 @@ const Bubble = ({ show, onClose, children, message, type }) => {
           <div className={`mensaje-confirmacion ${type}`}>
             {type === "success" ? (
               <IconCircleCheck id="check" />
+            ) : type === "neutral" ? (
+              <IconHelp id="neutral" />
             ) : (
-              <IconCircleX id="error" /> // Asegúrate de tener un icono para error
+              <IconCircleX id="error" />
             )}
             <h2>{message}</h2>
           </div>

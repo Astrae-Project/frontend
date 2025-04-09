@@ -75,3 +75,11 @@
     height: 21px;
     top: 40px;
   }
+
+  #neutral{
+    position: absolute;
+    color: rgb(133, 133, 133);
+    width: 21px;
+    height: 21px;
+    top: 40px;
+  }

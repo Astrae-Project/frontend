@@ -3,14 +3,43 @@
 import React, { useRef, useEffect, useState } from "react";
 import { IconPaperclip, IconAt, IconStar } from "@tabler/icons-react";
 import "./textarea-style.css";
+import customAxios from "@/service/api.mjs";
 
 const MIN_HEIGHT = 152;
 
-const Input = ({ onSendMessage }) => {
+const Input = ({ onSendMessage , groupId}) => {
   const textAreaRef = useRef(null);
+  const fileInputRef = useRef(null);
   const [message, setMessage] = useState("");
+  const [attachedFile, setAttachedFile] = useState(null);
+  const [showMentionList, setShowMentionList] = useState(false);
+  const [starMessage, setStarMessage] = useState("");
+  const [members, setMembers] = useState([]);
 
-  // Ajusta la altura del textarea dinámicamente
+  const numericGroupId = groupId ? parseInt(String(groupId).trim(), 10) : null;
+  // Verificamos que el ID del grupo sea un número válido
+  if (isNaN(numericGroupId)) {
+    console.error("El ID del grupo no es un número válido.");
+  }
+  
+  const fetchGroupData = async () => {
+    if (!numericGroupId) return;
+    try {
+      const response = await customAxios.get(
+        `http://localhost:5000/api/grupos/data/${numericGroupId}`
+      );
+      setMembers(response.data.miembros || []);
+      console.log("Miembros del grupo:", response.data.miembros);
+    } catch (error) {
+      console.error("Error obteniendo datos del grupo:", error);
+    }
+  };
+  
+  useEffect(() => {
+    fetchGroupData();
+  }, [numericGroupId]);
+
+  // Función para ajustar la altura del textarea
   const autoResize = () => {
     const textarea = textAreaRef.current;
     if (textarea) {
@@ -23,22 +52,31 @@ const Input = ({ onSendMessage }) => {
     autoResize();
   }, [message]);
 
-  // Enviar mensaje cuando se presiona el botón
+  // Función para enviar mensaje
   const handleSend = () => {
     const trimmedMessage = message.trim();
-    if (!trimmedMessage) return; // Evita mensajes vacíos
+    // Verificamos que haya un mensaje o un archivo adjunto
+    if (!trimmedMessage && !attachedFile) return;
 
-    onSendMessage?.(trimmedMessage); // Llama a la función de envío
-    setMessage(""); // Limpia el textarea
+    const payload = {
+      text: trimmedMessage,
+      file: attachedFile // Puedes luego gestionar el archivo en el backend o crear la lógica de subida
+    };
+
+    onSendMessage?.(payload);
+
+    // Reinicia estados
+    setMessage("");
+    setAttachedFile(null);
     if (textAreaRef.current) {
-      textAreaRef.current.style.height = `${MIN_HEIGHT}px`; // Restaura la altura mínima
+      textAreaRef.current.style.height = `${MIN_HEIGHT}px`;
     }
   };
 
-  // Enviar mensaje con "Enter" + evitar salto de línea innecesario
+  // Manejar envío con Enter (sin shift)
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault(); // Evita el salto de línea
+      e.preventDefault();
       handleSend();
     }
   };
@@ -46,9 +84,43 @@ const Input = ({ onSendMessage }) => {
   // Limpiar el mensaje
   const handleClear = () => {
     setMessage("");
+    setAttachedFile(null);
     if (textAreaRef.current) {
       textAreaRef.current.style.height = `${MIN_HEIGHT}px`;
     }
+  };
+
+  // --- Funcionalidad Menciones (@) ---
+  const handleMentionClick = () => {
+    setShowMentionList((prev) => !prev);
+  };
+
+  const selectMention = (username) => {
+    // Añade la mención al final del contenido actual con un espacio al final
+    setMessage((prev) => prev + `@${username} `);
+    setShowMentionList(false);
+    // Opcional: reenfoca el textarea
+    textAreaRef.current.focus();
+  };
+
+  
+
+  // --- Funcionalidad Adjuntar Archivo (clip) ---
+  const handleFileClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setAttachedFile(file);
+    }
+  };
+
+  // --- Funcionalidad Estrella (Placeholder) ---
+  const handleStarClick = () => {
+    setStarMessage("Función de favorito en desarrollo.");
+    setTimeout(() => setStarMessage(""), 3000);
   };
 
   return (
@@ -63,19 +135,50 @@ const Input = ({ onSendMessage }) => {
           setMessage(e.target.value);
           autoResize();
         }}
-        onKeyDown={handleKeyDown} // Permite enviar con Enter
+        onKeyDown={handleKeyDown}
       ></textarea>
+
+      {/* Mostrar vista previa del archivo adjunto */}
+      {attachedFile && (
+        <div className="attached-file">
+          <p>Archivo adjunto: {attachedFile.name}</p>
+        </div>
+      )}
+
+      {/* Mostrar mensaje del icono estrella si procede */}
+      {starMessage && (
+        <div className="star-message">
+          <p>{starMessage}</p>
+        </div>
+      )}
+
+      {/* Lista de menciones */}
+      {showMentionList && (
+        <div className="mention-list">
+          {members.map((candidate) => (
+            <div
+              key={candidate.id}
+              className="mention-item"
+              onClick={() => selectMention(candidate.username)}
+            >
+              {candidate.username}
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="contenedor-social">
-        <button className="btn-social" type="button">
-          <IconAt className="icon2" size={16} />
+        <button className="btn-social" type="button" onClick={handleMentionClick}>
+          <IconAt className="icon2" size={18} />
         </button>
-        <button className="btn-social" type="button">
-          <IconPaperclip className="icon2" size={16} />
+        <button className="btn-social" type="button" onClick={handleFileClick}>
+          <IconPaperclip className="icon2" size={18} />
         </button>
-        <button className="btn-social" type="button">
-          <IconStar className="icon2" size={16} />
+        <button className="btn-social" type="button" onClick={handleStarClick}>
+          <IconStar className="icon2" size={18} />
         </button>
       </div>
+
       <div className="contenedor-enviar">
         <button className="btn-enviar" id="borrar" onClick={handleClear}>
           Borrar
@@ -84,6 +187,13 @@ const Input = ({ onSendMessage }) => {
           Enviar
         </button>
       </div>
+
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+      />
     </div>
   );
 };

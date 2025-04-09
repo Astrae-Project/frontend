@@ -62,21 +62,22 @@ const ChatGroup = ({ groupId }) => {
     fetchRol();
   }, []);
 
-  // Obtener datos del grupo
-  useEffect(() => {
+  const fetchGroupData = async () => {
     if (!numericGroupId) return;
-    const fetchGroupData = async () => {
-      try {
-        const response = await customAxios.get(
-          `http://localhost:5000/api/grupos/data/${numericGroupId}`
-        );
-        setGroupData(response.data);
-      } catch (error) {
-        console.error("Error obteniendo datos del grupo:", error);
-      }
-    };
+    try {
+      const response = await customAxios.get(
+        `http://localhost:5000/api/grupos/data/${numericGroupId}`
+      );
+      setGroupData(response.data);
+    } catch (error) {
+      console.error("Error obteniendo datos del grupo:", error);
+    }
+  };
+  
+  useEffect(() => {
     fetchGroupData();
   }, [numericGroupId]);
+  
 
   // Obtener mensajes
   useEffect(() => {
@@ -175,19 +176,19 @@ const ChatGroup = ({ groupId }) => {
   
   const handleEditarGrupo = async () => {
     try {
-      const response = await customAxios.put(
+      await customAxios.put(
         `http://localhost:5000/api/grupos/datos/${groupId}`,
         formData
       );
+      // Se vuelve a consultar el grupo actualizado
+      await fetchGroupData();
       setActiveBubble(null);
-      setGroupData(response.data);
-    }
-    catch (error) {
+    } catch (error) {
       console.error("Error editando grupo:", error);
-      setConfirmationMessage("Error editando grupo.");
+      setConfirmationMessage(error.response.data.message);
       setMessageType("error");
     }
-  }
+  };  
 
   const handleSalirGrupo = async () => {
     try {
@@ -196,9 +197,11 @@ const ChatGroup = ({ groupId }) => {
       );
       setActiveBubble(null);
       setGroupData(null);
+      setConfirmationMessage("Has salido del grupo correctamente.");
+      setMessageType("success");
     } catch (error) {
       console.error("Error saliendo del grupo:", error);
-      setConfirmationMessage(error.message);
+      setConfirmationMessage(error.response.data.message);
       setMessageType("error");
     }
   }
@@ -379,7 +382,7 @@ const ChatGroup = ({ groupId }) => {
                       onClick={() => {
                         setActiveBubble("confirmacion");
                         setConfirmationMessage("¿Estás seguro de que deseas salir del grupo?");
-                        setMessageType("confirmacion");
+                        setMessageType("neutral");
                         setActiveBubble("confirmacion");
                       }
                       }
@@ -402,7 +405,7 @@ const ChatGroup = ({ groupId }) => {
               </>
             )}
           </div>
-          <Input onSendMessage={handleSendMessage} />
+          <Input onSendMessage={handleSendMessage} groupId={groupId}/>
         </>
       )}
 
@@ -495,7 +498,7 @@ const ChatGroup = ({ groupId }) => {
         <div className="confirmacion-container">
           <div className="botones-confirmacion">
             <button
-              className="botn-eventos"
+              className="botn-confirmar"
               onClick={() => {
                 setActiveBubble(null);
                 setConfirmationMessage("");
@@ -505,7 +508,7 @@ const ChatGroup = ({ groupId }) => {
               Cancelar
             </button>
             <button
-              className="botn-eventos" id="salir"
+              className="botn-confirmar" id="salir"
               onClick={handleSalirGrupo}
             >
               Confirmar
