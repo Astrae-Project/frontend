@@ -89,7 +89,7 @@ export default function EventosOtro({ fechaSeleccionada, username }) {
                     className="avatar-imagen"
                   />
                 </div>
-                <div className="evento-detalles">
+                <div className="evento-detalles1">
                   <p className="evento-creador">{evento.creador?.username || "Usuario desconocido"}</p>
                   <p className="evento-titulo">{evento.titulo || "Sin título"}</p>
                   <p className="evento-fecha">{formatDateTime(evento.fecha_evento)}</p>

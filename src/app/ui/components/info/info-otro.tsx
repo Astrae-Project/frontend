@@ -234,7 +234,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
       <ChipsOtro username={username} />
       <span className="avatar">
         <img
-          src={usuario?.usuario?.avatar}
+          src={usuario?.usuario?.avatar || "/default-avatar.png"}
           alt={`${usuario?.nombre || "Usuario"} avatar`}
           className="avatar-imagen"
         />

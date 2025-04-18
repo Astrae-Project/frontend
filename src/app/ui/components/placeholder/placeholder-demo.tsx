@@ -123,7 +123,7 @@ export function Placeholder({ username }) {
             >
               <div className="portfolio-icono">
                 <img
-                  src={user?.avatar || "/placeholder-avatar.png"}
+                  src={user?.avatar || "/default-avatar.png"}
                   className="avatar-imagen"
                   alt="Avatar"
                 />

@@ -92,19 +92,19 @@
 }
 
 /* Estilo para el li seleccionado */
-.calendario-item.selected {
+.evento-item.selected {
   background-color: #161621;  /* Fondo un poco más oscuro al hacer hover sobre el seleccionado */
   border: 1px solid #6e4ba3 ;
   box-shadow: 0 0 3px #6e4ba3 ;
   outline: none;  cursor: pointer;                          /* Indicar que es interactivo */
 }
 
-.calendario-item.selected:hover {
+.evento-item.selected:hover {
   background-color: #14141f82;  /* Fondo un poco más oscuro al hacer hover sobre el seleccionado */
 }
 
 /* Estilo del li al pasar el mouse */
-.calendario-item:hover {
+.evento-item:hover {
   background-color: #14141f82;  /* Fondo oscuro al hacer hover sobre el li */
 }
 

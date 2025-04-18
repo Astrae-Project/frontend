@@ -128,7 +128,7 @@ export const CartaOferta = ({ oferta }) => {
       <button className="carta-oferta" onClick={() => setActiveBubble("oferta")}>
         <div className="carta-header-oferta">
           <div className="carta-icono-oferta">
-            <img src={oferta?.startup?.usuario?.avatar} alt="Avatar de la startup" className="carta-avatar-oferta" />
+            <img src={oferta?.startup?.usuario?.avatar || "/default-avatar.png"} alt="Avatar de la startup" className="carta-avatar-oferta" />
           </div>
           <div className="carta-info-oferta">
             <p className="carta-nombre">{oferta?.inversor?.nombre}</p>

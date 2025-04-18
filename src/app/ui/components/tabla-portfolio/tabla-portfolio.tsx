@@ -103,7 +103,7 @@ const TablaPortfolio = () => {
                     }}
                   >
                     <div className="portfolio-icono">
-                      <img src={inversion.startup.usuario.avatar} className="portfolio-imagen" alt="Avatar startup" />
+                      <img src={inversion.startup.usuario.avatar || "/default-avatar.png"} className="portfolio-imagen" alt="Avatar startup" />
                     </div>
                     <div className="portfolio-info">
                       <p className="startup-nombre">{inversion.startup.nombre}</p>

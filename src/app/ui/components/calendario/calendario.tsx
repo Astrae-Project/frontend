@@ -407,13 +407,13 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
                   {eventosArray.map((evento) => (
                     <li
                       key={evento.id}
-                      className={selectedEvent?.id === evento.id ? 'selected' : ''}
+                      className={selectedEvent?.id === evento.id ? 'evento-item selected' : 'evento-item'}
                       onClick={() => handleSelectEvent(evento.id)} // Cambiar estado al hacer clic
                     >
                       <div className="portfolio-icono">
-                        <img src={evento.creador.avatar} className="avatar-imagen" />
+                        <img src={evento.creador.avatar || "/default-avatar.png"} className="avatar-imagen" />
                       </div>
-                      <div className="evento-detalles">
+                      <div className="evento-detalles1">
                         <p className="evento-creador">{evento.creador.username}</p>
                         <p className="evento-titulo">{evento.titulo}</p>
                         <p className="evento-fecha">{formatDateTime(evento.fecha_evento)}</p>
@@ -449,13 +449,13 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
                       .map((evento) => (
                         <li
                           key={evento.id}
-                          className={selectedEvent?.id === evento.id ? 'selected' : ''}
+                          className={selectedEvent?.id === evento.id ? 'evento-item selected' : 'evento-item'}
                           onClick={() => handleSelectEvent(evento.id)} // Cambiar estado al hacer clic
                         >
                           <div className="portfolio-icono">
-                            <img src={evento.creador.avatar} className="avatar-imagen" />
+                            <img src={evento.creador.avatar || "/default-avatar.png"} className="avatar-imagen" />
                           </div>
-                          <div className="evento-detalles">
+                          <div className="evento-detalles1">
                             <p className="evento-creador">{evento.creador.username}</p>
                             <p className="evento-titulo">{evento.titulo}</p>
                             <p className="evento-fecha">{formatDateTime(evento.fecha_evento)}</p>
@@ -576,13 +576,13 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
                   filteredEvents.map((evento) => (
                     <li
                       key={evento.id}
-                      className={selectedEvent?.id === evento.id ? 'selected' : ''}
+                      className={selectedEvent?.id === evento.id ? 'evento-item selected' : 'evento-item'}
                       onClick={() => handleSelectEvent(evento.id)} // Cambiar estado al hacer clic
                     >
                       <div className="portfolio-icono">
-                        <img src={evento.creador.avatar} className="avatar-imagen" alt="Avatar" />
+                        <img src={evento.creador.avatar || "/default-avatar.png"} className="avatar-imagen" alt="Avatar" />
                       </div>
-                      <div className="evento-detalles">
+                      <div className="evento-detalles1">
                         <p className="evento-creador">{evento.creador.username}</p>
                         <p className="evento-titulo">{evento.titulo}</p>
                         <p className="evento-fecha">{formatDateTime(evento.fecha_evento)}</p>
@@ -640,13 +640,13 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
                 {eventosArray.map((evento) => (
                     <li
                     key={evento.id}
-                    className={`calendario-item ${selectedEvent?.id === evento.id ? 'selected' : ''}`}
+                    className={`evento-item ${selectedEvent?.id === evento.id ? 'selected' : ''}`}
                     onClick={() => handleSelectEvent(evento.id)} // Cambiar estado al hacer clic
                     >
                     <div className="portfolio-icono">
-                      <img src={evento.creador.avatar} className="avatar-imagen" />
+                      <img src={evento.creador.avatar || "/default-avatar.png"} className="avatar-imagen" />
                     </div>
-                    <div className="evento-detalles">
+                    <div className="evento-detalles1">
                       <p className="evento-creador">{evento.creador.username}</p>
                       <p className="evento-titulo">{evento.titulo}</p>
                       <p className="evento-fecha">{formatDateTime(evento.fecha_evento)}</p>

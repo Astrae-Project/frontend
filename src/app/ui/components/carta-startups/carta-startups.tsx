@@ -22,7 +22,7 @@ export const Carta = ({ startup, onClick }) => {
     <button className="carta" onClick={onClick}>
       <div className="carta-header">
         <div className="carta-icono">
-          <img src={startup?.usuario?.avatar} alt="Avatar de startup" className="carta-avatar" />
+          <img src={startup?.usuario?.avatar || "/default-avatar.png"} alt="Avatar de startup" className="carta-avatar" />
         </div>
         <div className="carta-info">
           <p className="carta-nombre">{startup?.nombre}</p>

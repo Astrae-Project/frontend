@@ -314,7 +314,8 @@ const ChatGroup = ({ groupId }) => {
             {showHeader && (
               <div className="avatar-miembro">
                 <img
-                  src={`https://api.dicebear.com/7.x/identicon/svg?seed=${msg.emisor.username}`}
+                  src={msg.emisor.avatar || "/default-avatar.png"}
+                  className="avatar-imagen"
                   alt="Avatar"
                 />
               </div>
@@ -343,7 +344,13 @@ const ChatGroup = ({ groupId }) => {
         <>
           <div className="chat-header">
             <div className="group-info">
-              <div className="avatar1" aria-label="Avatar del grupo" />
+              <div className="avatar1" aria-label="Avatar del grupo">
+                <img
+                  src={groupData?.avatar || "/group-default-avatar.png"}
+                  className="avatar-imagen"
+                  alt="Avatar del grupo"
+                />
+              </div>
               <p className="nombre-grupo">{groupData ? groupData.nombre : "Cargando..."}</p>
             </div>
             <div className="header-icons">
@@ -404,7 +411,13 @@ const ChatGroup = ({ groupId }) => {
           </div>
           <div className="chat-messages" ref={chatContainerRef}>
             {isLoading ? (
-              <div className="loading-messages">Cargando mensajes...</div>
+              <div className="flex items-center justify-center h-screen">
+                <img
+                  src="/Logo.svg"
+                  alt="Cargando..."
+                  className="heartbeat"
+                />
+              </div>
             ) : (
               <>
                 {renderMessagesWithSeparators()}
@@ -532,13 +545,13 @@ const ChatGroup = ({ groupId }) => {
             <ul className="lista-permisos">
               {permisos.map((permiso) => (
                 <li key={permiso.id} className="permiso-item">
-                  <span className="permiso-nombre">{permiso.nombre}</span>
+                  <span className="permiso-nombre">{permiso.permiso}</span>
                   <label className="toggle-label">
                     <span>Solo admins</span>
                     <input
                       type="checkbox"
                       className="toggle-input"
-                      checked={permiso.soloAdmins}
+                      checked={permiso.abierto === false}
                       onChange={() => togglePermiso(permiso.id)}
                     />
                     <span className="slider"></span>

@@ -205,12 +205,12 @@ export function BentoGridInicio({username}) {
                   startups.map((startup) => (
                     <li
                       key={startup.id}
-                      className={selectedStartup?.id === startup.id ? "selected" : ""}
+                      className={selectedStartup?.id === startup.id ? "inversion-item selected" : "inversion-item"}
                       onClick={() => handleSelectStartup(startup)}
                     >
                       <div className="portfolio-icono">
                         <img
-                          src={startup.usuario?.avatar || "/placeholder-avatar.png"}
+                          src={startup.usuario?.avatar || "/default-avatar.png"}
                           className="avatar-imagen"
                           alt="Avatar"
                         />

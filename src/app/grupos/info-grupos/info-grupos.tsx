@@ -242,7 +242,13 @@ const InfoGrupos = ({ groupId }) => {
           <p>Selecciona un grupo para ver la información.</p>
         </div>
       ) : loading ? (
-        <p>Cargando información del grupo...</p>
+            <div className="flex items-center justify-center h-screen">
+              <img
+                src="/Logo.svg"
+                alt="Cargando..."
+                className="heartbeat"
+              />
+            </div>      
       ) : !grupo ? (
         <p>No se encontró información del grupo.</p>
       ) : (
@@ -270,11 +276,7 @@ const InfoGrupos = ({ groupId }) => {
                   <p className="titulo-primero">Creador</p>
                   <div className="creador-info">
                     <div className="avatar-creador">
-                      {grupo.creador?.avatar ? (
-                        <img src={grupo.creador.avatar} alt="Avatar del creador" />
-                      ) : (
-                        grupo.creador.username.charAt(0).toUpperCase()
-                      )}
+                        <img src={grupo.creador.avatar || '/default-avatar.png' } alt="Avatar del creador" />
                     </div>
                     <p className="titulo-segundo">{grupo.creador?.username}</p>
                   </div>
@@ -309,7 +311,7 @@ const InfoGrupos = ({ groupId }) => {
                     <div className="miembros-resumen">
                       {grupo.miembros.map(miembro => (
                         <div key={miembro.id} className="avatar-miembro">
-                          {miembro.avatar ? miembro.avatar : miembro.username.charAt(0).toUpperCase()}
+                          <img src={miembro.avatar || '/default-avatar.png' } alt="Avatar del creador" />
                         </div>
                       ))}
                     </div>
@@ -328,7 +330,7 @@ const InfoGrupos = ({ groupId }) => {
                         {grupo.miembros.map(miembro => (
                           <li key={miembro.id} className="miembro">
                             <div className="avatar-miembro">
-                              {miembro.avatar ? miembro.avatar : miembro.username.charAt(0).toUpperCase()}
+                              <img src={miembro.avatar || '/default-avatar.png' } alt="Avatar del creador" />
                             </div>
                             <div className="info-miembro">
                               <div className="contendor-username">
@@ -494,7 +496,13 @@ const InfoGrupos = ({ groupId }) => {
           <div className="bubble-añadir">
             <h3>Añadir miembro</h3>
             {loadingUsers ? (
-              <p>Cargando usuarios disponibles...</p>
+              <div className="flex items-center justify-center h-screen">
+                <img
+                  src="/Logo.svg"
+                  alt="Cargando..."
+                  className="heartbeat"
+                />
+              </div>
             ) : availableUsers.length === 0 ? (
               <div className="espacio-vacio">
                 <p>No hay usuarios disponibles para añadir</p>
@@ -509,7 +517,7 @@ const InfoGrupos = ({ groupId }) => {
                       onClick={() => selectUser(user)}
                     >
                       <div className="disponible-avatar">
-                        {user.avatar ? user.avatar : user.username.charAt(0).toUpperCase()}
+                        <img src={user.avatar || '/group-default-avatar.png' } alt="Avatar del creador" />
                       </div>
                       <div className="info-usuario">
                         <p>{user.username}</p>

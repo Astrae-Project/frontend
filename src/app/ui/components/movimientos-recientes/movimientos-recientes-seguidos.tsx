@@ -86,12 +86,11 @@ const MovimientosSeguidos = ({ username }) => {
                 <li key={index} className="movimiento-item">
                     <div className="portfolio-icono">
                       <div className="avatar-imagen">
-                        {/* Acceso al avatar según el autor */}
                         {movimiento.autor === 'inversor' && movimiento.inversor?.usuario?.avatar && (
-                          <img src={movimiento.inversor.usuario.avatar} alt="Avatar del inversor" />
+                          <img src={movimiento.inversor.usuario.avatar || "/default-avatar.png"} alt="Avatar del inversor" />
                         )}
                         {movimiento.autor === 'startup' && movimiento.startup?.usuario?.avatar && (
-                          <img src={movimiento.startup.usuario.avatar} alt="Avatar de la startup" />
+                          <img src={movimiento.startup.usuario.avatar || "/default-avatar.png"} alt="Avatar de la startup" />
                         )}
                       </div>
                     </div>

@@ -63,7 +63,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     display: flex;
-    height: 70%;
+    height: 75%;
     width: 100%;
     align-items: center;
     z-index: 10;

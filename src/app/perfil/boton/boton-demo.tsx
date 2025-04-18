@@ -51,7 +51,7 @@ export function Botones() {
     setLoading(true);
 
     try {
-      const response = await customAxios.post(
+      await customAxios.post(
         `http://localhost:5000/api/invest/oferta`,
         {
           id_startup: selectedStartup.id,
@@ -155,12 +155,12 @@ export function Botones() {
                   startups.map((startup) => (
                     <li
                       key={startup.id}
-                      className={selectedStartup?.id === startup.id ? "selected" : ""}
+                      className={selectedStartup?.id === startup.id ? "inversion-item selected" : "inversion-item"}
                       onClick={() => handleSelectStartup(startup)}
                     >
                       <div className="portfolio-icono">
                         <img
-                          src={startup.usuario?.avatar}
+                          src={startup.usuario?.avatar || "/default-avatar.png"}
                           className="avatar-imagen"
                           alt="Avatar"
                         />

@@ -79,7 +79,7 @@ const Info = () => {
       <Chips />
       <span className="avatar">
         <img
-          src={usuario?.usuario?.avatar} // Asegurarse de que haya una imagen por defecto
+          src={usuario?.usuario?.avatar || "/default-avatar.png"} // Asegurarse de que haya una imagen por defecto
           alt={`${usuario?.nombre} avatar`}
           className="avatar-imagen"
         />

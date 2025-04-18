@@ -14,7 +14,6 @@ import TablaPortfolioOtro from "@/app/ui/components/tabla-portfolio/tabla-portfo
 import GraficaStartupOtro from "@/app/ui/components/grafica-startup/grafica-startup-otro";
 import DatosStartupOtro from "@/app/ui/components/datos-startup/datos-startup-otro";
 import customAxios from "@/service/api.mjs";
-import LoadingScreen from "@/app/ui/components/loading-screen/loading-screen";
 
 
 export function BentoGridPerfilOtro({ username }) {
@@ -64,7 +63,13 @@ export function BentoGridPerfilOtro({ username }) {
     <div ref={containerRef} className={`contenedor4 ${isSmall ? "small" : ""}`}>
       <div className="grid">
         {rol === null ? (
-          <LoadingScreen></LoadingScreen> // Puedes mostrar un mensaje de carga mientras esperas la respuesta
+          <div className="flex items-center justify-center h-screen">
+            <img
+              src="/Logo.svg"
+              alt="Cargando..."
+              className="heartbeat"
+            />
+          </div>
         ) : rol === "inversor" ? (
           <>
             <InfoOtro username={username} />

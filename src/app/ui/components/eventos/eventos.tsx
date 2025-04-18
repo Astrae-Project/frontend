@@ -299,7 +299,7 @@ export default function Eventos({ fechaSeleccionada }) {
                       onClick={() => handleSelectEvent(evento.id)} // Cambiar estado al hacer clic
                     >
                       <div className="portfolio-icono">
-                        <img src={evento.creador.avatar} className="avatar-imagen" alt="Avatar" />
+                        <img src={evento.creador.avatar || "/default-avatar.png"} className="avatar-imagen" alt="Avatar" />
                       </div>
                       <div className="evento-detalles">
                         <p className="evento-creador">{evento.creador.username}</p>

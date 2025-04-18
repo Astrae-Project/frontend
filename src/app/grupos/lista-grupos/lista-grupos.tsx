@@ -177,7 +177,7 @@ const ListaGrupos = ({ onGroupSelect }) => {
               >
                 <div className="grupo-icono">
                   <img
-                    src={grupo.grupo.foto_grupo || "/default-avatar.png"}
+                    src={grupo.grupo.foto_grupo || "/group-default-avatar.png"}
                     alt="Avatar del grupo"
                     className="grupo-avatar"
                   />
@@ -303,7 +303,7 @@ const ListaGrupos = ({ onGroupSelect }) => {
                     >
                       <div className="grupo-icono">
                         <img
-                          src={grupo.foto_grupo || "/default-avatar.png"}
+                          src={grupo.foto_grupo || "/group-default-avatar.png"}
                           alt="Avatar del grupo"
                           className="grupo-avatar"
                         />
