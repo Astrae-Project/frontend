@@ -7,7 +7,7 @@ import Bubble from "@/app/ui/components/bubble/bubble";
 
 export function Botones() {
   const [loading, setLoading] = useState(false); // Estado de carga
-  const [usuario, setUsuario] = useState(null); // Información del usuario
+  const [user, setUser] = useState(null); // Información del usuario
   const [activeBubble, setActiveBubble] = useState(null); // Estado para mostrar el mensaje de confirmación
   const [rawAmount, setRawAmount] = useState(""); // Cantidad sin formato
   const [selectedAmount, setSelectedAmount] = useState(0); // Cantidad formateada
@@ -19,16 +19,18 @@ export function Botones() {
   const [startups, setStartups] = useState([]);
   const [step, setStep] = useState(1); // Paso actual (1 = seleccionar evento, 2 = editar evento)
   const [formData, setFormData] = useState({
-    nombre: usuario?.inversor?.nombre || usuario?.startup?.nombre || "",
-    username: usuario?.usuario?.username || "",
-    avatar: usuario?.usuario?.avatar || "",
-    ciudad: usuario?.inversor?.ciudad || usuario?.startup?.ciudad || "",
-    pais: usuario?.inversor?.pais || usuario?.startup?.pais || "",
-    perfil_inversion: usuario?.inversor?.perfil_inversion || "",
-    sector: usuario?.startup?.sector || "",
-    estado_financiacion: usuario?.startup?.estado_financiacion || "",
-    plantilla: usuario?.startup?.plantilla || "",    
+    nombre: "",
+    username: "",
+    avatar: "",
+    ciudad: "",
+    pais: "",
+    perfil_inversion: "",
+    sector: "",
+    estado_financiacion: "",
+    plantilla: "",
   });
+  
+  
 
   // Obtener datos del usuario
   const fetchUsuario = async () => {
@@ -36,7 +38,7 @@ export function Botones() {
       const response = await customAxios.get(`http://localhost:5000/api/data/usuario`, {
         withCredentials: true,
       });
-      setUsuario(response.data); // Almacenar la información del usuario
+      setUser(response.data); // Almacenar la información del usuario
     } catch (error) {
       console.error("Error fetching usuario:", error);
     }
@@ -57,8 +59,25 @@ export function Botones() {
     fetchStartups();
   }, []);
 
+    // 2) Cada vez que 'usuario' cambia, rellenamos formData
+  useEffect(() => {
+    if (!user) return;
+
+    setFormData({
+      nombre: user?.inversor?.nombre || user?.startup?.nombre || "",
+      username: user?.inversor?.usuario?.username || user?.startup?.usuario?.username || "",
+      avatar: user?.usuario?.avatar || "",
+      ciudad: user?.inversor?.ciudad || user?.startup?.ciudad || "",
+      pais: user?.inversor?.pais || user?.startup?.pais || "",
+      perfil_inversion: user?.inversor?.perfil_inversion || "",
+      sector: user?.startup?.sector || "",
+      estado_financiacion: user?.startup?.estado_financiacion || "",
+      plantilla: user?.startup?.plantilla || "",
+    });
+  }, [user]);
+
   const handleInvestClick = async () => {
-    if (loading || !usuario?.startup) return;
+    if (loading || !user?.startup) return;
     setLoading(true);
 
     try {
@@ -85,22 +104,18 @@ export function Botones() {
   };
 
   const handleEditarPerfil = async () => {
-    if (loading) return;
-    setLoading(true);
-      
-      try {
-        // Aquí puedes agregar la lógica para editar el perfil
-        setConfirmationMessage("Perfil editado con éxito!");
-        setMessageType("success");
-        setFormSubmitted(true);
-      } catch (error) {
-        console.error("Error al editar el perfil:", error);
-        setConfirmationMessage("Hubo un error al editar el perfil.");
-        setMessageType("error");
-        setFormSubmitted(true);
-      } finally {
-        setLoading(false);
-      }
+    try {
+      await customAxios.put(
+        `http://localhost:5000/api/perfil/editar-perfil`,
+        formData
+      );
+      await fetchUsuario();
+      setActiveBubble(null);
+    } catch (error) {
+      console.error("Error editando grupo:", error);
+      setConfirmationMessage(error.response.data.message);
+      setMessageType("error");
+    }
     }
 
   const formatInversion = (monto) => {
@@ -140,8 +155,8 @@ export function Botones() {
   };
 
   const renderBotonAccion = () => {
-    if (usuario) {
-      if (usuario.startup) {
+    if (user) {
+      if (user.startup) {
         return (
           <button className="custom-button" id="compartir">
             <p className="text">Compartir</p>
@@ -344,7 +359,7 @@ export function Botones() {
                   />
                 </div>
 
-                {usuario.inversor && (
+                {user.inversor && (
                   <>
                     <div className="form-group">
                       <input
@@ -360,7 +375,7 @@ export function Botones() {
                   </>
                 )}
 
-                {usuario.startup && (
+                {user.startup && (
                   <>
                     <div className="form-group">
                       <input
