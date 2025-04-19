@@ -175,7 +175,7 @@ const ListaGrupos = ({ onGroupSelect }) => {
                 onClick={() => handleSelectGroup(grupo.grupo)}
                 id="grupo"
               >
-                <div className="grupo-icono">
+                <div className="grupo-icono1">
                   <img
                     src={grupo.grupo.foto_grupo || "/group-default-avatar.png"}
                     alt="Avatar del grupo"

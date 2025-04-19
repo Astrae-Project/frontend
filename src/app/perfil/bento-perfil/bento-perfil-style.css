@@ -48,9 +48,15 @@
   position: absolute;
   width: 110px;
   height: 110px;
-  border-radius: 16px;
+  border-radius: 18px;
   top: 25px;
   left: 20px;
+}
+
+.avatar img{
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
 }
 
 .rankear{

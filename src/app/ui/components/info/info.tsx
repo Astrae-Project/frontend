@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
-import { IconBriefcaseFilled, IconBulbFilled, IconChartPieFilled, IconCurrencyEuro, IconMapPinFilled, IconMedal, IconPercentage, IconStarFilled, IconUserFilled} from "@tabler/icons-react";
+import { IconBriefcaseFilled, IconBulbFilled, IconChartPieFilled, IconCurrencyEuro, IconMapPinFilled, IconMedal, IconPercentage, IconUserFilled} from "@tabler/icons-react";
 import '../../../perfil/bento-perfil/bento-perfil-style.css';
 import { Botones } from "../../../perfil/boton/boton-demo";
 import { Chips } from "../../../perfil/chip/chip-demo";

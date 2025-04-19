@@ -18,6 +18,17 @@ export function Botones() {
   const [selectedStartup, setSelectedStartup] = useState(null); // Startup seleccionada
   const [startups, setStartups] = useState([]);
   const [step, setStep] = useState(1); // Paso actual (1 = seleccionar evento, 2 = editar evento)
+  const [formData, setFormData] = useState({
+    nombre: usuario?.inversor?.nombre || usuario?.startup?.nombre || "",
+    username: usuario?.usuario?.username || "",
+    avatar: usuario?.usuario?.avatar || "",
+    ciudad: usuario?.inversor?.ciudad || usuario?.startup?.ciudad || "",
+    pais: usuario?.inversor?.pais || usuario?.startup?.pais || "",
+    perfil_inversion: usuario?.inversor?.perfil_inversion || "",
+    sector: usuario?.startup?.sector || "",
+    estado_financiacion: usuario?.startup?.estado_financiacion || "",
+    plantilla: usuario?.startup?.plantilla || "",    
+  });
 
   // Obtener datos del usuario
   const fetchUsuario = async () => {
@@ -72,6 +83,25 @@ export function Botones() {
       setLoading(false);
     }
   };
+
+  const handleEditarPerfil = async () => {
+    if (loading) return;
+    setLoading(true);
+      
+      try {
+        // Aquí puedes agregar la lógica para editar el perfil
+        setConfirmationMessage("Perfil editado con éxito!");
+        setMessageType("success");
+        setFormSubmitted(true);
+      } catch (error) {
+        console.error("Error al editar el perfil:", error);
+        setConfirmationMessage("Hubo un error al editar el perfil.");
+        setMessageType("error");
+        setFormSubmitted(true);
+      } finally {
+        setLoading(false);
+      }
+    }
 
   const formatInversion = (monto) => {
     if (monto === null) {
@@ -134,7 +164,9 @@ export function Botones() {
 
   return (
     <span className="contenedor-botones1">
-      <button className="custom-button" id="editar-perfil" disabled={loading}>
+      <button className="custom-button" id="editar-perfil" disabled={loading}
+        onClick={() => setActiveBubble("editar-perfil")}
+      >
         <p className="text">{"Editar Perfil"}</p>
       </button>
 
@@ -235,6 +267,152 @@ export function Botones() {
               <button className="botn-invertir enviar" type="submit" onClick={handleInvestClick}>
                 Hacer Oferta
               </button>
+            </div>
+          </div>
+        )}
+
+        {activeBubble === "editar-perfil" && (
+          <div>
+            <div className="crear-grupo-container">
+              <h2>Editar Perfil</h2>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleEditarPerfil();
+                }}
+                className="crear-grupo-form"
+              >
+                <div className="form-group">
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={formData.nombre}
+                    onChange={(e) =>
+                      setFormData({ ...formData, nombre: e.target.value })
+                    }
+                    required
+                    placeholder="Nombre"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={formData.username}
+                    onChange={(e) =>
+                      setFormData({ ...formData, username: e.target.value })
+                    }
+                    required
+                    placeholder="Nombre de usuario"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={formData.ciudad}
+                    onChange={(e) =>
+                      setFormData({ ...formData, ciudad: e.target.value })
+                    }
+                    placeholder="Ciudad"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={formData.pais}
+                    onChange={(e) =>
+                      setFormData({ ...formData, pais: e.target.value })
+                    }
+                    placeholder="País"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={formData.avatar}
+                    onChange={(e) =>
+                      setFormData({ ...formData, avatar: e.target.value })
+                    }
+                    placeholder="URL del avatar"
+                  />
+                </div>
+
+                {usuario.inversor && (
+                  <>
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={formData.perfil_inversion}
+                        onChange={(e) =>
+                          setFormData({ ...formData, perfil_inversion: e.target.value })
+                        }
+                        placeholder="Perfil de inversión"
+                      />
+                    </div>
+                  </>
+                )}
+
+                {usuario.startup && (
+                  <>
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={formData.sector}
+                        onChange={(e) =>
+                          setFormData({ ...formData, sector: e.target.value })
+                        }
+                        placeholder="Sector"
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={formData.estado_financiacion}
+                        onChange={(e) =>
+                          setFormData({ ...formData, estado_financiacion: e.target.value })
+                        }
+                        placeholder="Ronda de financiación"
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={formData.plantilla}
+                        onChange={(e) =>
+                          setFormData({ ...formData, plantilla: e.target.value })
+                        }
+                        placeholder="Número de empleados"
+                      />
+                    </div>
+                  </>
+                )}
+
+                <div className="contendor-botn-invertir">
+                  <button className="botn-invertir" onClick={closeBubble}>
+                    Cancelar
+                  </button>
+                  <button
+                    className="botn-invertir enviar"
+                    type="submit"
+                    onClick={handleEditarPerfil}
+                  >
+                    Guardar
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         )}

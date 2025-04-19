@@ -14,6 +14,7 @@ import {
 } from "@tabler/icons-react";
 import Bubble from "@/app/ui/components/bubble/bubble";
 import PerfilOtro from "@/app/perfil-otro/page";
+import { se } from "date-fns/locale";
 
 const InfoGrupos = ({ groupId }) => {
   const [usuario, setUsuario] = useState(null);
@@ -131,13 +132,16 @@ const InfoGrupos = ({ groupId }) => {
 
   // Eliminar un miembro del grupo (corregido)
   const handleRemoveMember = async () => {
-    if (!selectedUser || !groupId) return;
-    
+    if (!selectedUser || !groupId) {
+      console.error("No hay usuario seleccionado o ID de grupo no disponible.");
+      return;
+    }    
+      
     try {
       // Eliminar al usuario del grupo usando DELETE y pasando el id en la URL
       await customAxios.delete(
         `http://localhost:5000/api/grupos/eliminar/${groupId}/miembro/${selectedUser.id}`,
-        { withCredentials: true }
+        { withCredentials: true },
       );
   
       // Actualizar la información del grupo
@@ -147,12 +151,9 @@ const InfoGrupos = ({ groupId }) => {
       );
   
       setGrupo(data);
-      setConfirmationMessage('Usuario eliminado correctamente');
-      setMessageType('success');
       setSelectedUser(null);
     } catch (error) {
       console.error("Error al eliminar miembro:", error);
-      setConfirmationMessage('Error al eliminar el usuario');
       setMessageType('error');
     }
   };
@@ -343,7 +344,10 @@ const InfoGrupos = ({ groupId }) => {
                             <div ref={dropdownRef}>
                               {miembro.id !== currentUserId && (
                                 <button
-                                  onClick={(e) => handleDropdownClick(e, miembro)}
+                                  onClick={(e) => {
+                                    handleDropdownClick(e, miembro);
+                                    setSelectedUser(miembro);
+                                  }}
                                   className="btn-acciones"
                                 >
                                   <IconDotsVertical />
@@ -352,7 +356,8 @@ const InfoGrupos = ({ groupId }) => {
                               {openDropdownId === miembro.id && (
                                 <div 
                                   className="dropdown" 
-                                  onClick={(e) => e.stopPropagation()}
+                                  onClick={(e) => e.stopPropagation()
+                                  }
                                 >
                                 <button
                                   className="btn-dropdown"
@@ -381,7 +386,10 @@ const InfoGrupos = ({ groupId }) => {
                                       <button
                                       className="btn-dropdown"
                                       id="eliminar"
-                                      onClick={handleRemoveMember}
+                                      onClick={() => {
+                                        setSelectedUser(miembro);
+                                        handleRemoveMember();
+                                        }}
                                       >
                                       <IconTrash/>
                                       <p>Eliminar</p>
@@ -517,7 +525,7 @@ const InfoGrupos = ({ groupId }) => {
                       onClick={() => selectUser(user)}
                     >
                       <div className="disponible-avatar">
-                        <img src={user.avatar || '/group-default-avatar.png' } alt="Avatar del creador" />
+                        <img src={user.avatar || '/default-avatar.png' } alt="Avatar del creador" />
                       </div>
                       <div className="info-usuario">
                         <p>{user.username}</p>

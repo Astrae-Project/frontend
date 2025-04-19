@@ -347,7 +347,6 @@ const ChatGroup = ({ groupId }) => {
               <div className="avatar1" aria-label="Avatar del grupo">
                 <img
                   src={groupData?.avatar || "/group-default-avatar.png"}
-                  className="avatar-imagen"
                   alt="Avatar del grupo"
                 />
               </div>
