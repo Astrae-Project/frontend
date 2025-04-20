@@ -44,9 +44,6 @@ const TablaInversiones = () => {
     }
   };
 
-  if (loading) return <p>Cargando ofertas...</p>;
-  if (error) return <p className="error-message">Error: {error}</p>;
-
   const formatoFecha = (fecha) => {
     if (!fecha) return "N/A"; // Si no hay fecha, se muestra N/A
     const options = { 
@@ -59,23 +56,23 @@ const TablaInversiones = () => {
 
   return (
     <div className="apartado3" id="tabla-inversores">
-      <table className="custom-table">
-        <thead className="titulos-tabla">
-          <tr>
-            <th className="col-startup"><p>Startup</p></th>
-            <th className="col-monto"><p>Monto</p></th>
-            <th className="col-porcentaje"><p>Porcentaje</p></th>
-            <th className="col-estado"><p>Estado</p></th>
-            <th className="col-fecha"><p>Fecha</p></th>
-          </tr>
-        </thead>
-        <tbody>
-          {ofertas.length === 0 ? (
+      {ofertas.length === 0 ? (
+        <div className="no-ofertas">
+          <h1>No hay ofertas disponibles</h1>
+        </div>
+      ) : (
+        <table className="custom-table">
+          <thead className="titulos-tabla">
             <tr>
-              <td colSpan="4" className="no-ofertas">No hay ofertas disponibles</td>
+              <th className="col-startup"><p>Startup</p></th>
+              <th className="col-monto"><p>Monto</p></th>
+              <th className="col-porcentaje"><p>Porcentaje</p></th>
+              <th className="col-estado"><p>Estado</p></th>
+              <th className="col-fecha"><p>Fecha</p></th>
             </tr>
-          ) : (
-            ofertas.map((oferta) => (
+          </thead>
+          <tbody>
+            {ofertas.map((oferta) => (
               <tr key={oferta.id}>
                 <td><p>{oferta.startup?.usuario.username || "Desconocido"}</p></td>
                 <td><p>{formatoValor(oferta.monto_ofrecido)}</p></td>
@@ -87,12 +84,12 @@ const TablaInversiones = () => {
                 </td>
                 <td><p>{formatoFecha(oferta.fecha_creacion)}</p></td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
-};
+}  
 
 export default TablaInversiones;

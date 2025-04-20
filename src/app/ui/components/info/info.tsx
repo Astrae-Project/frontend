@@ -12,7 +12,7 @@ import { MiniChips } from "../../../perfil/mini-chips/mini-chips";
 import customAxios from "@/service/api.mjs"; 
 
 const Info = () => {
-  const [usuario, setUsuario] = useState(null);
+  const [user, setUser] = useState(null);
   const [perfilTipo, setPerfilTipo] = useState(""); // Nuevo estado para almacenar el tipo de perfil
   const [sectorFavorito, setSectorFavorito] = useState("Desconocido");
   const [inversionesRealizadas, setInversionesRealizadas] = useState(0);
@@ -34,7 +34,7 @@ const Info = () => {
 
       const data = response.data;
 
-      setUsuario(data.inversor || data.startup); // Establecer el usuario con la respuesta
+      setUser(data.inversor || data.startup); // Establecer el usuario con la respuesta
       setPerfilTipo(data.inversor ? "inversor" : "startup"); // Determinar el tipo de perfil
       setSectorFavorito(data.sectorFavorito || "Desconocido");
       setInversionesRealizadas(data.inversor ? data.inversionesRealizadas : data.startup.inversiones.length);
@@ -79,23 +79,23 @@ const Info = () => {
       <Chips />
       <span className="avatar">
         <img
-          src={usuario?.usuario?.avatar || "/default-avatar.png"} // Asegurarse de que haya una imagen por defecto
-          alt={`${usuario?.nombre} avatar`}
+          src={user?.usuario?.avatar || "/default-avatar.png"} // Asegurarse de que haya una imagen por defecto
+          alt={`${user?.nombre} avatar`}
           className="avatar-imagen"
         />
       </span>
-      <p id="nombre">{perfilTipo === "inversor" ? usuario?.nombre : usuario?.usuario?.username || "Nombre del usuario"}</p>
+      <p id="nombre">{perfilTipo === "inversor" ? user?.nombre : user?.usuario?.username || "Nombre del usuario"}</p>
       <p id="creacion">
         {perfilTipo === "inversor" ? "Invirtiendo en Astrae desde" : "En Astrae desde"}{" "}
-        <span className="morado">{usuario?.usuario?.fecha_creacion ? new Date(usuario.usuario.fecha_creacion).getFullYear() : "Fecha"}</span>
+        <span className="morado">{user?.usuario?.fecha_creacion ? new Date(user.usuario.fecha_creacion).getFullYear() : "Fecha"}</span>
       </p>
 
       {/* Renderizado condicional para perfil inversor */}
       {perfilTipo === "inversor" ? (
         <>
           <span className="contenedor-ancho">
-            <MiniChips label={<div className="icon-text"><IconMapPinFilled className="icono2"/>{usuario?.usuario?.ciudad && usuario?.usuario?.pais ? `${usuario.usuario.ciudad}, ${usuario.usuario.pais}` : "Sin ubicación"}</div>} tooltipText="Ubicación" />
-            <MiniChips label={<div className="icon-text"><IconBriefcaseFilled className="icono2"/> {usuario?.perfil_inversion || "Desconocido"} </div>} tooltipText="Perfil de inversión" />
+            <MiniChips label={<div className="icon-text"><IconMapPinFilled className="icono2"/>{user?.usuario?.ciudad && user?.usuario?.pais ? `${user.usuario.ciudad}, ${user.usuario.pais}` : "Sin ubicación"}</div>} tooltipText="Ubicación" />
+            <MiniChips label={<div className="icon-text"><IconBriefcaseFilled className="icono2"/> {user?.perfil_inversion || "Desconocido"} </div>} tooltipText="Perfil de inversión" />
             <MiniChips label={<div className="icon-text"><IconBulbFilled className="icono2"/> {sectorFavorito}</div>} tooltipText="Sector favorito"/>
             <MiniChips label={<StarRating puntuacionMedia={puntuacionMedia} />} tooltipText={`${puntuacionMedia}`} />
             <MiniChips label={<div className="icon-text"><IconMedal id="icono-pequeño" className="icono2"/> Inversiones Exitosas: {inversionesExitosas}</div>} tooltipText={null}/>
@@ -105,12 +105,12 @@ const Info = () => {
       ) : (
         <>
           <span className="contenedor-ancho1">
-            <MiniChips label={<div className="icon-text"><IconMapPinFilled className="icono2"/>{usuario?.usuario?.ciudad && usuario?.usuario?.pais ? `${usuario.usuario.ciudad}, ${usuario.usuario.pais}` : "Sin ubicación"}</div>} tooltipText="Ubicación"/>
-            <MiniChips label={<div className="icon-text"><IconBulbFilled className="icono2"/> {usuario?.sector || "Desconocido"}</div>} tooltipText="Sector"/>
-            <MiniChips label={<div className="icon-text"><IconChartPieFilled className="icono2"/> {usuario?.estado_financiacion || "Desconocido"}</div>} tooltipText="Ronda de Financiación"/>
-            <MiniChips label={<div className="icon-text"><IconUserFilled  className="icono2"/> {usuario?.plantilla || "Desconocida"}</div>} tooltipText="Plantilla"/>
+            <MiniChips label={<div className="icon-text"><IconMapPinFilled className="icono2"/>{user?.usuario?.ciudad && user?.usuario?.pais ? `${user.usuario.ciudad}, ${user.usuario.pais}` : "Sin ubicación"}</div>} tooltipText="Ubicación"/>
+            <MiniChips label={<div className="icon-text"><IconBulbFilled className="icono2"/> {user?.sector || "Desconocido"}</div>} tooltipText="Sector"/>
+            <MiniChips label={<div className="icon-text"><IconChartPieFilled className="icono2"/> {user?.estado_financiacion || "Desconocido"}</div>} tooltipText="Ronda de Financiación"/>
+            <MiniChips label={<div className="icon-text"><IconUserFilled  className="icono2"/> {user?.plantilla || "Desconocida"}</div>} tooltipText="Plantilla"/>
             <MiniChips label={<div className="icon-text"><IconCurrencyEuro id="icono-pequeño" className="icono2"/> Recaudación Total: {formatInversion(recaudacionTotal ?? "0")} </div>} tooltipText={null}/>
-            <MiniChips label={<div className="icon-text"><IconPercentage id="icono-pequeño2" className="icono2"/> Porcentaje Disponible: {usuario?.porcentaje_disponible || "0"}%</div>} tooltipText={null}/>
+            <MiniChips label={<div className="icon-text"><IconPercentage id="icono-pequeño2" className="icono2"/> Porcentaje Disponible: {user?.porcentaje_disponible || "0"}%</div>} tooltipText={null}/>
           </span>
         </>
       )}

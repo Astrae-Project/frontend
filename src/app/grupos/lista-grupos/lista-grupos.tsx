@@ -1,46 +1,87 @@
 'use client';
 
+import React, { useState, useEffect } from "react";
 import customAxios from "@/service/api.mjs";
-import { useState, useEffect } from "react";
-import './lista-grupos-style.css';
-import { IconLockFilled, IconPlus, IconSearch } from "@tabler/icons-react";
+import {
+  IconLockFilled,
+  IconPlus,
+  IconSearch
+} from "@tabler/icons-react";
 import Bubble from "@/app/ui/components/bubble/bubble";
+import './lista-grupos-style.css';
 
 const ListaGrupos = ({ onGroupSelect }) => {
   const [grupos, setGrupos] = useState([]);
   const [todosGrupos, setTodosGrupos] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [activeBubble, setActiveBubble] = useState(null);
+  const [formData, setFormData] = useState({
+    nombre: "",
+    descripcion: "",
+    tipo: "publico"
+  });
+  const [selectedToJoin, setSelectedToJoin] = useState(null);
   const [confirmationMessage, setConfirmationMessage] = useState("");
-  const [formSubmitted, setFormSubmitted] = useState(false);
-  const [formData, setFormData] = useState({ nombre: "", descripcion: "", tipo: "publico" });
-  const [selectedGroup, setSelectedGroup] = useState(null);
-  const [grupoSeleccionado, setGrupoSeleccionado] = useState(null);
   const [messageType, setMessageType] = useState("");
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const [ultimoMensajePorGrupo, setUltimoMensajePorGrupo] = useState({});
+  const [grupoSeleccionado, setGrupoSeleccionado] = useState(null);
+
+  // — Fetch chats del usuario —
+  const fetchGrupos = async () => {
+    try {
+      const { data } = await customAxios.get(
+        "http://localhost:5000/api/data/grupos",
+        { withCredentials: true }
+      );
+      setGrupos(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Error al obtener los grupos:", err);
+    }
+  };
+
+  // — Fetch grupos disponibles para unirse —
+  const fetchTodosGrupos = async () => {
+    try {
+      const { data } = await customAxios.get(
+        "http://localhost:5000/api/data/todos-grupos",
+        { withCredentials: true }
+      );
+      setTodosGrupos(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Error al obtener todos los grupos:", err);
+    }
+  };
 
   useEffect(() => {
-    // Obtener los mensajes de cada grupo
-    const fetchUltimosMensajes = async () => {
-      try {
-        const grupoIds = grupos.map(grupo => grupo.grupo.id);
-        for (const grupoId of grupoIds) {
-          const response = await customAxios.get(`http://localhost:5000/api/grupos/ver/${grupoId}/mensajes`);
-          setUltimoMensajePorGrupo(prevState => ({
-            ...prevState,
-            [grupoId]: response.data.ultimoMensaje || { contenido: "No hay mensajes" } // Establecer el último mensaje
+    fetchGrupos();
+    fetchTodosGrupos();
+  }, []);
+
+  // — Fetch últimos mensajes cuando cambie la lista de chats —
+  useEffect(() => {
+    const fetchUltimos = async () => {
+      for (const { grupo } of grupos) {
+        try {
+          const { data } = await customAxios.get(
+            `http://localhost:5000/api/grupos/ver/${grupo.id}/mensajes`
+          );
+          setUltimoMensajePorGrupo(prev => ({
+            ...prev,
+            [grupo.id]: data.ultimoMensaje ?? { contenido: "No hay mensajes" }
+          }));
+        } catch {
+          setUltimoMensajePorGrupo(prev => ({
+            ...prev,
+            [grupo.id]: { contenido: "Error cargando mensajes" }
           }));
         }
-      } catch (error) {
-        console.error("Error obteniendo mensajes:", error);
       }
     };
-
-    if (grupos.length > 0) {
-      fetchUltimosMensajes();
-    }
+    if (grupos.length) fetchUltimos();
   }, [grupos]);
 
-  // Maneja la creación de un nuevo grupo
+  // — Crear grupo —
   const handleCrearGrupo = async () => {
     try {
       await customAxios.post(
@@ -48,149 +89,128 @@ const ListaGrupos = ({ onGroupSelect }) => {
         formData,
         { withCredentials: true }
       );
-      setConfirmationMessage("¡Grupo creado con éxito!");
       setMessageType("success");
+      setConfirmationMessage("¡Grupo creado con éxito!");
       setFormSubmitted(true);
-      fetchGrupos(); // Refrescar lista de grupos
+      await fetchGrupos();
+      await fetchTodosGrupos();
       closeBubble();
-    } catch (error) {
-      console.error("Error al crear el grupo:", error);
-      setConfirmationMessage("Hubo un error al crear el grupo.");
+    } catch (err) {
+      console.error(err);
       setMessageType("error");
+      setConfirmationMessage("Error creando el grupo");
       setFormSubmitted(true);
     }
   };
 
-  // Maneja la unión a un grupo
+  // — Unirse a grupo —
   const handleUnirGrupo = async () => {
-    if (!selectedGroup) return;
+    if (!selectedToJoin) return;
     try {
       await customAxios.post(
-        `http://localhost:5000/api/grupos/unir/${selectedGroup.id}`,
+        `http://localhost:5000/api/grupos/unir/${selectedToJoin.id}`,
         {},
         { withCredentials: true }
       );
-      setConfirmationMessage("¡Te has unido al grupo con éxito!");
       setMessageType("success");
+      setConfirmationMessage("¡Te has unido al grupo!");
       setFormSubmitted(true);
-      fetchGrupos(); // Refrescar lista de grupos
+      await fetchGrupos();
+      await fetchTodosGrupos();
       closeBubble();
-    } catch (error) {
-      console.error("Error al unirse al grupo:", error);
-      setConfirmationMessage("Hubo un error al intentar unirse al grupo.");
+    } catch (err) {
+      console.error(err);
       setMessageType("error");
+      setConfirmationMessage(
+        err.response?.status === 406
+          ? "No puedes unirte a un grupo privado."
+          : "Error al unirse al grupo"
+      );
       setFormSubmitted(true);
-      if (error.response && error.response.status === 406) {
-        setConfirmationMessage("No puedes unirte a un grupo privado.");
-        setMessageType("error");
-        setFormSubmitted(true);
-      }
     }
   };
 
-  // Seleccionar un grupo (desde la lista principal o el modal de unir)
-  const handleSelectGroup = (grupo) => {
-    setGrupoSeleccionado((prevSelected) => {
-      const newSelected = prevSelected?.id === grupo.id ? null : grupo;
-      if (newSelected && onGroupSelect) {
-        // Retrasamos la actualización para evitar modificar el padre durante el render
-        setTimeout(() => onGroupSelect(newSelected.id), 0);
-      }
-      return newSelected;
-    });
+  // — Selección de chat —
+  const handleSelectChat = (e, grupo) => {
+    e.stopPropagation();
+    onGroupSelect?.(grupo.id);
+    setGrupoSeleccionado(grupo);
   };
 
-  // Fetch de los grupos a los que pertenece el usuario
-  const fetchGrupos = async () => {
-    try {
-      const response = await customAxios.get(
-        "http://localhost:5000/api/data/grupos",
-        { withCredentials: true }
-      );
-      if (Array.isArray(response.data)) {
-        setGrupos(response.data);
-      } else {
-        console.error("Datos de respuesta inválidos:", response.data);
-      }
-    } catch (error) {
-      console.error("Error al obtener los grupos:", error);
-    }
+  // — Selección en modal de "unirse" —
+  const handleSelectToJoin = (e, grupo) => {
+    e.stopPropagation();
+    setSelectedToJoin(prev => (prev?.id === grupo.id ? null : grupo));
   };
 
-  // Fetch de todos los grupos (para el modal de unirse)
-  const fetchTodosGrupos = async () => {
-    try {
-      const response = await customAxios.get(
-        "http://localhost:5000/api/data/todos-grupos",
-        { withCredentials: true }
-      );
-      if (Array.isArray(response.data)) {
-        setTodosGrupos(response.data);
-      } else {
-        console.error("Datos de respuesta inválidos:", response.data);
-      }
-    } catch (error) {
-      console.error("Error al obtener los grupos:", error);
-    }
-  };
-
-  // Carga inicial de los grupos
-  useEffect(() => {
-    fetchGrupos();
-    fetchTodosGrupos();
-  }, []);
-
-  // Cierra el modal y resetea el formulario
+  // — Cerrar modal y reset —
   const closeBubble = () => {
     setActiveBubble(null);
-    setConfirmationMessage("");
-    setFormSubmitted(false);
     setFormData({ nombre: "", descripcion: "", tipo: "publico" });
-    setSelectedGroup(null);
+    setSelectedToJoin(null);
+    setConfirmationMessage("");
     setMessageType("");
+    setFormSubmitted(false);
   };
+
+  // — Filtrado de chats con el buscador —
+  const gruposFiltrados = grupos.filter(({ grupo }) =>
+    grupo.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="lista-grupos">
       <div className="divisor1">
         <p className="titulo-divisor">Chats</p>
+        <div className="botones-titulo">
+          <button className="botn-titulo" onClick={() => setActiveBubble("crear-grupo")}>
+            <IconPlus className="icono-agregar" />
+          </button>
+          <button className="botn-titulo" onClick={() => setActiveBubble("unir-grupo")}>
+            <IconSearch className="icono-agregar" />
+          </button>
+        </div>
       </div>
-  
-      {/* Buscador (opcional) */}
+
       <div className="search-container">
-        <input 
-          className="search-input" 
+        <input
+          className="search-input"
           placeholder="Busca un chat o inicia uno nuevo..."
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
         />
       </div>
-  
-      {/* Lista de grupos */}
+
       <div className="grupos">
-        {grupos.length > 0 ? (
+        {gruposFiltrados.length > 0 ? (
           <ul>
-            {grupos.map((grupo) => (
-              <li 
-                key={grupo.grupo.id}
-                className={grupoSeleccionado?.id === grupo.grupo.id ? "seleccionado" : ""}
-                onClick={() => handleSelectGroup(grupo.grupo)}
+            {gruposFiltrados.map(({ grupo }) => (
+              <li
+                key={grupo.id}
+                className={grupoSeleccionado?.id === grupo.id ? "seleccionado" : ""}
+                onClick={e => handleSelectChat(e, grupo)}
                 id="grupo"
               >
                 <div className="grupo-icono1">
                   <img
-                    src={grupo.grupo.foto_grupo || "/group-default-avatar.png"}
+                    src={grupo.foto_grupo || "/group-default-avatar.png"}
                     alt="Avatar del grupo"
                     className="grupo-avatar"
                   />
                 </div>
                 <div className="info-grupo">
-                  <p id="nombre-grupo">{grupo.grupo.nombre}</p>
-                  {grupo.grupo.tipo === "privado" && (
+                  <p id="nombre-grupo">{grupo.nombre}</p>
+                  {grupo.tipo === "privado" && (
                     <IconLockFilled className="icono-candado" />
                   )}
-                  {/* Mostrar el último mensaje de cada grupo */}
                   <p className="ultimo-mensaje">
-                    <strong>{ultimoMensajePorGrupo[grupo.grupo.id]?.emisor.username || "Desconocido"}: </strong>
-                    {ultimoMensajePorGrupo[grupo.grupo.id]?.contenido || "No hay mensajes"}
+                    <strong>
+                      {ultimoMensajePorGrupo[grupo.id]?.emisor?.username ||
+                        "Desconocido"}
+                      :{" "}
+                    </strong>
+                    {ultimoMensajePorGrupo[grupo.id]?.contenido ||
+                      "No hay mensajes"}
                   </p>
                 </div>
               </li>
@@ -198,14 +218,7 @@ const ListaGrupos = ({ onGroupSelect }) => {
           </ul>
         ) : (
           <div className="contenido-vacio" id="grupos-vacio">
-            <button onClick={() => setActiveBubble("crear-grupo")} className="boton-grupo1">
-              <IconPlus />
-              <p>Crear</p>
-            </button>
-            <button onClick={() => setActiveBubble("unir-grupo")} className="boton-grupo1">
-              <IconSearch />
-              <p>Unir</p>
-            </button>
+            <p>No hay chats que coincidan.</p>
           </div>
         )}
       </div>
@@ -289,6 +302,7 @@ const ListaGrupos = ({ onGroupSelect }) => {
             </form>
           </div>
         )}
+        
         {activeBubble === "unir-grupo" && !formSubmitted && (
           <div>
             <p>Selecciona un grupo para unirte</p>
@@ -298,8 +312,8 @@ const ListaGrupos = ({ onGroupSelect }) => {
                   todosGrupos.map((grupo) => (
                     <li
                       key={grupo.id}
-                      className={selectedGroup?.id === grupo.id ? "selected" : ""}
-                      onClick={() => handleSelectGroup(grupo)}
+                      className={selectedToJoin?.id === grupo.id ? "grupo-item1 selected" : "grupo-item1"}
+                      onClick={e => handleSelectToJoin(e, grupo)}
                     >
                       <div className="grupo-icono">
                         <img
@@ -309,7 +323,7 @@ const ListaGrupos = ({ onGroupSelect }) => {
                         />
                       </div>
                       <div className="grupo-info">
-                        <p id="nombre-grupo">{grupo.nombre}</p>
+                        <p id="nombre-grupo1">{grupo.nombre}</p>
                         {grupo.tipo === "privado" && (
                           <IconLockFilled className="icono-candado" />
                         )}
@@ -328,7 +342,7 @@ const ListaGrupos = ({ onGroupSelect }) => {
               <button
                 className="botn-eventos enviar"
                 onClick={handleUnirGrupo}
-                disabled={!selectedGroup}
+                disabled={!selectedToJoin}
               >
                 Seleccionar
               </button>

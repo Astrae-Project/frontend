@@ -3,9 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { ScrollShadow } from "@nextui-org/react";
 import "./ofertas-pendientes-style.css";
-import Bubble from "../bubble/bubble"; // Asegúrate de tener el componente Bubble importado
 import customAxios from "@/service/api.mjs";
-import PerfilOtro from "@/app/perfil-otro/page";
 import { CartaOferta } from "../carta-oferta/carta-oferta";
 
 export function OfertasPendientes({ username }) {

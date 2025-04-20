@@ -67,8 +67,8 @@ export function Botones() {
       nombre: user?.inversor?.nombre || user?.startup?.nombre || "",
       username: user?.inversor?.usuario?.username || user?.startup?.usuario?.username || "",
       avatar: user?.usuario?.avatar || "",
-      ciudad: user?.inversor?.ciudad || user?.startup?.ciudad || "",
-      pais: user?.inversor?.pais || user?.startup?.pais || "",
+      ciudad: user?.inversor?.usuario?.ciudad || user?.startup?.usuario?.ciudad || "",
+      pais: user?.inversor?.usuario?.pais || user?.startup?.usuario?.pais || "",
       perfil_inversion: user?.inversor?.perfil_inversion || "",
       sector: user?.startup?.sector || "",
       estado_financiacion: user?.startup?.estado_financiacion || "",
@@ -77,9 +77,6 @@ export function Botones() {
   }, [user]);
 
   const handleInvestClick = async () => {
-    if (loading || !user?.startup) return;
-    setLoading(true);
-
     try {
       await customAxios.post(
         `http://localhost:5000/api/invest/oferta`,
@@ -289,7 +286,7 @@ export function Botones() {
         {activeBubble === "editar-perfil" && (
           <div>
             <div className="crear-grupo-container">
-              <h2>Editar Perfil</h2>
+              <h2 className ='texto-titulo'>Editar Perfil</h2>
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -297,7 +294,8 @@ export function Botones() {
                 }}
                 className="crear-grupo-form"
               >
-                <div className="form-group">
+              <div className ='seccion-form'>
+              <div className="form-profile">
                   <input
                     type="text"
                     className="form-control"
@@ -307,10 +305,11 @@ export function Botones() {
                     }
                     required
                     placeholder="Nombre"
+                    id="nombre1"
                   />
                 </div>
 
-                <div className="form-group">
+                <div className="form-profile">
                   <input
                     type="text"
                     className="form-control"
@@ -320,10 +319,13 @@ export function Botones() {
                     }
                     required
                     placeholder="Nombre de usuario"
+                    id="username1"
                   />
                 </div>
+              </div>
 
-                <div className="form-group">
+              <div className ='seccion-form'>
+                <div className="form-profile">
                   <input
                     type="text"
                     className="form-control"
@@ -335,7 +337,7 @@ export function Botones() {
                   />
                 </div>
 
-                <div className="form-group">
+                <div className="form-profile">
                   <input
                     type="text"
                     className="form-control"
@@ -346,22 +348,11 @@ export function Botones() {
                     placeholder="País"
                   />
                 </div>
-
-                <div className="form-group">
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={formData.avatar}
-                    onChange={(e) =>
-                      setFormData({ ...formData, avatar: e.target.value })
-                    }
-                    placeholder="URL del avatar"
-                  />
-                </div>
+              </div>
 
                 {user.inversor && (
                   <>
-                    <div className="form-group">
+                    <div className="form-profile">
                       <input
                         type="text"
                         className="form-control"
@@ -377,7 +368,7 @@ export function Botones() {
 
                 {user.startup && (
                   <>
-                    <div className="form-group">
+                    <div className="form-profile">
                       <input
                         type="text"
                         className="form-control"
@@ -389,7 +380,7 @@ export function Botones() {
                       />
                     </div>
 
-                    <div className="form-group">
+                    <div className="form-profile">
                       <input
                         type="text"
                         className="form-control"
@@ -401,7 +392,7 @@ export function Botones() {
                       />
                     </div>
 
-                    <div className="form-group">
+                    <div className="form-profile">
                       <input
                         type="text"
                         className="form-control"

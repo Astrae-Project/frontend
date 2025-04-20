@@ -115,7 +115,7 @@ const TablaPortfolio = () => {
                         {cambioPorcentualInfo.text}%
                       </p>
                       <p className="mini-titulo" id="titulo-valor">Valor</p>
-                      <p className="valor">{formatInversion(inversion.monto_invertido)}</p>
+                      <p className="valor">{formatInversion(inversion.valor)}</p>
                     </div>
                   </button>
                 </li>
