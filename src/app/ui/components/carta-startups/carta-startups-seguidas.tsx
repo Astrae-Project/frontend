@@ -1,5 +1,6 @@
 import React from 'react';
 import './carta-startups-style.css';
+import GraficaStartupOtroSimple from '../grafica-startup/grafica-startup-otro-simple';
 
 export const CartaSeguidas = ({ startup, onClick }) => {
   // Función para formatear la inversión/valoración
@@ -35,10 +36,13 @@ export const CartaSeguidas = ({ startup, onClick }) => {
         </div>
       </div>
       <div className="carta-detalles">
-        <p className="carta-titulo">Valoración</p>
-        <p className="carta-valoracion">{formatInversion(startupData?.valoracion)}</p>
-        <p className="carta-titulo">Porcentaje</p>
-        <p className="carta-valoracion">{startupData?.porcentaje_disponible || "N/A"}</p>
+        <div className='division-tarjeta' style={{ display: 'none'}}>
+          <GraficaStartupOtroSimple username={startup?.username} />
+        </div>
+        <div className='division-tarjeta'>
+          <p className="carta-titulo">Valoración</p>
+          <p className="carta-valoracion">{formatInversion(startupData?.valoracion)}</p>
+        </div>
       </div>
     </button>
   );

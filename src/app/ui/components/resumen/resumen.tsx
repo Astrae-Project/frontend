@@ -13,20 +13,20 @@ const ResumenPortfolio = () => {
         "http://localhost:5000/api/data/portfolio",
         { withCredentials: true }
       );
-      setPortfolio(response.data);
+      const data = response.data;
+      setPortfolio(data);
       setDistribucionSectores(
-        calcularDistribucionPorSector(response.data?.inversiones || [])
+        calcularDistribucionPorSector(data.inversiones || [])
       );
 
-      // Obtener historial de valores y calcular cambios porcentuales
       const historialResponse = await customAxios.get(
         "http://localhost:5000/api/data/historicos",
         { withCredentials: true }
       );
       setCambiosPorcentuales(
         calcularCambioPorcentual(
-          Number(response.data.valor_total),
-          historialResponse.data.historico
+          Number(data.valor_total),
+          historialResponse.data.historico || []
         )
       );
     } catch (error) {
@@ -39,88 +39,85 @@ const ResumenPortfolio = () => {
   }, []);
 
   function calcularDistribucionPorSector(inversiones) {
-    const conteoSectores = {};
-    inversiones.forEach((inversion) => {
-      const sector = inversion.startup?.sector;
-      if (sector) {
-        conteoSectores[sector] = (conteoSectores[sector] || 0) + 1;
-      }
+    const conteo = {};
+    inversiones.forEach(inv => {
+      const sector = inv.startup?.sector;
+      if (sector) conteo[sector] = (conteo[sector] || 0) + 1;
     });
-
-    const totalInversiones = inversiones.length;
-    if (totalInversiones === 0) return [];
-
-    return Object.keys(conteoSectores).map((sector) => {
-      const count = conteoSectores[sector];
-      const percentage = (count / totalInversiones) * 100;
-      return { sector, count, percentage: Number(percentage.toFixed(2)) };
-    });
+    const total = inversiones.length;
+    if (total === 0) return [];
+    return Object.entries(conteo).map(([sector, count]) => ({
+      sector,
+      count,
+      percentage: Number((count / total * 100).toFixed(2))
+    }));
   }
 
   function calcularCambioPorcentual(valorActual, historico) {
     if (!historico || historico.length === 0 || valorActual == null) return null;
-
+  
     const historialOrdenado = historico
       .map((registro) => ({
         ...registro,
         fecha: new Date(registro.fecha),
         valoracion: Number(registro.valoracion),
       }))
-      .sort((a, b) => b.fecha - a.fecha);
-
-    if (historialOrdenado.length === 1) {
-      return { semana: 0, mes: 0, año: 0 };
-    }
-
+      .sort((a, b) => a.fecha - b.fecha); // ordenamos de más antiguo a más reciente
+  
     const obtenerCambio = (dias) => {
-      const fechaObjetivo = new Date();
-      fechaObjetivo.setDate(fechaObjetivo.getDate() - dias);
-      const registroPasado = historialOrdenado.find(
-        (registro) => registro.fecha <= fechaObjetivo
+      const fechaLimite = new Date();
+      fechaLimite.setDate(fechaLimite.getDate() - dias);
+  
+      const registrosEnRango = historialOrdenado.filter(
+        (registro) => registro.fecha >= fechaLimite
       );
-      if (!registroPasado) return 0;
-      const valorPasado = registroPasado.valoracion;
+  
+      if (registrosEnRango.length === 0) return 0;
+  
+      const primerRegistro = registrosEnRango[0];
+      const valorPasado = primerRegistro.valoracion;
       if (valorPasado === 0) return 0;
+  
       return ((valorActual - valorPasado) / valorPasado) * 100;
     };
-
+  
     return {
       semana: obtenerCambio(7),
       mes: obtenerCambio(30),
       año: obtenerCambio(365),
     };
-  }
+  }  
 
-  const formatoPorcentaje = (valor) => {
-    if (valor == null || isNaN(Number(valor))) return "N/A";
-    const num = Number(valor);
-    const color = num > 0 ? "rgb(67, 222, 67)" : num < 0 ? "rgba(222, 67, 67)" : "#888888";
-    return <span style={{ color, fontSize: "15px" }}>{num.toFixed(2).replace(/\.?0+$/, "")}%</span>;
+  const formatoPorcentaje = v => {
+    if (v == null) return "N/A";
+    const num = Number(v);
+    const color = num > 0 ? "rgb(67,222,67)" : num < 0 ? "rgb(222,67,67)" : "#888";
+    return <span style={{ color, fontSize: 15 }}>{num.toFixed(2)}%</span>;
   };
 
-  const formatoValor = (valor) => {
-    if (valor == null) return "N/A";
+  const formatoValor = v => {
+    if (v == null) return "N/A";
     return new Intl.NumberFormat("es-ES", {
       style: "currency",
       currency: "EUR",
-      minimumFractionDigits: 0,
-    }).format(valor);
+      minimumFractionDigits: 0
+    }).format(v);
   };
 
   const defaultColors = ["#4caf50", "#2196f3", "#ff9800", "#e91e63", "#9c27b0", "#3f51b5"];
-  const getColorForSector = (index) => defaultColors[index % defaultColors.length];
+  const getColorForSector = i => defaultColors[i % defaultColors.length];
 
   return (
     <div className="apartado3" id="resumen">
       <div className="titulos">
         <h2 className="titulos-valor">Valor Total:</h2>
-        <p className="valor-total">{formatoValor(portfolio?.valor_total)}</p>
+        <p className="valor-total">{formatoValor(portfolio.valor_total)}</p>
       </div>
 
       {cambiosPorcentuales && (
         <div className="cambios-porcentuales">
-          <p>7 dias: {formatoPorcentaje(cambiosPorcentuales.semana)}</p>
-          <p>30 dias: {formatoPorcentaje(cambiosPorcentuales.mes)}</p>
+          <p>7 días: {formatoPorcentaje(cambiosPorcentuales.semana)}</p>
+          <p>30 días: {formatoPorcentaje(cambiosPorcentuales.mes)}</p>
           <p>1 año: {formatoPorcentaje(cambiosPorcentuales.año)}</p>
         </div>
       )}
@@ -132,23 +129,17 @@ const ResumenPortfolio = () => {
               <span
                 key={item.sector}
                 className="sector-label"
-                style={{ width: `${item.percentage}%` }}
-              >
-                {item.sector}
+                style={{ width: `${item.percentage}%` }}>
+                {item.sector} ({item.percentage}%)
               </span>
             ))}
           </div>
-
           <div className="progress-bar">
-            {distribucionSectores.map((item, index) => (
+            {distribucionSectores.map((item, idx) => (
               <div
                 key={item.sector}
                 className="progress-segment"
-                style={{
-                  width: `${item.percentage}%`,
-                  backgroundColor: getColorForSector(index),
-                }}
-              />
+                style={{ width: `${item.percentage}%`, backgroundColor: getColorForSector(idx) }} />
             ))}
           </div>
         </div>

@@ -86,10 +86,10 @@ const MovimientosSeguidos = ({ username }) => {
                 <li key={index} className="movimiento-item">
                     <div className="portfolio-icono">
                       <div className="avatar-imagen">
-                        {movimiento.autor === 'inversor' && movimiento.inversor?.usuario?.avatar && (
+                        {movimiento.autor === 'inversor' && (
                           <img src={movimiento.inversor.usuario.avatar || "/default-avatar.png"} alt="Avatar del inversor" />
                         )}
-                        {movimiento.autor === 'startup' && movimiento.startup?.usuario?.avatar && (
+                        {movimiento.autor === 'startup' && (
                           <img src={movimiento.startup.usuario.avatar || "/default-avatar.png"} alt="Avatar de la startup" />
                         )}
                       </div>
@@ -97,7 +97,6 @@ const MovimientosSeguidos = ({ username }) => {
                     <div className="movimiento-detalles2">
                       {movimiento.tipo_movimiento === "inversion" && (
                         <>
-                          {/* Si es una inversión de un inversor */}
                           {movimiento.autor === 'inversor' && movimiento.startup && (
                             <span
                               className="btn-nombre1"

@@ -246,7 +246,7 @@ const TablaGrupos = () => {
                 todosGrupos.map((grupo) => (
                   <li
                     key={grupo.id}
-                    className={selectedGroup?.id === grupo.id ? "selected" : ""}
+                    className={selectedGroup?.id === grupo.id ? "grupo-item1 selected" : "grupo-item1"}
                     onClick={() => handleSelectGroup(grupo)}
                   >
                     <div className="grupo-icono">
@@ -257,7 +257,7 @@ const TablaGrupos = () => {
                       />
                     </div>
                     <div className="grupo-info">
-                      <p id="nombre-grupo">{grupo.nombre}</p>
+                      <p id="nombre-grupo1">{grupo.nombre}</p>
                       {grupo.tipo === "privado" && (
                         <IconLockFilled className="icono-candado" />
                       )}

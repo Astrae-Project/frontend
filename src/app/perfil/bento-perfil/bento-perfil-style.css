@@ -249,6 +249,12 @@
   border-radius: 10px;
 }
 
+.avatar-imagen img, .grupo-avatar img, .portfolio-imagen img{
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+}
+
 .titulo-portfolio, .titulo-movimientos, .titulo-contacto, .titulo-eventos{
   position: relative;
   font-variation-settings: "slnt" 0, "wght" 500;
