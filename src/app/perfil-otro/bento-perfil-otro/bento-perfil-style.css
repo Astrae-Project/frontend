@@ -617,9 +617,8 @@ svg{
 }
 
 .icono-candado{
-  position: relative;
-  justify-self: flex-end;
-  margin-right: 2%;
+  right: 10px;
+  position: absolute;
 }
 
 ul :first-child{
