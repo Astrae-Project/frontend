@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ScrollShadow } from "@nextui-org/react";
+import { ScrollShadow } from "@heroui/react";
 import "./startups-recomendadas-style.css";
 import { Carta } from "../carta-startups/carta-startups";
 import Bubble from "../bubble/bubble"; // Asegúrate de tener el componente Bubble importado

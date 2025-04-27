@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ScrollShadow } from "@nextui-org/react";
+import { ScrollShadow } from "@heroui/react";
 import "./ofertas-pendientes-style.css";
 import customAxios from "@/service/api.mjs";
 import { CartaOferta } from "../carta-oferta/carta-oferta";

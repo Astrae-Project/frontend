@@ -1,6 +1,6 @@
 "use client"
 
-import { Chip } from "@nextui-org/react";
+import { Chip } from "@heroui/react";
 import './chip-style.css';
 import { useState, useEffect } from "react";
 import customAxios from "@/service/api.mjs";

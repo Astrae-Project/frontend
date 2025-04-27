@@ -1,6 +1,6 @@
 "use client";
 
-import { ScrollShadow } from "@nextui-org/react";
+import { ScrollShadow } from "@heroui/react";
 import { CartaSeguidas } from "../../ui/components/carta-startups/carta-startups-seguidas";
 
 import "./startups-seguidas-style.css";
