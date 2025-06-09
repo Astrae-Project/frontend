@@ -4,6 +4,11 @@ import React, { useState, useEffect } from "react";
 import "./boton-style.css";
 import customAxios from "@/service/api.mjs";
 import Bubble from "@/app/ui/components/bubble/bubble";
+import FormularioInversion from "@/app/ui/components/stripe-form/stripe-form";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export function Botones() {
   const [loading, setLoading] = useState(false); // Estado de carga
@@ -76,30 +81,6 @@ export function Botones() {
     });
   }, [user]);
 
-  const handleInvestClick = async () => {
-    try {
-      await customAxios.post(
-        `http://localhost:5000/api/invest/oferta`,
-        {
-          id_startup: selectedStartup.id,
-          porcentaje_ofrecido: selectedPercentage,
-          monto_ofrecido: selectedAmount,
-        },
-        { withCredentials: true }
-      );
-      setConfirmationMessage("Oferta realizada con éxito!");
-      setMessageType("success");
-      setFormSubmitted(true);
-    } catch (error) {
-      console.error("Error al realizar la oferta:", error);
-      setConfirmationMessage("Hubo un error al realizar la oferta.");
-      setMessageType("error");
-      setFormSubmitted(true);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleEditarPerfil = async () => {
     try {
       await customAxios.put(
@@ -113,23 +94,7 @@ export function Botones() {
       setConfirmationMessage(error.response.data.message);
       setMessageType("error");
     }
-    }
-
-  const formatInversion = (monto) => {
-    if (monto === null) {
-      return "N/A";
-    }
-
-    if (monto >= 1e6) {
-      const millones = monto / 1e6;
-      return `${millones % 1 === 0 ? millones.toFixed(0) : millones.toFixed(1)}M €`;
-    } else if (monto >= 1e3) {
-      const miles = monto / 1e3;
-      return `${miles % 1 === 0 ? miles.toFixed(0) : miles.toFixed(1)}K €`;
-    } else {
-      return `${monto} €`;
-    }
-  };
+  }
 
   const handleSelectStartup = (startup) => {
     setSelectedStartup((prevSelected) => (prevSelected?.id === startup.id ? null : startup));
@@ -240,47 +205,9 @@ export function Botones() {
         )}
 
         {activeBubble === "crear-inversion" && step === 2 && selectedStartup && (
-          <div>
-            <p className="titulo">Haciendo oferta a {selectedStartup.usuario?.username || "Startup Desconocida"}</p>
-            <div className="formulario-inversion">
-              <div className="campo-inversion">
-                <label className="form-label" htmlFor="cantidad">Selecciona la cantidad de dinero:</label>
-                <input
-                  id="cantidad"
-                  className="select-inversion"
-                  value={rawAmount}
-                  onChange={(e) => {
-                    const inputValue = e.target.value.replace(/[^0-9]/g, "");
-                    setRawAmount(inputValue);
-                    setSelectedAmount(Number(inputValue));
-                  }}
-                  onBlur={() => setRawAmount(formatInversion(selectedAmount))}
-                  onFocus={() => setRawAmount(selectedAmount.toString())}
-                />
-              </div>
-              <div className="campo-inversion">
-                <label className="form-label" htmlFor="porcentaje">Selecciona el porcentaje:</label>
-                <div className="campo-porcentaje">
-                  <button className="selector-btn" onClick={() => setSelectedPercentage(selectedPercentage - 1)}>-</button>
-                  <input
-                    id="porcentaje"
-                    className="input-inversion"
-                    value={selectedPercentage}
-                    onChange={(e) => setSelectedPercentage(Number(e.target.value))}
-                  />
-                  <button className="selector-btn" onClick={() => setSelectedPercentage(selectedPercentage + 1)}>+</button>
-                </div>
-              </div>
-            </div>
-            <div className="contendor-botn-invertir">
-              <button className="botn-invertir" onClick={closeBubble}>
-                Cancelar
-              </button>
-              <button className="botn-invertir enviar" type="submit" onClick={handleInvestClick}>
-                Hacer Oferta
-              </button>
-            </div>
-          </div>
+          <Elements stripe={stripePromise}>
+            <FormularioInversion selectedStartup={selectedStartup}/>
+          </Elements>
         )}
 
         {activeBubble === "editar-perfil" && (

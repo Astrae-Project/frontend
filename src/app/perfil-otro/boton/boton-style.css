@@ -91,7 +91,6 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin: 20px 0 45px;
   align-items: center;
   backdrop-filter: blur(10px);
 }
@@ -101,19 +100,19 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  width: 80%;
+  width: 345px;
   align-items: center;
 }
 
 label.form-label {
-  font-size: 14px;
+  font-size: 13px;
   color: rgba(255, 255, 255, 0.7);
   font-weight: 400;
 }
 
 /* Inputs y selectores */
 .input-inversion, .select-inversion {
-  padding: 0.625rem;
+  padding: 7px 60px 6px 60px;
   border: none;
   border: 1px solid #202029;  /* Solo una raya debajo */
   border-radius: 10px;

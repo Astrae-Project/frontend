@@ -87,10 +87,10 @@
 
 /* Clases para el estado */
 .estado-container {
-  padding: 6px 10px;
+  padding: 3px 0px;
   border-radius: 6px;
   text-align: center;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .estado-aceptado {
@@ -98,7 +98,7 @@
 }
   
 .estado-pendiente {
-  background-color: #ed8936; /* Naranja para pendiente */
+  background-color: #ed9836; /* Naranja para pendiente */
 }
   
 .estado-rechazado {

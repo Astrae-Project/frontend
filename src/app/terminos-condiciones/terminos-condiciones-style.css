@@ -1,0 +1,73 @@
+.terminos-container {
+  max-width: 100%;
+  margin: 0 auto;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 100vh;
+  padding: 50px 120px 30px;
+  background: none;
+  position: relative;
+}
+
+/* Ocultar scrollbar en WebKit (Chrome, Safari) */
+.terminos-container::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* Ocultar scrollbar en Firefox y otros */
+.terminos-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.titulo {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #ffffff;
+}
+
+.actualizacion {
+  font-size: 0.875rem;
+  color: #aaaaaa;
+  margin-bottom: 32px;
+}
+
+.section {
+  margin-bottom: 32px;
+}
+
+.subtitulo {
+  font-size: 1.375rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #eeeeee;
+}
+
+.subsubtitulo {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-top: 16px;
+  color: #dddddd;
+}
+
+.lista {
+  list-style-position: inside;
+  margin-left: 20px;
+  color: #dddddd;
+}
+
+.lista li {
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+.final {
+  text-align: center;
+  color: #aaaaaa;
+  margin-top: 48px;
+  font-style: italic;
+}

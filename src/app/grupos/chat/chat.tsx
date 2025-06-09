@@ -79,13 +79,39 @@ const ChatGroup = ({ groupId }) => {
     fetchGroupData();
   }, [numericGroupId]);
 
-  const togglePermiso = (id) => {
-    setPermisos((prev) =>
-      prev.map((permiso) =>
-        permiso.id === id ? { ...permiso, soloAdmins: !permiso.soloAdmins } : permiso
-      )
+  const actualizarPermiso = async (permisoId, nuevoValor) => {
+  try {
+    await customAxios.put(`http://localhost:5000/api/grupos/cambio-permiso/${numericGroupId}`, {
+      groupId: numericGroupId,
+      permiso: permisoId,
+      abierto: nuevoValor,
+    });
+  } catch (error) {
+    console.error("Error actualizando permiso:", error);
+  }
+};
+  useEffect(() => {
+    if (permisos.length > 0) {
+      permisos.forEach((permiso) => {
+        actualizarPermiso(permiso.permiso, permiso.abierto);
+      });
+    }
+  }, [permisos]);
+
+  const togglePermiso = (permisoId) => {
+  setPermisos((prev) =>
+    prev.map((permiso) => {
+      if (permiso.permiso === permisoId) {
+        const nuevoValor = !permiso.abierto;
+        // Llamada al backend
+        actualizarPermiso(permisoId, nuevoValor);
+        return { ...permiso, abierto: nuevoValor };
+      }
+      return permiso;
+      })
     );
   };
+
   
   // Obtener mensajes
   useEffect(() => {
@@ -503,10 +529,10 @@ const ChatGroup = ({ groupId }) => {
                   className="botn-eventos"
                   onClick={closeBubble}
                 >
-                  Cancelar
+                  <p className="texto-btn">Cancelar</p>
                 </button>
                 <button type="submit" className="botn-eventos enviar">
-                  Guardar
+                  <p className="texto-btn">Guardar</p>
                 </button>
               </div>
             </form>
@@ -539,24 +565,37 @@ const ChatGroup = ({ groupId }) => {
 
         {activeBubble === "permisos" && selectedGroup && (
           <div className="permisos-container">
-            <h2>Permisos</h2>
-            <p>Gestiona los permisos de los miembros del grupo.</p>
+            <h2>Configurar permisos</h2>
+
             <ul className="lista-permisos">
-              {permisos.map((permiso) => (
-                <li key={permiso.id} className="permiso-item">
-                  <span className="permiso-nombre">{permiso.permiso}</span>
-                  <label className="toggle-label">
-                    <span>Solo admins</span>
-                    <input
-                      type="checkbox"
-                      className="toggle-input"
-                      checked={permiso.abierto === false}
-                      onChange={() => togglePermiso(permiso.id)}
-                    />
-                    <span className="slider"></span>
-                  </label>
-                </li>
-              ))}
+              {permisos.map((permisoObj) => {
+                const nombreVisible = {
+                  invitar_miembros: "Invitar nuevos miembros",
+                  crear_ofertas: "Publicar ofertas",
+                  subir_documentos: "Subir documentos",
+                }[permisoObj.permiso] || permisoObj.permiso;
+
+                const acceso = permisoObj.abierto ? "Todos los miembros" : "Solo administradores";
+
+                return (
+                  <li key={permisoObj.permiso} className="permiso-item">
+                    <div style={{ flex: 1 }}>
+                      <div className="permiso-nombre">{nombreVisible}</div>
+                      <div className="admins">{acceso}</div>
+                    </div>
+
+                    <label className="toggle-label">
+                      <input
+                        type="checkbox"
+                        className="toggle-input"
+                        checked={!permisoObj.abierto}
+                        onChange={() => togglePermiso(permisoObj.permiso)}
+                      />
+                      <span className="slider"></span>
+                    </label>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         )}

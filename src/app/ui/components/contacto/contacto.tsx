@@ -170,10 +170,10 @@ const InformacionContacto = ({ contacto, fetchContacto }) => {
                   setSelectedContact(null); // Limpiar selección
                 }}
               >
-                Atrás
+                <p className='texto-btn'>Atrás</p>
               </button>
               <button className="botn-eventos enviar" onClick={handleAñadirContacto}>
-                Confirmar
+                <p className='texto-btn'>Confirmar</p>
               </button>
             </div>
           </div>
