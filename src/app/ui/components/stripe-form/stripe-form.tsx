@@ -4,7 +4,7 @@ import customAxios from '@/service/api.mjs';
 import './stripe-form-style.css';
 import '../../../perfil/boton/boton-style.css';
 
-export default function FormularioInversion({ selectedStartup }) {
+export default function FormularioInversion({ selectedStartup, onClose }) {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [confirmationMessage, setConfirmationMessage] = useState('');
   const [messageType, setMessageType] = useState(''); // 'success' | 'error'
@@ -14,18 +14,20 @@ export default function FormularioInversion({ selectedStartup }) {
   const [selectedAmount, setSelectedAmount] = useState(0);
   const [selectedPercentage, setSelectedPercentage] = useState(0);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [amountError, setAmountError] = useState('');
+
 
   const stripe = useStripe();
   const elements = useElements();
 
   const formatInversion = (monto) => {
-    if (monto === null) return 'N/A';
-    if (monto >= 1e6) return `${(monto / 1e6).toFixed(monto % 1 === 0 ? 0 : 1)}M €`;
-    if (monto >= 1e3) return `${(monto / 1e3).toFixed(monto % 1 === 0 ? 0 : 1)}K €`;
-    return `${monto} €`;
+  if (monto === null) return 'N/A';
+  // Formato europeo: separador de miles es punto, decimal es coma
+  return monto.toLocaleString('de-DE') + ' €';
   };
 
   const closeBubble = () => {
+    // Reset local
     setFormSubmitted(false);
     setConfirmationMessage('');
     setMessageType('');
@@ -34,6 +36,9 @@ export default function FormularioInversion({ selectedStartup }) {
     setSelectedAmount(0);
     setSelectedPercentage(0);
     setTermsAccepted(false);
+
+    // Cerrar desde el padre
+    onClose?.();
   };
 
   const cardElementOptions = {
@@ -123,39 +128,74 @@ export default function FormularioInversion({ selectedStartup }) {
       <p className="titulo">
         Haciendo oferta a {selectedStartup?.usuario?.username || 'Startup Desconocida'}
       </p>
+    <div className="campos-inversion">
       {/* Monto */}
       <div className="campo-inversion">
-        <label className="form-label" htmlFor="cantidad">Monto a invertir:</label>
+        <label className="form-label" htmlFor="cantidad">Monto a invertir</label>
         <input
           id="cantidad"
-          className="select-inversion"
+          className={`select-inversion ${amountError ? 'input-error' : ''}`}
           value={rawAmount}
           onChange={e => {
             const v = e.target.value.replace(/[^0-9]/g, '');
             setRawAmount(v);
             setSelectedAmount(Number(v));
+            if (v === '') {
+              setAmountError('');
+              return;
+            }
+            const num = Number(v);
+            if (num < 500) setAmountError('Monto mínimo 500 €');
+            else if (num > 1000000) setAmountError('Monto máximo 1.000.000 €');
+            else setAmountError('');
           }}
-          onBlur={() => setRawAmount(formatInversion(selectedAmount))}
-          onFocus={() => setRawAmount(selectedAmount.toString())}
+          onBlur={() => {
+            if (selectedAmount < 500) setAmountError('Monto mínimo 500 €');
+            else if (selectedAmount > 1000000) setAmountError('Monto máximo 1.000.000 €');
+            else setAmountError('');
+            setRawAmount(formatInversion(selectedAmount));
+          }}
+          onFocus={() => setRawAmount(selectedAmount === 0 ? '' : selectedAmount.toString())}
         />
+        {amountError && <p className="error-text">{amountError}</p>}
       </div>
-      {/* Porcentaje */}
+
+      {/* Porcentaje: mínimo 0, máximo 100 */}
       <div className="campo-inversion">
-        <label className="form-label" htmlFor="porcentaje">Porcentaje:</label>
+        <label className="form-label" htmlFor="porcentaje">Porcentaje</label>
         <div className="campo-porcentaje">
-          <button type="button" className="selector-btn" onClick={() => setSelectedPercentage(p => p - 1)}>-</button>
-          <input
-            id="porcentaje"
-            className="input-inversion"
-            value={selectedPercentage}
-            onChange={e => setSelectedPercentage(Number(e.target.value))}
-          />
-          <button type="button" className="selector-btn" onClick={() => setSelectedPercentage(p => p + 1)}>+</button>
+          <div className="porcentaje-wrapper">
+            <button
+              type="button"
+              className="selector-btn izquierda"
+              onClick={() => setSelectedPercentage(p => Math.max(0, p - 1))}
+            >-</button>
+            
+            <input
+              id="porcentaje"
+              className="input-porcentaje"
+              value={selectedPercentage}
+              onChange={e => {
+                let val = Number(e.target.value);
+                if (val < 0) val = 0;
+                if (val > 100) val = 100;
+                setSelectedPercentage(val);
+              }}
+            />
+
+            <button
+              type="button"
+              className="selector-btn derecha"
+              onClick={() => setSelectedPercentage(p => Math.min(100, p + 1))}
+            >+</button>
+          </div>
         </div>
       </div>
+    </div>
+
       {/* CardElement */}
       <div className="campo-inversion">
-        <label className="form-label" htmlFor="card-element">Información de pago:</label>
+        <label className="form-label" htmlFor="card-element">Información de pago</label>
         <CardElement id="card-element" options={cardElementOptions} />
       </div>
       {/* Términos */}

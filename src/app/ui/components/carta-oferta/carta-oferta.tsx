@@ -13,6 +13,7 @@ export const CartaOferta = ({ oferta }) => {
   const [rawAmount, setRawAmount] = useState("");
   const [selectedAmount, setSelectedAmount] = useState(0);
   const [selectedPercentage, setSelectedPercentage] = useState(0);
+  const [amountError, setAmountError] = useState("");
 
   const closeBubble = () => {
     setActiveBubble(null);
@@ -23,12 +24,9 @@ export const CartaOferta = ({ oferta }) => {
   };
 
   const formatInversion = (monto) => {
-    if (monto == null) return 'N/A';
-    const value = Number(monto);
-    if (isNaN(value)) return 'N/A';
-    if (value >= 1e6) return `${(value / 1e6).toFixed(1)}M€`;
-    if (value >= 1e3) return `${(value / 1e3).toFixed(1)}K€`;
-    return `${value.toLocaleString('es-ES', { maximumFractionDigits: 0 })}€`;
+  if (monto === null) return 'N/A';
+  // Formato europeo: separador de miles es punto, decimal es coma
+  return monto.toLocaleString('de-DE') + ' €';
   };
 
   // Función corregida para mostrar siempre el número entero con puntos
@@ -133,7 +131,7 @@ export const CartaOferta = ({ oferta }) => {
           <div className="carta-apartados-oferta">
             <p className="carta-titulo-oferta">Monto Ofrecido</p>
             <p className="carta-valoracion">
-              {formatInversion(oferta?.monto_ofrecido)}
+              {formatInversionRaw(oferta?.monto_ofrecido)}
             </p>
           </div>
           <div className="carta-apartados-oferta">
@@ -211,47 +209,91 @@ export const CartaOferta = ({ oferta }) => {
           </div>
         )}
         {activeBubble === "oferta" && step === 2 && (
-          <div>
-            <p>Haciendo oferta a {oferta.inversor.usuario?.username || "Startup Desconocida"}</p>
-            <div className="formulario-inversion">
+            <form onSubmit={handleInvestClick} className="formulario-inversion">
+              <p className="titulo">
+                Haciendo oferta a {oferta.inversor.usuario?.username || 'Startup Desconocida'}
+              </p>
+              <div className="campos-inversion" style={{ marginBottom: '15px' }}>
+              {/* Monto */}
               <div className="campo-inversion">
-                <label className="form-label" htmlFor="cantidad">Selecciona la cantidad de dinero:</label>
+                <label className="form-label" htmlFor="cantidad">Monto a invertir</label>
                 <input
                   id="cantidad"
-                  className="select-inversion"
+                  className={`select-inversion ${amountError ? 'input-error' : ''}`}
                   value={rawAmount}
-                  onChange={(e) => {
-                    const inputValue = e.target.value.replace(/[^0-9]/g, "");
-                    setRawAmount(inputValue);
-                    setSelectedAmount(Number(inputValue));
+                  onChange={e => {
+                    const v = e.target.value.replace(/[^0-9]/g, '');
+                    setRawAmount(v);
+                    setSelectedAmount(Number(v));
+                    if (v === '') {
+                      setAmountError('');
+                      return;
+                    }
+                    const num = Number(v);
+                    if (num < 500) setAmountError('Monto mínimo 500 €');
+                    else if (num > 1000000) setAmountError('Monto máximo 1.000.000 €');
+                    else setAmountError('');
                   }}
-                  onBlur={() => setRawAmount(formatInversion(selectedAmount))}
-                  onFocus={() => setRawAmount(selectedAmount.toString())}
+                  onBlur={() => {
+                    if (selectedAmount < 500) setAmountError('Monto mínimo 500 €');
+                    else if (selectedAmount > 1000000) setAmountError('Monto máximo 1.000.000 €');
+                    else setAmountError('');
+                    setRawAmount(formatInversion(selectedAmount));
+                  }}
+                  onFocus={() => setRawAmount(selectedAmount === 0 ? '' : selectedAmount.toString())}
                 />
+                {amountError && <p className="error-text">{amountError}</p>}
               </div>
+        
+              {/* Porcentaje: mínimo 0, máximo 100 */}
               <div className="campo-inversion">
-                <label className="form-label" htmlFor="porcentaje">Selecciona el porcentaje:</label>
+                <label className="form-label" htmlFor="porcentaje">Porcentaje</label>
                 <div className="campo-porcentaje">
-                  <button className="selector-btn" onClick={() => setSelectedPercentage(selectedPercentage - 1)}>-</button>
-                  <input
-                    id="porcentaje"
-                    className="input-inversion"
-                    value={selectedPercentage}
-                    onChange={(e) => setSelectedPercentage(Number(e.target.value))}
-                  />
-                  <button className="selector-btn" onClick={() => setSelectedPercentage(selectedPercentage + 1)}>+</button>
+                  <div className="porcentaje-wrapper">
+                    <button
+                      type="button"
+                      className="selector-btn izquierda"
+                      onClick={() => setSelectedPercentage(p => Math.max(0, p - 1))}
+                    >-</button>
+                    
+                    <input
+                      id="porcentaje"
+                      className="input-porcentaje"
+                      value={selectedPercentage}
+                      onChange={e => {
+                        let val = Number(e.target.value);
+                        if (val < 0) val = 0;
+                        if (val > 100) val = 100;
+                        setSelectedPercentage(val);
+                      }}
+                    />
+        
+                    <button
+                      type="button"
+                      className="selector-btn derecha"
+                      onClick={() => setSelectedPercentage(p => Math.min(100, p + 1))}
+                    >+</button>
+                  </div>
                 </div>
               </div>
             </div>
+              
+            {/* Botones */}
             <div className="contendor-botn-invertir">
-              <button className="botn-invertir" onClick={closeBubble}>
+              <button type="button" className="botn-invertir" onClick={closeBubble} disabled={loading}>
                 Cancelar
               </button>
-              <button className="botn-invertir enviar" type="submit" onClick={handleInvestClick}>
-                Hacer Oferta
+              <button type="submit" className="botn-invertir enviar" disabled={loading}>
+                {loading ? 'Procesando...' : 'Hacer Oferta'}
               </button>
             </div>
-          </div>
+            {/* Mensaje */}
+            {formSubmitted && (
+              <div className={messageType === 'error' ? 'error-message' : 'success-message'}>
+                {confirmationMessage}
+              </div>
+            )}
+          </form>
         )}
       </Bubble>
     </>

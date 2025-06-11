@@ -344,7 +344,8 @@
     background-color: #161621;  /* Fondo un poco más oscuro al hacer hover sobre el seleccionado */
     border: 1px solid #6e4ba3 ;
     box-shadow: 0 0 3px #6e4ba3 ;
-    outline: none;  cursor: pointer;                          /* Indicar que es interactivo */
+    outline: none;  
+    cursor: pointer;                          /* Indicar que es interactivo */
   }
   
   .grupo-item1.selected:hover {
@@ -354,20 +355,7 @@
   /* Estilo del li al pasar el mouse */
   .grupo-item1:hover {
     background-color: #14141f82;  /* Fondo oscuro al hacer hover sobre el li */
-  }  
-
-  .botn-eventos {
-    position: relative;
-    width: auto;
-    height: 30px;
-    background-color: #1C1C29;
-    border: 1px solid #1E202F;
-    border-radius: 5px;
-    font-size: 13px;
-    padding-left: 5%;
-    padding-right: 5%;
-    transition: background-color 0.3s ease;
-  }
+  } 
 
   /* Estilo específico para el botón de enviar */
   .enviar {
@@ -376,7 +364,20 @@
   }
 
   .enviar:hover {
-    background-color: #563085;
+    background-color: #7857ab;
+  }
+
+  .botn-grupos {
+  position: relative;
+  width: auto;
+  height: 30px;
+  background-color: #1C1C29;
+  border: 1px solid #1E202F;
+  border-radius: 5px;
+  font-size: 13px;
+  padding-top: 0px;
+  padding-left: 5%;
+  padding-right: 5%;
   }
 
   .contendor-botn-evento {

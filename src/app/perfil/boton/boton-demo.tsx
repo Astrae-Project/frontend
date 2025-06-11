@@ -34,8 +34,6 @@ export function Botones() {
     estado_financiacion: "",
     plantilla: "",
   });
-  
-  
 
   // Obtener datos del usuario
   const fetchUsuario = async () => {
@@ -120,7 +118,7 @@ export function Botones() {
     if (user) {
       if (user.startup) {
         return (
-          <button className="custom-button" id="compartir">
+          <button className="custom-button boton-morado" id="compartir">
             <p className="text">Compartir</p>
           </button>
         );
@@ -206,7 +204,7 @@ export function Botones() {
 
         {activeBubble === "crear-inversion" && step === 2 && selectedStartup && (
           <Elements stripe={stripePromise}>
-            <FormularioInversion selectedStartup={selectedStartup}/>
+            <FormularioInversion selectedStartup={selectedStartup}  onClose={() => setActiveBubble(false)}/>
           </Elements>
         )}
 

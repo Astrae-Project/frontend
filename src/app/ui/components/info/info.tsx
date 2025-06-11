@@ -1,15 +1,17 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
-import { IconBriefcaseFilled, IconBulbFilled, IconChartPieFilled, IconCurrencyEuro, IconMapPinFilled, IconMedal, IconPercentage, IconUserFilled} from "@tabler/icons-react";
+import { IconBriefcaseFilled, IconBulbFilled, IconChartPieFilled, IconCurrencyEuro, IconFileDownloadFilled, IconMapPinFilled, IconMedal, IconPercentage, IconUserFilled} from "@tabler/icons-react";
 import '../../../perfil/bento-perfil/bento-perfil-style.css';
 import { Botones } from "../../../perfil/boton/boton-demo";
 import { Chips } from "../../../perfil/chip/chip-demo";
 import StarRating from "../../../perfil/estrellas/estrellas";
 import { MiniChips } from "../../../perfil/mini-chips/mini-chips";
+import { useRef } from "react";
 
 // Asumiendo que customAxios está configurado adecuadamente en otro archivo
 import customAxios from "@/service/api.mjs"; 
+import Bubble from "../bubble/bubble";
 
 const Info = () => {
   const [user, setUser] = useState(null);
@@ -20,6 +22,57 @@ const Info = () => {
   const [roiPromedio, setRoiPromedio] = useState(0);
   const [puntuacionMedia, setPuntuacionMedia] = useState(0);
   const [recaudacionTotal, setRecaudacionTotal] = useState(0);
+  const [activeBubble, setActiveBubble] = useState(null);
+  const [confirmationMessage, setConfirmationMessage] = useState("");
+  const [messageType, setMessageType] = useState("success"); // success o error
+  const [tipo, setTipo] = useState(""); // Estado para el tipo de documento
+  const [archivo, setArchivo] = useState(null); // Estado para el archivo seleccionado
+  const fileInputRef = useRef(null); // Referencia para el input de archivo
+  
+  const handleSubirDocumento = async (e) => {
+    e.preventDefault();
+
+    if (!archivo) {
+      alert("Debes seleccionar un archivo");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("archivo", archivo);
+    formData.append("id_usuario", user.id); // Usa el ID del usuario autenticado
+
+    // Detectar tipo por extensión del archivo
+    const extension = archivo.name.split('.').pop().toLowerCase();
+
+    let tipoDetectado = "";
+    if (extension === "pdf") tipoDetectado = "pdf";
+    else if (["doc", "docx"].includes(extension)) tipoDetectado = "word";
+    else if (["jpg", "jpeg", "png", "webp"].includes(extension)) tipoDetectado = "imagen";
+    else tipoDetectado = "otro";
+
+    formData.append("tipo", tipoDetectado);
+
+    try {
+      const res = await customAxios.post(`http://localhost:5000/api/perfil/documento/${startup.id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true
+      });
+
+      alert("Documento subido correctamente");
+      closeBubble();
+      // Puedes actualizar aquí el estado con la nueva lista si lo necesitas
+    } catch (err) {
+      console.error("Error al subir:", err);
+      const mensaje = err.response?.data?.message || "Error al subir documento";
+      alert(mensaje);
+    }
+  };
+
+  const closeBubble = () => {
+    setActiveBubble(null);
+    setConfirmationMessage(""); // Limpiar el mensaje de confirmación al cerrar
+    setMessageType("success"); // Resetear el tipo de mensaje al cerrar
+  }
 
   const fetchDatos = async () => {
     try {
@@ -104,6 +157,9 @@ const Info = () => {
         </>
       ) : (
         <>
+          <button className="rankear" onClick={() => setActiveBubble("subir-documento")}>
+            <IconFileDownloadFilled id="descarga" />
+          </button>
           <span className="contenedor-ancho1">
             <MiniChips label={<div className="icon-text"><IconMapPinFilled className="icono2"/>{user?.usuario?.ciudad && user?.usuario?.pais ? `${user.usuario.ciudad}, ${user.usuario.pais}` : "Sin ubicación"}</div>} tooltipText="Ubicación"/>
             <MiniChips label={<div className="icon-text"><IconBulbFilled className="icono2"/> {user?.sector || "Desconocido"}</div>} tooltipText="Sector"/>
@@ -116,6 +172,54 @@ const Info = () => {
       )}
 
       <Botones />
+
+      <Bubble
+        show={!!activeBubble}
+        onClose={closeBubble}
+        message={confirmationMessage} // Pasar el mensaje de confirmación
+        type={messageType} // Pasar el tipo de mensaje (success o error)
+      >
+        {activeBubble === "subir-documento" && (
+          <div className="document-upload-container">
+            <h4>Subir nuevo documento</h4>
+
+            <form onSubmit={handleSubirDocumento}>
+              <div
+                className="dropzone"
+                onClick={() => fileInputRef.current.click()}
+                onDragOver={e => e.preventDefault()}
+                onDrop={e => {
+                  e.preventDefault();
+                  if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    setArchivo(e.dataTransfer.files[0]);
+                  }
+                }}
+              >
+                {archivo
+                  ? <span className="dropzone-filename">{archivo.name}</span>
+                  : <span className="dropzone-text">Haz click o arrastra el archivo aquí</span>
+                }
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".pdf,.doc,.docx,.ppt,.pptx"
+                  className="dropzone-input"
+                  onChange={e => setArchivo(e.target.files[0])}
+                />
+              </div>
+
+              <div className="contendor-botn-evento">
+                <button type="button" className="botn-eventos" onClick={closeBubble}>
+                  Cancelar
+                </button>
+                <button type="submit" className="botn-eventos enviar">
+                  Subir
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+      </Bubble>
     </div>
   );
 };

@@ -49,6 +49,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
   const [puntuacion, setPuntuacion] = useState(0);
   const [comentario, setComentario] = useState("");
   const [hovered, setHovered] = useState(0);
+  const [documentos, setDocumentos] = useState([]);
 
   // Fetch del rol del usuario
   const fetchRol = async () => {
@@ -95,6 +96,27 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
       console.error("Error fetching usuario data:", error);
     }
   };
+
+  const fetchDocumentos = async () => {
+    try {
+      const response = await customAxios.get(
+        `http://localhost:5000/api/data/usuario/${username}/documentos`,
+        { withCredentials: true }
+      );
+
+      if (response.data && Array.isArray(response.data.documentos)) {
+        setDocumentos(response.data.documentos);
+      } else {
+        console.error("No se encontraron documentos o la respuesta no es válida");
+      }
+    } catch (error) {
+      console.error("Error fetching documentos:", error);
+    }
+  };
+
+  useEffect(() => {
+      fetchDocumentos();
+    }, [username]);
 
   // Formato para las inversiones
   const formatInversion = (monto) => {
@@ -286,7 +308,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
         </>
       ) : (
         <>
-          <button className="rankear" onClick={() => setActiveBubble("rankear")}>
+          <button className="rankear" onClick={() => setActiveBubble("documentos")}>
             <IconFileDownloadFilled id="descarga" />
           </button>
           <span className="contenedor-ancho1">
@@ -347,6 +369,29 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
               <button className="botn-eventos enviar" onClick={handleEnviarResena}>
                 Valorar
               </button>
+            </div>
+          </div>
+        )}
+
+        {activeBubble === "documentos" && (
+          <div>
+            <h4>Documentos subidos</h4>
+            {documentos.length === 0 ? (
+              <p>No hay documentos disponibles.</p>
+            ) : (
+              <ul className="lista-documentos">
+                {documentos.map((doc) => (
+                  <li key={doc.id} className="documento-item">
+                    <span>{doc.nombre}</span>
+                    <a href={doc.url} target="_blank" rel="noopener noreferrer" className="botn-eventos">
+                      Ver / Descargar
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <div className="contendor-botn-evento">
+              <button className="botn-eventos" onClick={closeBubble}>Cerrar</button>
             </div>
           </div>
         )}

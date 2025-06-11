@@ -14,6 +14,12 @@ import MovimientosSeguidos from "../movimientos-recientes/movimientos-recientes-
 import Notificaciones from "../notificaciones/notificaciones";
 import LoadingScreen from "../loading-screen/loading-screen";
 import { OfertasPendientes } from "../ofertas-pendientes/ofertas-pendientes";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import FormularioInversion from "../stripe-form/stripe-form";
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+
 
 export function BentoGridInicio({username}) {
   const [loading, setLoading] = useState(false); // Estado de carga
@@ -117,22 +123,6 @@ export function BentoGridInicio({username}) {
       setFormSubmitted(true);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const formatInversion = (monto) => {
-    if (monto === null) {
-      return "N/A";
-    }
-
-    if (monto >= 1e6) {
-      const millones = monto / 1e6;
-      return `${millones % 1 === 0 ? millones.toFixed(0) : millones.toFixed(1)}M €`;
-    } else if (monto >= 1e3) {
-      const miles = monto / 1e3;
-      return `${miles % 1 === 0 ? miles.toFixed(0) : miles.toFixed(1)}K €`;
-    } else {
-      return `${monto} €`;
     }
   };
 
@@ -242,47 +232,9 @@ export function BentoGridInicio({username}) {
         )}
 
         {activeBubble === "crear-inversion" && step === 2 && selectedStartup && (
-          <div>
-            <p>Haciendo oferta a {selectedStartup.usuario?.username || "Startup Desconocida"}</p>
-            <div className="formulario-inversion">
-              <div className="campo-inversion">
-                <label className="form-label" htmlFor="cantidad">Selecciona la cantidad de dinero:</label>
-                <input
-                  id="cantidad"
-                  className="select-inversion"
-                  value={rawAmount}
-                  onChange={(e) => {
-                    const inputValue = e.target.value.replace(/[^0-9]/g, "");
-                    setRawAmount(inputValue);
-                    setSelectedAmount(Number(inputValue));
-                  }}
-                  onBlur={() => setRawAmount(formatInversion(selectedAmount))}
-                  onFocus={() => setRawAmount(selectedAmount.toString())}
-                />
-              </div>
-              <div className="campo-inversion">
-                <label className="form-label" htmlFor="porcentaje">Selecciona el porcentaje:</label>
-                <div className="campo-porcentaje">
-                  <button className="selector-btn" onClick={() => setSelectedPercentage(selectedPercentage - 1)}>-</button>
-                  <input
-                    id="porcentaje"
-                    className="input-inversion"
-                    value={selectedPercentage}
-                    onChange={(e) => setSelectedPercentage(Number(e.target.value))}
-                  />
-                  <button className="selector-btn" onClick={() => setSelectedPercentage(selectedPercentage + 1)}>+</button>
-                </div>
-              </div>
-            </div>
-            <div className="contendor-botn-invertir">
-              <button className="botn-invertir" onClick={closeBubble}>
-                Cancelar
-              </button>
-              <button className="botn-invertir enviar" type="submit" onClick={handleInvestClick}>
-                Hacer Oferta
-              </button>
-            </div>
-          </div>
+          <Elements stripe={stripePromise}>
+            <FormularioInversion selectedStartup={selectedStartup}  onClose={() => setActiveBubble(false)}/>
+          </Elements>
         )}
 
         {activeBubble === "crear-grupo" && !formSubmitted && (

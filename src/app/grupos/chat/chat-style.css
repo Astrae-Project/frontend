@@ -428,8 +428,3 @@
 .toggle-input:checked + .slider::before {
   transform: translateX(20px);
 }
-
-.texto-btn {
-  position: relative;
-  top: 1.5px;
-}

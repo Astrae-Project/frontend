@@ -4,6 +4,11 @@ import React, { useState, useEffect } from "react";
 import customAxios from "@/service/api.mjs"; // Instancia personalizada de Axios
 import "./boton-style.css";
 import Bubble from "@/app/ui/components/bubble/bubble";
+import FormularioInversion from "@/app/ui/components/stripe-form/stripe-form";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export function BotonesOtro({ username }) {
   const [isFollowing, setIsFollowing] = useState(null); // Estado para saber si el usuario sigue o no
@@ -28,22 +33,6 @@ export function BotonesOtro({ username }) {
     setMessageType(""); // Limpiar el tipo de mensaje
   };
 
-  const formatInversion = (monto) => {
-    if (monto === null) {
-      return 'N/A';
-    }
-  
-    if (monto >= 1e6) {
-      const millones = monto / 1e6;
-      return `${millones % 1 === 0 ? millones.toFixed(0) : millones.toFixed(1)}M €`; // Para millones
-    } else if (monto >= 1e3) {
-      const miles = monto / 1e3;
-      return `${miles % 1 === 0 ? miles.toFixed(0) : miles.toFixed(1)}K €`; // Para miles
-    } else {
-      return `${monto} €`; // Para cantidades menores a mil
-    }
-  };
-  
   // Obtener datos del usuario autenticado
   const fetchUsuarioAutenticado = async () => {
     try {
@@ -175,7 +164,7 @@ export function BotonesOtro({ username }) {
       </button>
   
       <button
-        className="custom-button"
+        className="custom-button boton-morado"
         id="suscribir"
         onClick={usuarioObservado?.startup ? () => setActiveBubble("crear-inversion") : undefined} // Solo ejecuta la función si es startup
         disabled={loading || !usuarioObservado?.startup} // Desactiva el botón si no es startup o está cargando
@@ -190,51 +179,9 @@ export function BotonesOtro({ username }) {
         type={messageType}
       >
         {activeBubble === "crear-inversion" && !formSubmitted && (
-          <div>
-            <p className="titulo">Haciendo oferta a {usuarioObservado.startup?.usuario.username || "Startup Desconocida"}</p>
-            <div className="formulario-inversion">
-              <div className="campo-inversion">
-                <label className="form-label" htmlFor="cantidad">Selecciona la cantidad de dinero:</label>
-                <input 
-                  id="cantidad"
-                  className="select-inversion"
-                  value={rawAmount}
-                  onChange={(e) => {
-                    const inputValue = e.target.value.replace(/[^0-9]/g, ""); // Permitir solo números
-                    setRawAmount(inputValue); // Almacena el valor bruto
-                    setSelectedAmount(Number(inputValue)); // Actualiza el estado formateado
-                  }}
-                  onBlur={() => {
-                    setRawAmount(formatInversion(selectedAmount)); // Formatea al perder el foco
-                  }}
-                  onFocus={() => {
-                    setRawAmount(selectedAmount); // Devuelve el valor bruto al enfocar
-                  }}
-                />
-              </div>
-              <div className="campo-inversion">
-                <label className="form-label" htmlFor="porcentaje">Selecciona el porcentaje:</label>
-                <div className="campo-porcentaje">
-                  <button className="selector-btn" onClick={() => setSelectedPercentage(selectedPercentage - 1)}>-</button>
-                  <input 
-                    id="porcentaje"
-                    className="input-inversion"
-                    value={selectedPercentage}
-                    onChange={(e) => setSelectedPercentage(Number(e.target.value))}
-                  />
-                  <button className="selector-btn" onClick={() => setSelectedPercentage(selectedPercentage + 1)}>+</button>
-                </div>
-              </div>
-            </div>
-            <div className="contendor-botn-invertir">
-              <button className="botn-invertir" onClick={closeBubble}>
-                Cancelar
-              </button>
-              <button className="botn-invertir enviar" type="submit" onClick={handleInvestClick}>
-                Hacer Oferta
-              </button>
-            </div>
-          </div>
+          <Elements stripe={stripePromise}>
+            <FormularioInversion selectedStartup={usuarioObservado?.startup} onClose={() => setActiveBubble(false)}/>
+          </Elements>
         )}
       </Bubble>
     </span>

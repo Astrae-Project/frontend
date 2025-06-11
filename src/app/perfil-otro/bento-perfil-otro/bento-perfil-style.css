@@ -274,6 +274,9 @@
   scrollbar-width: none; 
   -ms-overflow-style: none;
   scroll-behavior: smooth;
+  display: flex;
+  align-items: center;
+   justify-content: center;
 }
 
 .movimiento-descripcion{

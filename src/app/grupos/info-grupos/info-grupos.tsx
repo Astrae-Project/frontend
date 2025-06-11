@@ -487,12 +487,12 @@ const InfoGrupos = ({ groupId }) => {
               <div className="contendor-botn-grupo">
                 <button
                   type="button"
-                  className="botn-eventos"
+                  className="botn-grupos"
                   onClick={closeBubble}
                 >
                   Cancelar
                 </button>
-                <button type="submit" className="botn-eventos enviar" onClick={() => handleChangeRole(formData.role)}>
+                <button type="submit" className="botn-grupos enviar" onClick={() => handleChangeRole(formData.role)}>
                   Asignar
                 </button>
               </div>

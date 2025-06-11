@@ -61,6 +61,7 @@
   border: 1px solid #1E202F;
   border-radius: 5px;
   font-size: 13px;
+  padding-top: 4px;
   padding-left: 5%;
   padding-right: 5%;
 }
@@ -88,7 +89,7 @@
 }
 
 .enviar:hover {
-  background-color: #563085;
+  background-color: #7857ab;
 }
 
 /* Estilo para el li seleccionado */
