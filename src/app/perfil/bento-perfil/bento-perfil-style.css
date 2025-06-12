@@ -827,14 +827,16 @@ ul :first-child{
   border: 2px dashed #151522;
   border-radius: 8px;
   height: 150px;
+  max-width: 90%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   background: #10101A;
   transition: border-color 0.2s;
-  margin: 15px;
+  margin-top: 15px;
   margin-bottom: 20px;
+  justify-self: center;
 }
 
 .dropzone:hover {
@@ -851,9 +853,10 @@ ul :first-child{
 }
 
 .dropzone-filename {
-  color: #333;
+  color: #d8d8d8;
   font-size: 0.9rem;
-  word-break: break-all;
+  word-break: break-word;
+  width: 80%;
 }
 
 
