@@ -28,51 +28,6 @@ const Info = () => {
   const [tipo, setTipo] = useState(""); // Estado para el tipo de documento
   const [archivo, setArchivo] = useState(null); // Estado para el archivo seleccionado
   const fileInputRef = useRef(null); // Referencia para el input de archivo
-  
-  const handleSubirDocumento = async (e) => {
-    e.preventDefault();
-
-    if (!archivo) {
-      alert("Debes seleccionar un archivo");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("archivo", archivo);
-    formData.append("id_usuario", user.id); // Usa el ID del usuario autenticado
-
-    // Detectar tipo por extensión del archivo
-    const extension = archivo.name.split('.').pop().toLowerCase();
-
-    let tipoDetectado = "";
-    if (extension === "pdf") tipoDetectado = "pdf";
-    else if (["doc", "docx"].includes(extension)) tipoDetectado = "word";
-    else if (["jpg", "jpeg", "png", "webp"].includes(extension)) tipoDetectado = "imagen";
-    else tipoDetectado = "otro";
-
-    formData.append("tipo", tipoDetectado);
-
-    try {
-      const res = await customAxios.post(`http://localhost:5000/api/perfil/documento/${startup.id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true
-      });
-
-      alert("Documento subido correctamente");
-      closeBubble();
-      // Puedes actualizar aquí el estado con la nueva lista si lo necesitas
-    } catch (err) {
-      console.error("Error al subir:", err);
-      const mensaje = err.response?.data?.message || "Error al subir documento";
-      alert(mensaje);
-    }
-  };
-
-  const closeBubble = () => {
-    setActiveBubble(null);
-    setConfirmationMessage(""); // Limpiar el mensaje de confirmación al cerrar
-    setMessageType("success"); // Resetear el tipo de mensaje al cerrar
-  }
 
   const fetchDatos = async () => {
     try {
@@ -125,7 +80,64 @@ const Info = () => {
       return `${monto}€`; // Para cantidades menores a mil
     }
   };
+  
+  const handleSubirDocumento = async (e) => {
+    e.preventDefault();
 
+    if (!archivo) {
+      alert("Debes seleccionar un archivo");
+      return;
+    }
+
+    if (perfilTipo !== "startup") {
+      alert("Solo las startups pueden subir documentos");
+      return;
+    }
+
+    if (!user?.id) {
+      alert("No se ha podido identificar tu perfil de startup");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("archivo", archivo);
+
+    const ext = archivo.name.split('.').pop().toLowerCase();
+    const tipoDetectado =
+      ext === "pdf" ? "pdf" :
+      ["doc", "docx"].includes(ext) ? "word" :
+      ["jpg", "jpeg", "png", "webp"].includes(ext) ? "imagen" :
+      "otro";
+
+    formData.append("tipo", tipoDetectado);
+
+    try {
+      const response = await customAxios.post(
+        `http://localhost:5000/api/perfil/subir-documento/${user.id}`,
+        formData,
+        {
+          withCredentials: true
+        }
+      );
+
+      alert("Documento subido correctamente");
+      closeBubble();
+    } catch (err) {
+      if (err.response) {
+        alert(err.response.data?.message || "Error al subir documento");
+      } else if (err.request) {
+        alert("No se recibió respuesta del servidor");
+      } else {
+        alert("Error desconocido al subir documento");
+      }
+    }
+  };
+
+  const closeBubble = () => {
+    setActiveBubble(null);
+    setConfirmationMessage(""); // Limpiar el mensaje de confirmación al cerrar
+    setMessageType("success"); // Resetear el tipo de mensaje al cerrar
+  }
 
   return (
     <div className="seccion">
@@ -176,21 +188,24 @@ const Info = () => {
       <Bubble
         show={!!activeBubble}
         onClose={closeBubble}
-        message={confirmationMessage} // Pasar el mensaje de confirmación
-        type={messageType} // Pasar el tipo de mensaje (success o error)
+        message={confirmationMessage}
+        type={messageType}
       >
         {activeBubble === "subir-documento" && (
           <div className="document-upload-container">
             <h4>Subir nuevo documento</h4>
 
-            <form onSubmit={handleSubirDocumento}>
+            <form 
+              onSubmit={handleSubirDocumento} 
+              encType="multipart/form-data"      // ← aquí
+            >
               <div
                 className="dropzone"
                 onClick={() => fileInputRef.current.click()}
                 onDragOver={e => e.preventDefault()}
                 onDrop={e => {
                   e.preventDefault();
-                  if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                  if (e.dataTransfer.files?.[0]) {
                     setArchivo(e.dataTransfer.files[0]);
                   }
                 }}
@@ -202,9 +217,9 @@ const Info = () => {
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept=".pdf,.doc,.docx,.ppt,.pptx"
+                  accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png,.webp"
                   className="dropzone-input"
-                  onChange={e => setArchivo(e.target.files[0])}
+                  onChange={e => setArchivo(e.target.files?.[0] || null)}
                 />
               </div>
 

@@ -290,12 +290,12 @@ const ListaGrupos = ({ onGroupSelect }) => {
               <div className="contendor-botn-grupo">
                 <button
                   type="button"
-                  className="botn-eventos"
+                  className="botn-grupos"
                   onClick={closeBubble}
                 >
                   Cancelar
                 </button>
-                <button type="submit" className="botn-eventos enviar">
+                <button type="submit" className="botn-grupos enviar">
                   Crear
                 </button>
               </div>
@@ -336,11 +336,11 @@ const ListaGrupos = ({ onGroupSelect }) => {
               </ul>
             </div>
             <div className="contendor-botn-evento">
-              <button className="botn-eventos" onClick={closeBubble}>
+              <button className="botn-grupos" onClick={closeBubble}>
                 Cerrar
               </button>
               <button
-                className="botn-eventos enviar"
+                className="botn-grupos enviar"
                 onClick={handleUnirGrupo}
                 disabled={!selectedToJoin}
               >

@@ -10,7 +10,7 @@ interface MiniChipsProps {
 
 export function MiniChipsOtro({ label, tooltipText }: MiniChipsProps) {
 return (
-  <Chip className="mini-chip">
+  <Chip className="mini-chip-otro">
     {label}
     {tooltipText && (
         <span className="tooltip">{tooltipText}</span>

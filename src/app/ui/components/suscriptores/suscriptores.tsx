@@ -5,14 +5,16 @@ import customAxios from "@/service/api.mjs";
 const Suscriptores = () => {
   const [suscriptores, setSuscriptores] = useState(0);
   const [inversores, setInversores] = useState(0);
+  const [esStartup, setEsStartup] = useState(false);
 
   const fetchEstadisticas = async () => {
     try {
       const response = await customAxios.get("http://localhost:5000/api/data/usuario", {
         withCredentials: true,
       });
-      // Si el usuario es una startup, obtiene los inversores
+
       if (response.data.startup) {
+        setEsStartup(true);
         setInversores(response.data.inversores);
       }
 
@@ -28,9 +30,9 @@ const Suscriptores = () => {
 
   return (
     <div className="seccion" id="grid2">
-      <p className="numeros">{inversores > 0 ? inversores : suscriptores}</p>
+      <p className="numeros">{esStartup ? inversores : suscriptores}</p>
       <section className="datos">
-        <p>{inversores > 0 ? "Inversores" : "Suscriptores"}</p>
+        <p>{esStartup ? "Inversores" : "Suscriptores"}</p>
       </section>
     </div>
   );
