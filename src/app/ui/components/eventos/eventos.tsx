@@ -6,7 +6,6 @@ import "../bento-inicio/bento-inicio-style.css";
 import customAxios from "@/service/api.mjs";
 import Bubble from "../bubble/bubble";
 import PerfilOtro from "@/app/perfil-otro/page";
-import { IconPlus, IconSearch } from "@tabler/icons-react";
 
 export default function Eventos({ fechaSeleccionada }) {
   const [eventos, setEventos] = useState([]);
@@ -242,10 +241,10 @@ export default function Eventos({ fechaSeleccionada }) {
               </div>
               <div className="form-group">
                 <input
-                  type="date"
+                  type="datetime-local"
                   id="fecha_evento"
+                  name="fecha_evento"
                   className="form-control"
-                  name="fecha_evento" // Añadir el name
                 />
               </div>
               <div className="tipo-opciones">

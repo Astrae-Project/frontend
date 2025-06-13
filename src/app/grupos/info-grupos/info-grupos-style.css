@@ -465,8 +465,13 @@
     margin-bottom: 10px;
     overflow-y: auto;
     overflow-x: hidden;
-    height: 100%;
+    height: 185px;
     width: 80%;
+    gap: 15px;
+}
+
+.lista-usuarios::-webkit-scrollbar {
+    display: none; /* Oculta la barra de desplazamiento */
 }
 
 .disponible-avatar{
@@ -505,8 +510,12 @@
     background-color: #1C1C29;
 }
 
-.usuario-disponible .seleccionado {
-    background-color: #1f1f2d;
+.usuario-disponible.seleccionado {
+    background-color: #161621;
+    border: 2px solid #6e4ba3;
+    box-shadow: 0 0 2px #6e4ba3;
+    outline: none;
+    cursor: pointer;
 }
 
 .info-usuario p {

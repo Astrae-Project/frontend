@@ -100,23 +100,17 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
   const fetchDocumentos = async () => {
     try {
       const response = await customAxios.get(
-        `http://localhost:5000/api/data/usuario/${username}/documentos`,
+        `http://localhost:5000/api/perfil/documento/${usuario.id}`,
         { withCredentials: true }
       );
-
-      if (response.data && Array.isArray(response.data.documentos)) {
-        setDocumentos(response.data.documentos);
-      } else {
-        console.error("No se encontraron documentos o la respuesta no es válida");
-      }
+      setDocumentos(response.data);
     } catch (error) {
       console.error("Error fetching documentos:", error);
     }
   };
-
   useEffect(() => {
       fetchDocumentos();
-    }, [username]);
+    }, []);
 
   // Formato para las inversiones
   const formatInversion = (monto) => {
@@ -235,7 +229,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
         setFormSubmitted(true); // Ocultar el formulario
       }
     };
-    
+
   // Efectos
   useEffect(() => {
     fetchRol();

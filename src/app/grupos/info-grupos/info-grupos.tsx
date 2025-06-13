@@ -536,10 +536,10 @@ const InfoGrupos = ({ groupId }) => {
               </div>
             )}
             <div className="contendor-botn-evento">
-              <button type="button" className="botn-grupos" onClick={closeBubble}>Cerrar</button>
+              <button type="button" className="botn-eventos" onClick={closeBubble}>Cerrar</button>
               <button 
                 type="button" 
-                className="botn-grupos enviar" 
+                className="botn-eventos enviar" 
                 onClick={handleAddMember} 
                 disabled={!selectedUser}
               >

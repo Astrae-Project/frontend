@@ -526,12 +526,12 @@ const ChatGroup = ({ groupId }) => {
               <div className="contendor-botn-grupo">
                 <button
                   type="button"
-                  className="botn-grupos"
+                  className="botn-eventos"
                   onClick={closeBubble}
                 >
                   <p>Cancelar</p>
                 </button>
-                <button type="submit" className="botn-grupos enviar">
+                <button type="submit" className="botn-eventos enviar">
                   <p>Guardar</p>
                 </button>
               </div>

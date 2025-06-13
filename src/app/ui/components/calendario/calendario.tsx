@@ -125,17 +125,18 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
   // Crear evento
   const handleCrearEvento = async (eventData) => {
     try {
-      const response = await customAxios.post("http://localhost:5000/api/evento/crear", eventData);
-      setConfirmationMessage("¡Evento creado con éxito!"); // Mensaje de éxito
-      setMessageType("success"); // Tipo de mensaje de éxito
-      setFormSubmitted(true); // Cambiar el estado para ocultar el formulario
+      await customAxios.post("http://localhost:5000/api/evento/crear", eventData);
+      setConfirmationMessage("¡Evento creado con éxito!");
+      setMessageType("success");
+      setFormSubmitted(true);
     } catch (error) {
       console.error("Error al crear evento:", error);
-      setConfirmationMessage("Hubo un error al crear el evento."); // Mensaje de error
-      setMessageType("error"); // Tipo de mensaje de error
-      setFormSubmitted(true); // Cambiar el estado para ocultar el formulario
+      setConfirmationMessage("Hubo un error al crear el evento.");
+      setMessageType("error");
+      setFormSubmitted(true);
     }
   };
+
   
   // Función para eliminar el evento
   const handleEliminarEvento = async () => {
@@ -185,6 +186,17 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
       setFormSubmitted(true);
     }
   };
+
+  useEffect(() => {
+  if (selectedEvent) {
+    setEditFormData({
+      titulo: selectedEvent.titulo || "",
+      descripcion: selectedEvent.descripcion || "",
+      tipo: selectedEvent.tipo || "publico",
+      fecha_evento: selectedEvent.fecha_evento || "", // Debe ser un string tipo "2025-06-13T14:30"
+    });
+  }
+}, [selectedEvent]);
 
   const handleEditarEvento = async (eventData) => {
     if (!selectedEvent || !selectedEvent.id) {
@@ -330,12 +342,18 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
+
+                const fecha = e.target["fecha_evento"].value;
+                const hora = e.target["hora_evento"].value;
+                const fechaCompleta = `${fecha}T${hora}`; // Combina fecha y hora
+
                 const eventData = {
                   titulo: e.target["titulo"].value,
                   tipo: e.target["tipo"].value,
-                  fecha_evento: e.target["fecha_evento"].value,
+                  fecha_evento: fechaCompleta,
                   descripcion: e.target["descripcion"].value,
                 };
+
                 handleCrearEvento(eventData);
               }}
               className="crear-evento-form"
@@ -358,12 +376,20 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
                   className="form-control"
                 ></textarea>
               </div>
-              <div className="form-group">
+              <div className="form-group datetime-group">
                 <input
                   type="date"
                   id="fecha_evento"
-                  className="form-control"
-                  name="fecha_evento" // Añadir el name
+                  name="fecha_evento"
+                  className="form-control date-input"
+                  required
+                />
+                <input
+                  type="time"
+                  id="hora_evento"
+                  name="hora_evento"
+                  className="form-control time-input"
+                  required
                 />
               </div>
               <div className="tipo-opciones">
@@ -510,13 +536,28 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
                   placeholder="Introduce la descripción del evento"
                 />
               </div>
-              <div className="form-group">
+              <div className="datetime-group">
                 <input
                   type="date"
-                  id="fecha_evento"
-                  className="form-control"
-                  value={editFormData.fecha_evento}
-                  onChange={(e) => setEditFormData({ ...editFormData, fecha_evento: e.target.value })}
+                  className="form-control date-input"
+                  value={editFormData.fecha_evento ? editFormData.fecha_evento.split("T")[0] : ""}
+                  onChange={(e) =>
+                    setEditFormData((prev) => ({
+                      ...prev,
+                      fecha_evento: `${e.target.value}T${prev.fecha_evento?.split("T")[1] || "12:00"}`,
+                    }))
+                  }
+                />
+                <input
+                  type="time"
+                  className="form-control time-input"
+                  value={editFormData.fecha_evento ? editFormData.fecha_evento.split("T")[1] : ""}
+                  onChange={(e) =>
+                    setEditFormData((prev) => ({
+                      ...prev,
+                      fecha_evento: `${prev.fecha_evento?.split("T")[0] || "2025-06-13"}T${e.target.value}`,
+                    }))
+                  }
                 />
               </div>
               <div className="tipo-opciones">
@@ -557,7 +598,6 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
             </form>
           </div>
         )}
-
 
         {activeBubble === "buscar-evento" && !formSubmitted && (
           <div className="contenedor-buscar">
