@@ -161,7 +161,7 @@
 .contenido-vacio{
   display: flex;
   justify-content: center;
-  height: 75%;
+  height: 90%;
   width: 100%;
   gap: 40px;
 }

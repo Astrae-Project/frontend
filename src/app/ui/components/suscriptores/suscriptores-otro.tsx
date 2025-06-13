@@ -5,7 +5,7 @@ import customAxios from "@/service/api.mjs";
 const SuscriptoresOtro = ({ username }) => {
   const [suscriptores, setSuscriptores] = useState(0);
   const [inversores, setInversores] = useState(0);
-  const [error, setError] = useState(null);
+  const [esStartup, setEsStartup] = useState(false);
 
   const fetchEstadisticas = async () => {
     if (!username) return; // No intentar la solicitud si username no está definido
@@ -15,18 +15,14 @@ const SuscriptoresOtro = ({ username }) => {
         withCredentials: true,
       });
 
-      // Extraer inversores si es una startup
-      const inversoresData = response.data?.inversores || 0;
-      setInversores(inversoresData);
+       if (response.data.startup) {
+        setEsStartup(true);
+        setInversores(response.data.inversores);
+      }
 
-      // Extraer suscriptores
-      const suscriptoresData = response.data?.suscriptores || 0;
-      setSuscriptores(suscriptoresData);
-
-      setError(null); // Limpiar cualquier error previo
+      setSuscriptores(response.data.suscriptores);
     } catch (error) {
-      console.error("Error al obtener estadísticas:", error);
-      setError("Ocurrió un problema al cargar los datos.");
+      console.error("Error fetching estadísticas:", error);
     }
   };
 
@@ -36,16 +32,10 @@ const SuscriptoresOtro = ({ username }) => {
 
   return (
     <div className="seccion" id="grid2">
-      {error ? (
-        <p className="error">{error}</p>
-      ) : (
-        <>
-          <p className="numeros">{inversores > 0 ? inversores : suscriptores}</p>
-          <section className="datos">
-            <p>{inversores > 0 ? "Inversores" : "Suscriptores"}</p>
-          </section>
-        </>
-      )}
+      <p className="numeros">{esStartup ? inversores : suscriptores}</p>
+      <section className="datos">
+        <p>{esStartup ? "Inversores" : "Suscriptores"}</p>
+      </section>
     </div>
   );
 };

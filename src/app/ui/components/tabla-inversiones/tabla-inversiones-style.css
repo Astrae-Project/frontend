@@ -104,6 +104,11 @@
 .estado-rechazado {
   background-color: #e53e3e; /* Rojo para rechazado */
 }
+
+.estado-contraoferta {
+  background-color: #6a3d8f; /* Azul para contraoferta */
+  cursor: pointer;
+}
   
 /* Columnas específicas */
 .col-startup, .col-estado, .col-porcentaje, .col-monto, .col-fecha {
@@ -116,4 +121,90 @@
     width: 50%;
   }
 }
-  
+
+.oferta-card {
+  width: 90%;
+  height: 90%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.oferta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #2a2a2d;
+  padding-bottom: 8px;
+}
+
+.oferta-header h3 {
+  font-size: 18px;
+  color: #ffffff;
+  margin: 0;
+}
+
+.oferta-fecha {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.oferta-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.oferta-dato {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  padding: 4px 0;
+}
+
+.dato-label {
+  font-weight: 500;
+  color: #cbd5e1;
+}
+
+.dato-valor {
+  color: #f1f5f9;
+}
+
+.oferta-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.btn {
+  position: relative;
+    width: auto;
+    height: 30px;
+    background-color: #1C1C29;
+    border: 1px solid #1E202F;
+    border-radius: 5px;
+    font-size: 13px;
+    padding-top: 1.2%;
+    padding-left: 5%;
+    padding-right: 5%;
+    transition: background-color 0.3s ease;
+}
+
+.btn-rechazar {
+  background-color: #dc2626;
+}
+
+.btn-rechazar:hover {
+  background-color: #b91c1c;
+}
+
+.btn-aceptar {
+  background-color: #6e4ba3;
+}
+
+.btn-aceptar:hover {
+  background-color: #563085;
+}

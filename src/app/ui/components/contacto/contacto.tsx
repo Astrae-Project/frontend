@@ -120,7 +120,7 @@ const InformacionContacto = ({ contacto, fetchContacto }) => {
         <ul className="contacto-lista">
           {contactoItems}
           {contactoItems.length < 5 && (
-            <div className="contenido-vacio">
+            <div className="contenido-vacio1">
               <li className="añadir" id="añadir-contacto" onClick={() => setActiveBubble('añadir-contacto')}>
                 <IconPlus />
                 <p>Añadir</p>
@@ -129,7 +129,7 @@ const InformacionContacto = ({ contacto, fetchContacto }) => {
           )}
         </ul>
       ) : (
-        <div className="contenido-vacio">
+        <div className="contenido-vacio1">
           <li className="añadir boton-grupo">
             <p>Añadir</p>
           </li>

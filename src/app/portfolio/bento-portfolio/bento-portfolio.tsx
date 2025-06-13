@@ -43,34 +43,6 @@ export function BentoGridPortfolio() {
     fetchStartups();
   }, []);
 
-  const handleInvestClick = async () => {
-    if (loading) return;
-    setLoading(true);
-
-    try {
-      await customAxios.post(
-        `http://localhost:5000/api/invest/oferta`,
-        {
-          id_startup: selectedStartup.id,
-          porcentaje_ofrecido: selectedPercentage,
-          monto_ofrecido: selectedAmount,
-        },
-        { withCredentials: true }
-      );
-      setConfirmationMessage("Oferta realizada con éxito!");
-      setMessageType("success");
-      setFormSubmitted(true);
-    } catch (error) {
-      console.error("Error al realizar la oferta:", error);
-      setConfirmationMessage("Hubo un error al realizar la oferta.");
-      setMessageType("error");
-      setFormSubmitted(true);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-
   const handleSelectStartup = (startup) => {
     setSelectedStartup((prevSelected) => (prevSelected?.id === startup.id ? null : startup));
   };

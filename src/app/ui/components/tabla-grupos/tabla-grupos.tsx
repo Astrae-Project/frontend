@@ -152,7 +152,7 @@ const TablaGrupos = () => {
           </ul>
         </div>
       ) : (
-        <div className="contenido-vacio" id="grupos-vacio">
+        <div className="contenido-vacio2" id="grupos-vacio">
           <button onClick={() => setActiveBubble("crear-grupo")} className="boton-grupo"><IconPlus /><p>Crear</p></button>
           <button onClick={() => setActiveBubble("unir-grupo")} className="boton-grupo"><IconSearch /><p>Unir</p></button>
         </div>
