@@ -71,8 +71,9 @@ export function BentoGridPortfolio() {
                 <button className="boton-invertir" onClick={() => setActiveBubble("crear-inversion")}><IconPlus></IconPlus></button>
             </div>
             <StartupsSeguidas></StartupsSeguidas>
-  
-            <GraficaInversorPortfolio></GraficaInversorPortfolio>
+            <div className="apartado3">
+              <GraficaInversorPortfolio></GraficaInversorPortfolio>
+            </div>
             <div className="apartado3">
                 <TablaPortfolio></TablaPortfolio>
             </div>

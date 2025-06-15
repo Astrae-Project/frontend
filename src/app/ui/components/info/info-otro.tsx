@@ -13,6 +13,9 @@ import {
   IconStar,
   IconStarFilled,
   IconUserFilled,
+  IconFileTypeDocx,
+  IconFileTypeDoc,
+  IconFileTypePdf,
 } from "@tabler/icons-react";
 
 import "../../../perfil/bento-perfil/bento-perfil-style.css";
@@ -50,6 +53,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
   const [comentario, setComentario] = useState("");
   const [hovered, setHovered] = useState(0);
   const [documentos, setDocumentos] = useState([]);
+  const [selectedDocumento, setSelectedDocumento] = useState(null);
 
   // Fetch del rol del usuario
   const fetchRol = async () => {
@@ -98,6 +102,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
   };
 
   const fetchDocumentos = async () => {
+    if (!usuario || !usuario.id) return;
     try {
       const response = await customAxios.get(
         `http://localhost:5000/api/perfil/documento/${usuario.id}`,
@@ -109,8 +114,52 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
     }
   };
   useEffect(() => {
+    if (usuario && perfilTipo === "startup") {
       fetchDocumentos();
-    }, []);
+    }
+  }, [usuario, perfilTipo]);
+
+  const handleDownloadDocument = async (documento) => {
+    if (!documento?.id) {
+      console.error("No document selected or invalid document ID");
+      return;
+    }
+
+    try {
+      const response = await customAxios.get(
+        `http://localhost:5000/api/perfil/documento/download/${documento.id}`,
+        {
+          responseType: "blob",
+          withCredentials: true,
+        }
+      );
+
+      const blob = new Blob([response.data]);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", documento.nombre || "documento.pdf");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading document:", error);
+    }
+  };
+
+  const renderIconByTipo = (tipo) => {
+    switch (tipo.toLowerCase()) {
+      case "pdf":
+        return <IconFileTypePdf className="documento-icono-img"/>;
+      case "doc":
+      case "docx":
+        return <IconFileTypeDoc className="documento-icono-img" />;
+      default:
+        return <IconFileDownloadFilled className="documento-icono-img" />;
+    }
+  };
+
 
   // Formato para las inversiones
   const formatInversion = (monto) => {
@@ -238,6 +287,10 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
   useEffect(() => {
     if (username) fetchDatos();
   }, [username]);
+
+  const handleSelectDocument = (documento) => {
+    setSelectedDocumento((prevSelected) => (prevSelected?.id === documento.id ? null : documento));
+  };
 
   const closeBubble = () => {
     setActiveBubble(null);
@@ -375,17 +428,39 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
             ) : (
               <ul className="lista-documentos">
                 {documentos.map((doc) => (
-                  <li key={doc.id} className="documento-item">
-                    <span>{doc.nombre}</span>
-                    <a href={doc.url} target="_blank" rel="noopener noreferrer" className="botn-eventos">
-                      Ver / Descargar
-                    </a>
+                  <li
+                    key={doc.id}
+                    className={
+                      selectedDocumento?.id === doc.id
+                        ? "documento-item selected"
+                        : "documento-item"
+                    }
+                    onClick={() => handleSelectDocument(doc)}
+                  >
+                    <div className="documento-icono">
+                      {renderIconByTipo(doc.tipo)}
+                    </div>
+                    <div className="documento-lista">
+                      <p className="nombre-documento">{doc.nombre}</p>
+                    </div>
                   </li>
                 ))}
               </ul>
             )}
             <div className="contendor-botn-evento">
-              <button className="botn-eventos" onClick={closeBubble}>Cerrar</button>
+              <button className="botn-eventos" onClick={closeBubble}>
+                Cerrar
+              </button>
+              <button
+                onClick={() => {
+                  handleDownloadDocument(selectedDocumento);
+                }}
+                disabled={!selectedDocumento}
+                rel="noopener noreferrer"
+                className="botn-eventos enviar"
+              >
+                Descargar
+              </button>
             </div>
           </div>
         )}

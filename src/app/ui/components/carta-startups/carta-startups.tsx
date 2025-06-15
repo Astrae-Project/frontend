@@ -9,43 +9,51 @@ export const Carta = ({ startup, onClick }) => {
   
     if (monto >= 1e6) {
       const millones = monto / 1e6;
-      return `${millones % 1 === 0 ? millones.toFixed(0) : millones.toFixed(1)}M€`; // Para millones
+      return `${millones % 1 === 0 ? millones.toFixed(0) : millones.toFixed(1)}M€`;
     } else if (monto >= 1e3) {
       const miles = monto / 1e3;
-      return `${miles % 1 === 0 ? miles.toFixed(0) : miles.toFixed(1)}K€`; // Para miles
+      return `${miles % 1 === 0 ? miles.toFixed(0) : miles.toFixed(1)}K€`;
     } else {
-      return `${monto}€`; // Para cantidades menores a mil
+      return `${monto}€`;
     }
   };
 
   return (
-    <button className="carta" onClick={onClick}>
-      <div className="carta-header">
-        <div className="carta-icono">
-          <img src={startup?.usuario?.avatar || "/default-avatar.png"} alt="Avatar de startup" className="carta-avatar" />
+    <button className="carta1" onClick={onClick}>
+      {/* HEADER */}
+      <div className="carta-header1">
+        <div className="carta-icono1">
+          <img
+            src={startup?.avatar || "/default-avatar.png"}
+            alt="Avatar"
+            className="carta-avatar1"
+          />
         </div>
-        <div className="carta-info">
-          <p className="carta-nombre">{startup?.nombre}</p>
-          <p className="carta-username">@{startup?.usuario?.username}</p>
+        <div className="carta-info1">
+          <p className="carta-nombre1">{startup?.nombre || 'Nombre desconocido'}</p>
+          <p className="carta-username1">@{startup.usuario.username}</p>
         </div>
       </div>
-      <div className="carta-detalles">
 
-      <div className='division-tarjeta' id='riesgo'>
-          <p className="carta-titulo">Riesgo:</p>
-          <p className="carta-valoracion">{formatInversion(startup?.valoracion)}</p>
+      {/* VALORACIÓN PRINCIPAL */}
+      <div className="division-tarjeta valoracion-principal1">
+        <p className="carta-titulo1">Valoración</p>
+        <p className="carta-valoracion1">{formatInversion(startup?.valoracion)}</p>
+      </div>
+
+      {/* INFO SECUNDARIA */}
+      <div className="division-tarjeta info-secundaria1">
+        <div>
+          <p className="carta-subtitulo1">Sector</p>
+          <p className="carta-subdato1">{startup?.sector || '—'}</p>
         </div>
-        <div className='division-tarjeta' id='sector'>
-          <p className="carta-titulo">Sector:</p>
-          <p className="carta-valoracion">{startup?.sector}</p>
+        <div>
+          <p className="carta-subtitulo1">Etapa</p>
+          <p className="carta-subdato1">{startup?.estado_financiacion || '—'}</p>
         </div>
-        <div className='division-tarjeta' id='valoracion'>
-          <p className="carta-titulo">Valoración:</p>
-          <p className="carta-valoracion">{formatInversion(startup?.valoracion)}</p>
-        </div>
-        <div className='division-tarjeta' id='porcentaje'>
-          <p className="carta-titulo">Porcentaje:</p>
-          <p className="carta-valoracion">{startup?.porcentaje_disponible}%</p>
+        <div>
+          <p className="carta-subtitulo1">Disponible %</p>
+          <p className="carta-subdato1">{startup?.porcentaje_disponible || '—'}%</p>
         </div>
       </div>
     </button>

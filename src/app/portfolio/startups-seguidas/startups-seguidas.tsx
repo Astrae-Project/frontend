@@ -6,7 +6,7 @@ import { CartaSeguidas } from "../../ui/components/carta-startups/carta-startups
 import "./startups-seguidas-style.css";
 import PerfilOtro from "@/app/perfil-otro/page";
 import customAxios from "@/service/api.mjs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Bubble from "@/app/ui/components/bubble/bubble";
 
 const StartupsSeguidas = () => {

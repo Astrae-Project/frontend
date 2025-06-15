@@ -1,112 +1,107 @@
-.carta1 {
+.carta {
   position: relative;
   display: grid;
-  grid-template-rows: auto 1.2fr 1.2fr;
+  grid-template-rows: auto 1fr 1fr ;
   height: 100%;
-  width: 230px;            /* Ajustado un poco menor */
+  width: 230px;
   background-color: #10101A;
   border: 1px solid #151522;
-  border-radius: 16px;     /* Ligeramente más suave */
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-  margin-right: 12px;
-  padding: 14px;           /* Mantiene espaciado cómodo */
+  border-radius: 18px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  margin-right: 13px;
+  padding: 16px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  align-items: end;
+  align-items: end; /* Aquí */
 }
 
-.carta1:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
+.carta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
 }
 
 /* HEADER */
-.carta-header1 {
+.carta-header {
   display: flex;
   align-items: center;
 }
 
-.carta-icono1 {
+.carta-icono {
   display: flex;
-  height: 60px;            /* Ligero ajuste */
-  width: 60px;
+  height: 50px;
+  width: 50px;
   background-color: #1C1C29;
   border-radius: 10px;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
   overflow: hidden;
 }
 
-.carta-avatar1 {
+.carta-avatar {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.carta-info1 {
-  position: relative;
-  top: 3px;
+.carta-info {
   margin-left: 12px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-self: end;
 }
 
-.carta-nombre1 {
-  text-align: left;
-  font-size: 17px;
+.carta-nombre {
+  margin: 0;
+  font-size: 16px;
   color: #FFF;
 }
 
-.carta-username1 {
-  text-align: left;
-  font-size: 14px;
+.carta-username {
+  margin: 2px 0 0 0;
+  font-size: 12px;
   color: #888888;
 }
 
 /* VALORACIÓN PRINCIPAL */
-.valoracion-principal1 {
+.valoracion-principal {
   display: flex;
   align-items: baseline;
-  gap: 10px;
-  margin-top: 16px;
+  gap: 8px;
 }
 
-.carta-titulo1 {
+.valoracion-principal .carta-titulo {
   margin: 0;
   font-size: 12px;
   color: #888888;
 }
 
-.carta-valoracion1 {
+.valoracion-principal .carta-valoracion {
   margin: 0;
-  font-size: 20px;
+  font-size: 18px;
   color: #FFF;
 }
 
 /* INFO SECUNDARIA */
-.info-secundaria1 {
+.info-secundaria {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
-  margin-top: 16px;
 }
 
-.carta-subtitulo1 {
+.carta-subtitulo {
   margin: 0;
   font-size: 10px;
   color: #888888;
 }
 
-.carta-subdato1 {
-  margin: 2px 0 0;
+.carta-subdato {
+  margin: 2px 0 0 0;
   font-size: 12px;
   color: #CCC;
 }
 
-/* EXTRA INFO (si se utiliza) */
-.extra-info1 {
+/* EXTRA INFO */
+.extra-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -114,10 +109,10 @@
   border-top: 1px solid #2a2a3d;
 }
 
-.extra-info1 .carta-subtitulo1 {
+.extra-info .carta-subtitulo {
   font-size: 10px;
 }
 
-.extra-info1 .carta-subdato1 {
+.extra-info .carta-subdato {
   font-size: 12px;
 }

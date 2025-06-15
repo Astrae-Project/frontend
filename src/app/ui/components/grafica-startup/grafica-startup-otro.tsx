@@ -73,6 +73,13 @@ const GraficaStartupOtro = ({ username }) => {
     fetchValorStartup(); // Poblar gráfica al cargar el componente
   }, [username]);
 
+  const formatInversionRaw = (monto) => {
+    if (monto == null) return 'N/A';
+    const value = Number(monto);
+    if (isNaN(value)) return 'N/A';
+    return `${value.toLocaleString('es-ES', { maximumFractionDigits: 0 })}€`;
+  };
+
   return (
     <div className="seccion" id="grafica-startup">
       <div className="titulo-principal">
@@ -91,7 +98,7 @@ const GraficaStartupOtro = ({ username }) => {
           top: '1.5px', // Mover hacia abajo
         }
         }>
-          {totalStartupValue.toLocaleString('es-ES')}€ 
+          {formatInversionRaw(totalStartupValue)}
         </span>
         <p className='cambio-valor'
         style={{

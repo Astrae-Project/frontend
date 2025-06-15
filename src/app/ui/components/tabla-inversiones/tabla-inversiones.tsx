@@ -14,10 +14,10 @@ const TablaInversiones = () => {
   useEffect(() => {
     const fetchOfertas = async () => {
       try {
-        const response = await customAxios.get(
-          "http://localhost:5000/api/data/ofertas"
-        );
-        setOfertas(response.data);
+        const { data } = await customAxios.get("http://localhost:5000/api/data/ofertas", {
+          withCredentials: true,
+        });
+        setOfertas(data);
       } catch (err) {
         setError(err.response?.data?.message || err.message);
       } finally {
@@ -27,139 +27,116 @@ const TablaInversiones = () => {
     fetchOfertas();
   }, []);
 
-  const formatoValor = (valor) =>
-    valor == null
+  const formatoValor = (v) =>
+    v == null
       ? "N/A"
       : new Intl.NumberFormat("es-ES", {
           style: "currency",
           currency: "EUR",
           minimumFractionDigits: 0,
-        }).format(valor);
+        }).format(v);
 
-  const getEstadoClass = (estado) => {
-    switch (estado) {
-      case "Aceptada":
-        return "estado-aceptado";
-      case "Pendiente":
-        return "estado-pendiente";
-      case "Rechazada":
-        return "estado-rechazado";
-      case "Contraoferta":
-        return "estado-contraoferta";
-      default:
-        return "";
-    }
-  };
+  const getEstadoClass = (e) => ({
+    Aceptada: "estado-aceptado",
+    Pendiente: "estado-pendiente",
+    Rechazada: "estado-rechazado",
+    Contraoferta: "estado-contraoferta",
+  }[e] || "");
 
-  const formatoFecha = (fecha) => {
-    if (!fecha) return "N/A";
-    return new Date(fecha).toLocaleDateString("es-ES", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-    });
-  };
+  const formatoFecha = (f) =>
+    f
+      ? new Date(f).toLocaleDateString("es-ES", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        })
+      : "N/A";
 
   const openBubble = (oferta) => {
-    if (oferta.estado === "Contraoferta") {
-      setActiveBubble(oferta);
-    }
+    if (oferta.estado === "Contraoferta") setActiveBubble(oferta);
   };
-
   const closeBubble = () => {
     setActiveBubble(null);
     setConfirmationMessage("");
     setMessageType("");
   };
 
-const handleAccept = async () => {
-  if (!activeBubble) return;
+  const handleAccept = async () => {
+    try {
+      const { id, inversor } = activeBubble;
+      await customAxios.put(
+        `http://localhost:5000/api/invest/contraoferta/${id}/aceptar/${inversor.id_usuario}`,
+        {},
+        { withCredentials: true }
+      );
+      setConfirmationMessage("Oferta aceptada con éxito!");
+      setMessageType("success");
+    } catch {
+      setConfirmationMessage("Error al aceptar la oferta.");
+      setMessageType("error");
+    }
+  };
+  const handleReject = async () => {
+    try {
+      const { id, inversor } = activeBubble;
+      await customAxios.put(
+        `http://localhost:5000/api/invest/contraoferta/${id}/rechazar/${inversor.id_usuario}`,
+        {},
+        { withCredentials: true }
+      );
+      setConfirmationMessage("Oferta rechazada con éxito!");
+      setMessageType("success");
+    } catch {
+      setConfirmationMessage("Error al rechazar la oferta.");
+      setMessageType("error");
+    }
+  };
 
-  try {
-    const { id: ofertaId, inversor } = activeBubble;
-    const inversorId = inversor?.id_usuario;
-
-    await customAxios.put(`http://localhost:5000/api/invest/contraoferta/${ofertaId}/aceptar/${inversorId}`,
-      {},
-      { withCredentials: true }
-    );
-
-    setConfirmationMessage("Oferta aceptada con éxito!");
-    setMessageType("success");
-  } catch (err) {
-    setConfirmationMessage("Hubo un error al aceptar la oferta.");
-    setMessageType("error");
-  }
-};
-
-const handleReject = async () => {
-  if (!activeBubble) return;
-
-  try {
-    const { id: ofertaId, inversor } = activeBubble;
-    const userId = inversor?.id_usuario;
-
-    await customAxios.put(`http://localhost:5000/api/invest/contraoferta/${ofertaId}/rechazar/${userId}`,
-      {},
-      { withCredentials: true }
-    );
-
-    setConfirmationMessage("Oferta rechazada con éxito!");
-    setMessageType("success");
-  } catch (err) {
-    setConfirmationMessage("Hubo un error al rechazar la oferta.");
-    setMessageType("error");
-  }
-};
-
-
-  if (loading) {
+  if (loading)
     return <div className="no-ofertas">Cargando ofertas…</div>;
-  }
-
-  if (error) {
-    return <div className="no-ofertas">Error: {error}</div>;
-  }
-
-  if (ofertas.length === 0) {
+  if (error) return <div className="no-ofertas">Error: {error}</div>;
+  if (!ofertas.length)
     return (
       <div className="no-ofertas">
-        <h1>No hay ofertas disponibles</h1>
+        <h2>No hay ofertas disponibles</h2>
       </div>
     );
-  }
 
   return (
-    <div className="apartado3" id="tabla-inversores">
-      <table className="custom-table">
-        <thead className="titulos-tabla">
-          <tr>
-            <th className="col-startup"><p>Startup</p></th>
-            <th className="col-monto"><p>Monto</p></th>
-            <th className="col-porcentaje"><p>Porcentaje</p></th>
-            <th className="col-estado"><p>Estado</p></th>
-            <th className="col-fecha"><p>Fecha</p></th>
-          </tr>
-        </thead>
-        <tbody>
-          {ofertas.map((oferta) => (
-            <tr key={oferta.id}>
-              <td><p>{oferta.startup?.usuario.username || "Desconocido"}</p></td>
-              <td><p>{formatoValor(oferta.monto_ofrecido)}</p></td>
-              <td><p>{oferta.porcentaje_ofrecido}%</p></td>
-              <td>
-                <div
-                  className={`estado-container ${getEstadoClass(oferta.estado)}`} 
-                  onClick={() => openBubble(oferta)}
-                >
-                  <p>{oferta.estado}</p>
-                </div>
-              </td>
-              <td><p>{formatoFecha(oferta.fecha_creacion)}</p></td>
+    <div className="apartado3 tabla-inversiones-wrapper">
+      <div className="custom-table-container">
+        <table className="custom-table">
+          <thead>
+            <tr>
+              <th>Startup</th>
+              <th>Monto</th>
+              <th>Ofrecido %</th>
+              <th>Estado</th>
+              <th>Fecha</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {ofertas.map((oferta) => (
+              <tr key={oferta.id}>
+                <td>{oferta.startup?.usuario.username}</td>
+                <td>{formatoValor(oferta.monto_ofrecido)}</td>
+                <td>{oferta.porcentaje_ofrecido}%</td>
+                <td>
+                  <span
+                    className={`estado-badge ${getEstadoClass(
+                      oferta.estado
+                    )}`}
+                    onClick={() => openBubble(oferta)}
+                  >
+                    {oferta.estado}
+                  </span>
+                </td>
+                <td>{formatoFecha(oferta.fecha_creacion)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <Bubble
         show={!!activeBubble}
@@ -170,40 +147,34 @@ const handleReject = async () => {
         {activeBubble && (
           <div className="oferta-card">
             <div className="oferta-header">
-              <h3>Contraoferta Recibida</h3>
-              <span className="oferta-fecha">
-                {formatoFecha(activeBubble.fecha_creacion)}
-              </span>
+              <h3>Contraoferta</h3>
+              <span>{formatoFecha(activeBubble.fecha_creacion)}</span>
             </div>
-
             <div className="oferta-body">
-              <div className="oferta-dato">
-                <span className="dato-label">Startup</span>
-                <span className="dato-valor">
-                  {activeBubble.startup?.usuario.username || "Desconocido"}
-                </span>
+              <div>
+                <strong>Startup:</strong>{" "}
+                {activeBubble.startup.usuario.username}
               </div>
-
-              <div className="oferta-dato">
-                <span className="dato-label">Monto Ofrecido</span>
-                <span className="dato-valor">
-                  {formatoValor(activeBubble.contraoferta_monto)}
-                </span>
+              <div>
+                <strong>Monto:</strong>{" "}
+                {formatoValor(activeBubble.contraoferta_monto)}
               </div>
-
-              <div className="oferta-dato">
-                <span className="dato-label">Porcentaje Ofrecido</span>
-                <span className="dato-valor">
-                  {activeBubble.contraoferta_porcentaje}%
-                </span>
+              <div>
+                <strong>% Ofrecido:</strong>{" "}
+                {activeBubble.contraoferta_porcentaje}%
               </div>
             </div>
-
             <div className="oferta-footer">
-              <button className="btn btn-rechazar" onClick={handleReject}>
+              <button
+                className="btn btn-rechazar"
+                onClick={handleReject}
+              >
                 Rechazar
               </button>
-              <button className="btn btn-aceptar" onClick={handleAccept}>
+              <button
+                className="btn btn-aceptar"
+                onClick={handleAccept}
+              >
                 Aceptar
               </button>
             </div>

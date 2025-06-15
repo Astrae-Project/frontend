@@ -12,8 +12,9 @@ import EventosyCalendarioOtro1 from "@/app/ui/components/eventos-calendario1/eve
 import MovimientosRecientesOtro from "@/app/ui/components/movimientos-recientes/movimientos-recientes-perfil-otro";
 import TablaPortfolioOtro from "@/app/ui/components/tabla-portfolio/tabla-portfolio-otro";
 import GraficaStartupOtro from "@/app/ui/components/grafica-startup/grafica-startup-otro";
-import DatosStartupOtro from "@/app/ui/components/datos-startup/datos-startup-otro";
+import DatosStartupOtro from "@/app/ui/components/datos-startup/timeline-startup-otro";
 import customAxios from "@/service/api.mjs";
+import TimelineStartupOtro from "@/app/ui/components/datos-startup/timeline-startup-otro";
 
 
 export function BentoGridPerfilOtro({ username }) {
@@ -86,7 +87,7 @@ export function BentoGridPerfilOtro({ username }) {
           <>
             <InfoOtro username={username} />
             <GraficaStartupOtro username={username} />
-            <DatosStartupOtro username={username}/>
+            <TimelineStartupOtro username={username}/>
             <SeguidoresOtro username={username} />
             <SuscriptoresOtro username={username} />
             <InversionesRealizadasOtro username={username} />

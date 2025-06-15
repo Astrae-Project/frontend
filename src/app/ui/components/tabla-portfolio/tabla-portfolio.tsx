@@ -39,12 +39,20 @@ const TablaPortfolio = () => {
     return classes;
   };
 
-  // Format investment value
   const formatInversion = (monto) => {
     if (monto === null) return 'N/A';
-    if (monto >= 1e6) return `${(monto / 1e6).toString().replace(/\.?0+$/, '')}M€`;
-    if (monto >= 1e3) return `${(monto / 1e3).toString().replace(/\.?0+$/, '')}K€`;
-    return `${monto} €`;
+
+    if (monto >= 1e6) {
+      const millones = monto / 1e6;
+      return `${(Math.round(millones * 10) / 10).toString().replace(/\.0$/, '')}M€`;
+    }
+
+    if (monto >= 1e3) {
+      const miles = monto / 1e3;
+      return `${(Math.round(miles * 10) / 10).toString().replace(/\.0$/, '')}K€`;
+    }
+
+    return `${monto.toLocaleString("es-ES")} €`;
   };
 
   // Open bubble

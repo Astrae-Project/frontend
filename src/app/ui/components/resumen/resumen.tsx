@@ -6,6 +6,7 @@ const ResumenPortfolio = () => {
   const [portfolio, setPortfolio] = useState({});
   const [distribucionSectores, setDistribucionSectores] = useState([]);
   const [cambiosPorcentuales, setCambiosPorcentuales] = useState(null);
+  const [cambioUltimo, setCambioUltimo] = useState(null);
 
   const fetchPortfolio = async () => {
     try {
@@ -15,20 +16,16 @@ const ResumenPortfolio = () => {
       );
       const data = response.data;
       setPortfolio(data);
-      setDistribucionSectores(
-        calcularDistribucionPorSector(data.inversiones || [])
-      );
+      setDistribucionSectores(calcularDistribucionPorSector(data.inversiones || []));
 
       const historialResponse = await customAxios.get(
         "http://localhost:5000/api/data/historicos",
         { withCredentials: true }
       );
-      setCambiosPorcentuales(
-        calcularCambioPorcentual(
-          Number(data.valor_total),
-          historialResponse.data.historico || []
-        )
-      );
+      const historico = historialResponse.data.historico || [];
+
+      setCambiosPorcentuales(calcularCambioPorcentual(Number(data.valor_total), historico));
+      setCambioUltimo(calcularCambioUltimo(Number(data.valor_total), historico));
     } catch (error) {
       console.error("Error fetching portfolio:", error);
     }
@@ -40,7 +37,7 @@ const ResumenPortfolio = () => {
 
   function calcularDistribucionPorSector(inversiones) {
     const conteo = {};
-    inversiones.forEach(inv => {
+    inversiones.forEach((inv) => {
       const sector = inv.startup?.sector;
       if (sector) conteo[sector] = (conteo[sector] || 0) + 1;
     });
@@ -49,69 +46,110 @@ const ResumenPortfolio = () => {
     return Object.entries(conteo).map(([sector, count]) => ({
       sector,
       count,
-      percentage: Number((count / total * 100).toFixed(2))
+      percentage: Number(((count / total) * 100).toFixed(2)),
     }));
   }
 
   function calcularCambioPorcentual(valorActual, historico) {
-    if (!historico || historico.length === 0 || valorActual == null) return null;
-  
+    if (!historico || valorActual == null) return null;
+
     const historialOrdenado = historico
       .map((registro) => ({
         ...registro,
         fecha: new Date(registro.fecha),
         valoracion: Number(registro.valoracion),
       }))
-      .sort((a, b) => a.fecha - b.fecha); // ordenamos de más antiguo a más reciente
-  
+      .sort((a, b) => a.fecha - b.fecha);
+
+    const ahora = new Date();
+
     const obtenerCambio = (dias) => {
       const fechaLimite = new Date();
-      fechaLimite.setDate(fechaLimite.getDate() - dias);
-  
-      const registrosEnRango = historialOrdenado.filter(
-        (registro) => registro.fecha >= fechaLimite
+      fechaLimite.setDate(ahora.getDate() - dias);
+
+      const registrosPrevios = historialOrdenado.filter(
+        (registro) => registro.fecha <= fechaLimite
       );
-  
-      if (registrosEnRango.length === 0) return 0;
-  
-      const primerRegistro = registrosEnRango[0];
-      const valorPasado = primerRegistro.valoracion;
-      if (valorPasado === 0) return 0;
-  
+
+      if (registrosPrevios.length === 0) return null;
+
+      const registroBase = registrosPrevios[registrosPrevios.length - 1];
+      const valorPasado = registroBase.valoracion;
+      if (valorPasado === 0) return null;
+
       return ((valorActual - valorPasado) / valorPasado) * 100;
     };
-  
+
     return {
       semana: obtenerCambio(7),
       mes: obtenerCambio(30),
       año: obtenerCambio(365),
     };
-  }  
+  }
 
-  const formatoPorcentaje = v => {
-    if (v == null) return "N/A";
+  // NUEVA función para calcular cambio % respecto al último valor histórico previo al actual
+  function calcularCambioUltimo(valorActual, historico) {
+    if (!historico || valorActual == null) return null;
+
+    const historialOrdenado = historico
+      .map((registro) => ({
+        ...registro,
+        fecha: new Date(registro.fecha),
+        valoracion: Number(registro.valoracion),
+      }))
+      .sort((a, b) => a.fecha - b.fecha);
+
+    // Buscar el último valor histórico anterior al actual
+    // Suponemos que valorActual es el más reciente
+    let ultimoValor = null;
+    for (let i = historialOrdenado.length - 1; i >= 0; i--) {
+      if (historialOrdenado[i].valoracion !== valorActual) {
+        ultimoValor = historialOrdenado[i].valoracion;
+        break;
+      }
+    }
+
+    if (ultimoValor == null || ultimoValor === 0) return null;
+
+    return ((valorActual - ultimoValor) / ultimoValor) * 100;
+  }
+
+  const formatoPorcentaje = (v) => {
+    if (v == null) return "—";
     const num = Number(v);
     const color = num > 0 ? "rgb(67,222,67)" : num < 0 ? "rgb(222,67,67)" : "#888";
-    return <span style={{ color, fontSize: 15 }}>{num.toFixed(2)}%</span>;
+    return <span style={{ color, fontSize: 15, marginLeft: 8 }}>{num.toFixed(2)}%</span>;
   };
 
-  const formatoValor = v => {
+  const formatoPorcentajeGrande = (v) => {
+    if (v == null) return "—";
+    const num = Number(v);
+    const color = num > 0 ? "rgb(67,222,67)" : num < 0 ? "rgb(222,67,67)" : "#888";
+    return <span style={{ color, fontSize: 11 }}>{num.toFixed(2)}%</span>;
+  };
+
+  const formatoValor = (v) => {
     if (v == null) return "N/A";
     return new Intl.NumberFormat("es-ES", {
       style: "currency",
       currency: "EUR",
-      minimumFractionDigits: 0
+      minimumFractionDigits: 0,
     }).format(v);
   };
 
-  const defaultColors = ["#4caf50", "#2196f3", "#ff9800", "#e91e63", "#9c27b0", "#3f51b5"];
-  const getColorForSector = i => defaultColors[i % defaultColors.length];
+  const defaultColors = ["#5A6EEB","#8F44D6","#3BAE9D","#D98C5F","#6C6F93","#A25BCF" ];
+  const getColorForSector = (i) => defaultColors[i % defaultColors.length];
 
   return (
     <div className="apartado3" id="resumen">
-      <div className="titulos">
+      <div className="titulos" style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
         <h2 className="titulos-valor">Valor Total:</h2>
-        <p className="valor-total">{formatoValor(portfolio.valor_total)}</p>
+        <p className="valor-total" style={{ display: "flex", alignItems: "center" }}>
+          {formatoValor(portfolio.valor_total)}
+        </p>
+        <p className="cambio-ultimo" style={{ display: "flex", alignItems: "center" }}>
+          {formatoPorcentajeGrande(cambioUltimo)}
+        </p>
       </div>
 
       {cambiosPorcentuales && (
@@ -129,7 +167,8 @@ const ResumenPortfolio = () => {
               <span
                 key={item.sector}
                 className="sector-label"
-                style={{ width: `${item.percentage}%` }}>
+                style={{ width: `${item.percentage}%` }}
+              >
                 {item.sector} ({item.percentage}%)
               </span>
             ))}
@@ -139,7 +178,17 @@ const ResumenPortfolio = () => {
               <div
                 key={item.sector}
                 className="progress-segment"
-                style={{ width: `${item.percentage}%`, backgroundColor: getColorForSector(idx) }} />
+                style={{
+                  width: `${item.percentage}%`,
+                  backgroundColor: getColorForSector(idx),
+                  borderRadius:
+                    idx === 0
+                      ? "4px 0 0 4px"
+                      : idx === distribucionSectores.length - 1
+                      ? "0 4px 4px 0"
+                      : "0",
+                }}
+              />
             ))}
           </div>
         </div>

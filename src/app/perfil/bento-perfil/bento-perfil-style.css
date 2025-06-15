@@ -243,14 +243,14 @@
   text-overflow: ellipsis;
 }
 
-.avatar-imagen, .grupo-avatar, .portfolio-imagen{
+.avatar-imagen, .grupo-avatar, .portfolio-imagen, .documento-imagen{
   position: relative;
   width: 100%;
   height: 100%;
   border-radius: 10px;
 }
 
-.avatar-imagen img, .grupo-avatar img, .portfolio-imagen img{
+.avatar-imagen img, .grupo-avatar img, .portfolio-imagen img, .documento-imagen img{
   width: 100%;
   height: 100%;
   border-radius: 10px;
@@ -365,7 +365,7 @@
   display: flex;
 }
 
-.movimiento-icono, .portfolio-icono, .grupo-icono, .contacto-icono, .movimiento-icono1{
+.movimiento-icono, .portfolio-icono, .grupo-icono, .contacto-icono, .movimiento-icono1, .documento-icono{
   position: relative;
   display: flex;
   height: 32.5px;
@@ -437,7 +437,8 @@
   font-size: 9px;
   color: #888888; /* Un gris claro */
   top: 11px;
-  margin-left: -31px;
+  margin-left: -41px !important;
+  margin-right: 10px;
   text-overflow: ellipsis;
   white-space: nowrap; /* Evita saltos de línea */
   overflow: hidden;
@@ -471,7 +472,7 @@
 }
 
 #titulo-valor{
-  margin-left: 25%;
+  margin-left: 20%;
 }
 
 .porcentaje {
@@ -857,6 +858,72 @@ ul :first-child{
   font-size: 0.9rem;
   word-break: break-word;
   width: 80%;
+}
+
+.documento-item {
+  display: flex;
+  align-items: center;
+  padding: 0px 10px;
+  width: 400px;
+  height: 52px;
+  background-color: #14141f;
+  margin-top: 14.3px;  
+  border-radius: 10px;
+  flex-shrink: 0;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+/* Estilo para el li seleccionado */
+.documento-item.selected {
+  background-color: #161621;
+  border: 1px solid #6e4ba3;
+  box-shadow: 0 0 3px #6e4ba3;
+  outline: none;
+  cursor: pointer;
+}
+
+.documento-item.selected:hover {
+  background-color: #14141f82;
+}
+
+.documento-item:hover {
+  background-color: #14141f82;
+}
+
+.lista-documentos {
+  padding: 10px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+  margin-bottom: 10px;
+}
+
+.documento-icono {
+  flex-shrink: 0;
+}
+
+.documento-icono-img {
+  width: 20px;
+  height: 20px;
+}
+
+.documento-lista {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.nombre-documento {
+  position: relative;
+  top: 3px;
+  font-size: 14px;
+  color: #e9e9e9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 10px;
 }
 
 

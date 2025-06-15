@@ -1,116 +1,158 @@
-import customAxios from '@/service/api.mjs';
 import React, { useEffect, useState } from 'react';
+import customAxios from '@/service/api.mjs';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
+  Title,
   Tooltip,
-  LineElement,
-  PointElement,
+  Legend,
   Filler,
+  PointElement,
+  LineElement,
 } from 'chart.js';
-import '../grafica-startup/grafica-startup-style.css';
+import './grafica-inversor-style.css';
 
-ChartJS.register(CategoryScale, LinearScale, Tooltip, LineElement, PointElement, Filler);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+  PointElement,
+  LineElement
+);
+
+const rangosDisponibles = [
+  { label: '1M', value: 30 },
+  { label: '3M', value: 90 },
+  { label: '6M', value: 180 },
+  { label: '1A', value: 365 },
+  { label: 'Todo', value: Infinity },
+];
 
 const GraficaInversorPortfolio = () => {
-  const [data, setData] = useState({ labels: [], datasets: [] });
-  const [isLoading, setIsLoading] = useState(true);
-
-  const fetchValorPortfolio = async () => {
-    try {
-      const response = await customAxios.get('/api/data/historicos', { withCredentials: true });
-      const historico = response.data.historico || [];
-
-      const labels = historico.map(item => new Date(item.fecha).toLocaleDateString());
-      const values = historico.map(item => Number(item.valoracion));
-
-      setData({
-        labels,
-        datasets: [
-          {
-            label: 'Valor del portfolio',
-            data: values,
-            borderColor: 'rgb(142, 110, 190)',
-            backgroundColor: 'rgba(144, 113, 190, 0.1)',
-            fill: true,
-            tension: 0.4,
-            pointRadius: 0,
-            pointHitRadius: 10,
-            borderWidth: 2,
-          },
-        ],
-      });
-    } catch (err) {
-      console.error('Error fetching historics:', err);
-      setData({ labels: [], datasets: [] });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [fullData, setFullData] = useState({ labels: [], values: [] });
+  const [chartData, setChartData] = useState(null);
+  const [rango, setRango] = useState(Infinity);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchValorPortfolio();
+    const fetchHistorico = async () => {
+      try {
+        const response = await customAxios.get(
+          'http://localhost:5000/api/data/historicos',
+          { withCredentials: true }
+        );
+        const historico = Array.isArray(response.data.historico)
+          ? response.data.historico
+          : [];
+        if (!historico.length) {
+          setFullData({ labels: [], values: [] });
+          return;
+        }
+        const sorted = historico
+          .map(r => ({
+            fecha: new Date(r.fecha),
+            valor: Number(r.valoracion)
+          }))
+          .sort((a, b) => a.fecha - b.fecha);
+
+        const labels = sorted.map(r =>
+          r.fecha.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })
+        );
+        const values = sorted.map(r => r.valor);
+        setFullData({ labels, values });
+      } catch (err) {
+        console.error('Error fetching historico:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchHistorico();
   }, []);
 
-  if (isLoading) {
-    return <div className="grafica-loading">Cargando evolución…</div>;
-  }
+  useEffect(() => {
+    if (!fullData.labels.length) {
+      setChartData(null);
+      return;
+    }
+    const total = fullData.labels.length;
+    const start = rango === Infinity ? 0 : Math.max(total - rango, 0);
+    const labels = fullData.labels.slice(start);
+    const dataSet = fullData.values.slice(start);
+    setChartData({
+      labels,
+      datasets: [
+        {
+          label: 'Valor del portfolio',
+          data: dataSet,
+          borderColor: '#8E6EBE',
+          backgroundColor: 'rgba(144,113,190,0.2)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 3,
+          pointHoverRadius: 6,
+        },
+      ],
+    });
+  }, [fullData, rango]);
 
-  if (data.labels.length === 0) {
-    return <div className='apartado3'><div className="grafica-empty">Sin datos para mostrar</div></div>
+  if (loading) {
+    return <div className="grafica-empty">Cargando datos del portfolio…</div>;
+  }
+  if (!chartData) {
+    return <div className="grafica-empty">No hay datos históricos para mostrar</div>;
   }
 
   return (
-    <div className="apartado3">
-      <Line
-        data={data}
-        options={{
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: {
-            duration: 800,
-            easing: 'easeOutQuart',
-          },
-          plugins: {
-            tooltip: {
-              enabled: true,
-              mode: 'index',
-              intersect: false,
-              callbacks: {
-                label: ctx =>
-                  `${ctx.parsed.y.toLocaleString('es-ES', {
-                    style: 'currency',
-                    currency: 'EUR',
-                  })}`,
+    <div className="grafica-wrapper">
+      <div className="grafica-header">
+        <h3 className="grafica-titulo">Evolución del portfolio</h3>
+        <div className="selector-rango">
+          {rangosDisponibles.map(({ label, value }) => (
+            <button
+              key={value}
+              className={rango === value ? 'activo' : ''}
+              onClick={() => setRango(value)}
+              aria-label={`Últimos ${label}`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="chart-container">
+        <Line
+          data={chartData}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: '#222',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                padding: 8,
+                cornerRadius: 4,
               },
-              backgroundColor: 'rgba(20,20,25,0.9)',
-              titleFont: { size: 11 },
-              bodyFont: { size: 12 },
-              padding: 8,
             },
-            legend: {
-              display: false,
-            },
-          },
-          scales: {
-            x: {
-              ticks: { color: 'rgba(255,255,255,0.6)', font: { size: 9 } },
-              grid: { color: 'rgba(220,220,220,0.03)' },
-            },
-            y: {
-              ticks: {
-                color: 'rgba(255,255,255,0.6)',
-                font: { size: 9 },
-                callback: value => `${value / 1000}k`,
+            scales: {
+              x: {
+                ticks: { color: '#ccc', maxRotation: 0, minRotation: 0 },
+                grid: { color: 'rgba(255,255,255,0.05)' },
               },
-              grid: { color: 'rgba(220,220,220,0.03)' },
-              beginAtZero: false,
+              y: {
+                ticks: { color: '#ccc' },
+                grid: { color: 'rgba(255,255,255,0.05)' },
+              },
             },
-          },
-        }}
-      />
+          }}
+        />
+      </div>
     </div>
   );
 };

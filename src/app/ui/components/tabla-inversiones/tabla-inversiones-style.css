@@ -1,127 +1,120 @@
+/* Wrapper del componente (mantiene el background de .apartado3) */
+.tabla-inversiones-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Mensajes de carga / error / vacío */
 .no-ofertas {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
-  font-size: 16px;
-  color: #E5E7EB; /* Texto claro */
+  padding: 24px;
+  text-align: center;
+  color: #aaa;
+  font-size: 1rem;
 }
 
+/* Contenedor de la tabla con scroll suave y SIN scrollbar visible */
 .custom-table-container {
   width: 100%;
-  max-height: 400px;
-  background: transparent;
-  border-radius: 12px;
-  padding: 1rem;
-  overflow: hidden;
-}
-
-.custom-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
-  color: #E5E7EB; /* Texto claro */
-  display: block;
-  max-height: 400px;
+  max-height: 300px;
   overflow-y: auto;
-  background: #10101A; /* Fondo principal */
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
-.custom-table p {
-  position: relative;
-  top: 1.2px;
-}
-
-
-.custom-table::-webkit-scrollbar {
-  display: none;
-}
-
+/* Ocultar scrollbar WebKit */
 .custom-table-container::-webkit-scrollbar {
   display: none;
 }
+/* Ocultar scrollbar Firefox */
+.custom-table-container {
+  scrollbar-width: none;
+}
 
-.custom-table thead {
+/* Tabla estilizada */
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #eee;
+  font-size: 0.9rem;
+}
+
+/* Encabezado sticky y fondo idéntico al wrapper */
+.custom-table thead th {
   position: sticky;
   top: 0;
+  background: #10101A;
+  border-bottom: 2px solid #252534;
+  letter-spacing: 0.03em;
+  padding-top: 12px;
+  padding-right: 12px;
+  padding-bottom: 10px;
+  padding-left: 12px;
   text-align: center;
-  z-index: 1;
-  background-color: #10101A; /* Encabezado ligeramente más claro */
-  border-bottom: 1px solid #232332; /* Bordes oscuros pero perceptibles */
 }
 
-.custom-table thead th {
-  padding: 10px 16px;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 12px;
-  background-color: #10101A;
-  border-bottom: 1px solid #232332; /* Bordes oscuros pero perceptibles */
-  color: #E5E7EB;
-  min-width: 120px;
-}
-
-.custom-table tr {
-  width: 100%;
-  border-bottom: 1px solid #232332; /* Bordes oscuros pero perceptibles */
-}
-
+/* Filas con zebra stripes y hover */
 .custom-table tbody tr {
-  border-bottom: 1px solid #232332;
   transition: background 0.2s ease-in-out;
-  height: 42px;
 }
 
-.custom-table tbody td {
-  padding: 10px 16px;
-  border-right: 1px solid #232332;
-  color: #E5E7EB;
+.custom-table tbody tr:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.03);
 }
 
-.custom-table tbody td:last-child {
+.custom-table tbody tr:hover {
+  background: rgba(142, 110, 190, 0.1);
+}
+
+/* Celdas */
+.custom-table th,
+.custom-table td {
+  padding: 10px 12px;
+  border-right: 1px solid #252534;
+}
+
+.custom-table th:last-child,
+.custom-table td:last-child {
   border-right: none;
-  font-weight: 500;
-  color: #ffffff;
 }
 
-/* Clases para el estado */
-.estado-container {
-  padding: 3px 0px;
+/* Badges de estado */
+.estado-badge {
+  display: inline-block;
+  padding: 3px 14px;
   border-radius: 6px;
-  text-align: center;
+  font-size: 0.8rem;
   font-weight: 500;
+  transition: transform 0.15s ease;
+  width: 95px;
 }
 
 .estado-aceptado {
-  background-color: #38a169; /* Verde para aceptada */
+  background-color: #38a169;
+  color: #fff;
 }
-  
+
 .estado-pendiente {
-  background-color: #ed9836; /* Naranja para pendiente */
+  background-color: #ed9836;
+  color: #fff;
 }
-  
+
 .estado-rechazado {
-  background-color: #e53e3e; /* Rojo para rechazado */
+  background-color: #e53e3e;
+  color: #fff;
 }
 
 .estado-contraoferta {
-  background-color: #6a3d8f; /* Azul para contraoferta */
+  background-color: #6a3d8f;
+  color: #fff;
   cursor: pointer;
-}
-  
-/* Columnas específicas */
-.col-startup, .col-estado, .col-porcentaje, .col-monto, .col-fecha {
-  width: 25%; /* Distribuye el ancho de las columnas por igual */
-}
- 
-/* Opcional: media queries para pantallas pequeñas */
-@media (max-width: 768px) {
-  .col-startup, .col-estado, .col-porcentaje, .col-monto, .col-fecha {
-    width: 50%;
-  }
+  transform: scale(1.05);
 }
 
+/* Mantener oferta-card y burbuja sin cambios */
 .oferta-card {
   width: 90%;
   height: 90%;
@@ -179,18 +172,18 @@
   margin-top: 12px;
 }
 
+/* Botones */
 .btn {
-  position: relative;
-    width: auto;
-    height: 30px;
-    background-color: #1C1C29;
-    border: 1px solid #1E202F;
-    border-radius: 5px;
-    font-size: 13px;
-    padding-top: 1.2%;
-    padding-left: 5%;
-    padding-right: 5%;
-    transition: background-color 0.3s ease;
+  width: auto;
+  height: 30px;
+  background-color: #1C1C29;
+  border: 1px solid #1E202F;
+  border-radius: 5px;
+  font-size: 13px;
+  padding: 0 12px;
+  transition: background-color 0.3s ease;
+  color: #fff;
+  cursor: pointer;
 }
 
 .btn-rechazar {

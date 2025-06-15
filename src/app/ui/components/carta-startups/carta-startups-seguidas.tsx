@@ -1,47 +1,60 @@
 import React from 'react';
-import './carta-startups-style.css';
+import './carta-startups-seguidas-style.css';
 import GraficaStartupOtroSimple from '../grafica-startup/grafica-startup-otro-simple';
 
 export const CartaSeguidas = ({ startup, onClick }) => {
-  // Función para formatear la inversión/valoración
+  // Formateo de valoración
   const formatInversion = (monto) => {
-    if (monto === null || monto === undefined) return 'N/A';
+    if (monto == null) return 'N/A';
     if (monto >= 1e6) {
       const millones = monto / 1e6;
-      return `${millones % 1 === 0 ? millones.toFixed(0) : millones.toFixed(1)}M€`;
-    } else if (monto >= 1e3) {
-      const miles = monto / 1e3;
-      return `${miles % 1 === 0 ? miles.toFixed(0) : miles.toFixed(1)}K€`;
-    } else {
-      return `${monto}€`;
+      return `${(Math.round(millones * 10) / 10).toString().replace(/\.0$/, '')}M€`;
     }
+    if (monto >= 1e3) {
+      const miles = monto / 1e3;
+      return `${(Math.round(miles * 10) / 10).toString().replace(/\.0$/, '')}K€`;
+    }
+    return `${monto.toLocaleString('es-ES')} €`;
   };
 
-  // Extraemos la información de la startup real desde el array 'startups'
-  const startupData = (startup.startups && startup.startups.length > 0) ? startup.startups[0] : {};
+  const data = startup.startups?.[0] || {};
 
   return (
     <button className="carta" onClick={onClick}>
+      {/* HEADER */}
       <div className="carta-header">
         <div className="carta-icono">
-          <img 
-            src={startup?.avatar || "/default-avatar.png"} 
-            alt="Avatar de startup" 
-            className="carta-avatar" 
+          <img
+            src={startup.avatar || "/default-avatar.png"}
+            alt="Avatar"
+            className="carta-avatar"
           />
         </div>
         <div className="carta-info">
-          <p className="carta-nombre">{startupData?.nombre || "Nombre desconocido"}</p>
-          <p className="carta-username">@{startup?.username || "Desconocido"}</p>
+          <p className="carta-nombre">{data.nombre || 'Nombre desconocido'}</p>
+          <p className="carta-username">@{startup.username}</p>
         </div>
       </div>
-      <div className="carta-detalles">
-        <div className='division-tarjeta' style={{ display: 'none'}}>
-          <GraficaStartupOtroSimple username={startup?.username} />
+
+      {/* VALORACIÓN PRINCIPAL */}
+      <div className="division-tarjeta valoracion-principal">
+        <p className="carta-titulo">Valoración</p>
+        <p className="carta-valoracion">{formatInversion(data.valoracion)}</p>
+      </div>
+
+      {/* INFO SECUNDARIA */}
+      <div className="division-tarjeta info-secundaria">
+        <div>
+          <p className="carta-subtitulo">Sector</p>
+          <p className="carta-subdato">{data.sector || '—'}</p>
         </div>
-        <div className='division-tarjeta'>
-          <p className="carta-titulo">Valoración</p>
-          <p className="carta-valoracion">{formatInversion(startupData?.valoracion)}</p>
+        <div>
+          <p className="carta-subtitulo">Etapa</p>
+          <p className="carta-subdato">{data.estado_financiacion || '—'}</p>
+        </div>
+        <div>
+          <p className="carta-subtitulo">Disponible %</p>
+          <p className="carta-subdato">{data.porcentaje_disponible || '—'}%</p>
         </div>
       </div>
     </button>
