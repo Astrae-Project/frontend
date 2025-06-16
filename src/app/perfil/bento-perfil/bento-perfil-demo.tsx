@@ -12,9 +12,9 @@ import TablaPortfolio from "../../ui/components/tabla-portfolio/tabla-portfolio"
 import Info from "../../ui/components/info/info";
 import MovimientosRecientes from "../../ui/components/movimientos-recientes/movimientos-recientes-perfil";
 import customAxios from "@/service/api.mjs";
-import DatosStartup from "@/app/ui/components/datos-startup/timeline-startup";
+import DatosStartup from "@/app/ui/components/timeline-startup/timeline-startup";
 import GraficaStartup from "@/app/ui/components/grafica-startup/grafica-startup";
-import TimelineStartup from "@/app/ui/components/datos-startup/timeline-startup";
+import TimelineStartup from "@/app/ui/components/timeline-startup/timeline-startup";
 
 
 export function BentoGridPerfil() {

@@ -17,6 +17,7 @@ import { OfertasPendientes } from "../ofertas-pendientes/ofertas-pendientes";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import FormularioInversion from "../stripe-form/stripe-form";
+import HitosDashboard from "../timeline-startup/hitos-dashborad";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -322,7 +323,7 @@ export function BentoGridInicio({username}) {
             <GraficaStartup />
           </div>
           <div className="apartado">
-            <MovimientosRecientes1 />
+            <HitosDashboard />
           </div>
           <div className="apartado">
             <EventosyCalendario />
