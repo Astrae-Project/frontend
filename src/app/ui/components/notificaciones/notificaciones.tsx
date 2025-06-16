@@ -129,7 +129,7 @@ const Notificaciones = () => {
               {notificaciones.map((_, index) => (
                 <div
                   key={index}
-                  className={`punto ${index === actualIndex ? "activo" : ""}`}
+                  className={`puntito ${index === actualIndex ? "activo" : ""}`}
                   onClick={() => irANotificacion(index)}
                 ></div>
               ))}

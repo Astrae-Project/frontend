@@ -32,7 +32,7 @@
     margin-bottom: 6px;
   }
   
-  .punto {
+  .puntito {
     width: 5px;
     height: 5px;
     border: 1px solid #393941;
@@ -40,7 +40,7 @@
     cursor: pointer;
   }
   
-  .punto.activo {
+  .puntito.activo {
     background-color: #393941;
   }
   

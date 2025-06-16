@@ -276,7 +276,7 @@
   scroll-behavior: smooth;
   display: flex;
   align-items: center;
-   justify-content: center;
+  justify-content: center;
 }
 
 .movimiento-descripcion{

@@ -1,8 +1,10 @@
-/* timeline-startup-style.css */
-
-/* Contenedor general */
 #timeline {
-  padding: 2rem 6%;
+  padding-bottom: 12px;
+  padding-top: 50px;
+  padding-left: 6%;
+  padding-right: 6%;
+  border: none;
+  align-items: normal;
 }
 
 /* Lista como contenedor centrado */
@@ -12,14 +14,16 @@
   padding: 0;
   position: relative;
   padding-left: 6px;     /* espacio fijo a la izquierda para la línea */
+  gap: 5px;
+  overflow-x: hidden;
 }
 
 /* Cada ítem con altura fija */
 .timeline-item {
   position: relative;
   display: flex;
-  align-items: center;
-  height: 80px;           /* altura fija */
+  align-items: center; /* antes era center */
+  height: 50px;           /* altura fija */
   margin-bottom: 0;
   padding-left: 0;        /* contenido empieza justo después del 40px de .timeline */
   width: 100%;
@@ -28,10 +32,10 @@
 /* El punto (hueco) */
 .punto {
   position: absolute;
-  left: 0;
-  top: calc(50% - 8px);
-  width: 16px;
-  height: 16px;
+  left: 1.5px;
+  top: calc(50% - 5px);
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background-color: #10101A;         /* hueco */
   border: 3px solid gray;         /* grosor del borde */
@@ -43,9 +47,9 @@
 .conector {
   position: absolute;
   left: 6.3px;
-  top: calc(50% + 8px);
+  top: calc(50% + 5px);
   width: 4px;
-  height: 80px;
+  height: 85%;
   background: linear-gradient(to bottom, var(--current-color), var(--next-color));
   transition: background 0.4s ease;
   z-index: 1;
@@ -59,6 +63,8 @@
 
 /* Contenido transparente, sin background */
 .contenido-hito {
+  position: relative;
+  top: 8.5px;
   margin-left: 30px;
   flex: 1;
   max-width: calc(100% - 1rem);
@@ -73,17 +79,16 @@
 
 /* Texto principal */
 .titulo-hito {
-  font-size: 13px;
+  font-size: 11.5px;
   color: #eee;
-  margin: 0 0 0.25rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
+
 
 /* Fecha secundaria */
 .fecha-hito {
-  font-size: 11px;
+  font-size: 8px;
   color: #aaa;
   margin: 0;
 }
@@ -98,12 +103,7 @@
   transform: scale(1.3);
 }
 
-/* Responsive */
-@media (max-width: 640px) {
-  #timeline { padding: 1.5rem 4%; }
-  .timeline-item { height: 70px; }
-  .conector { height: 70px; }
-  .punto { width: 14px; height: 14px; top: calc(50% - 7px); border-width: 2px; }
-  .titulo-hito { font-size: 0.95rem; }
-  .fecha-hito { font-size: 0.8rem; }
+.timeline-item.apagado {
+  opacity: 0.5;
+  filter: grayscale(25%);
 }
