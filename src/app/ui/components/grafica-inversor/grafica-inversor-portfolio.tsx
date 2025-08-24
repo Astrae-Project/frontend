@@ -34,10 +34,11 @@ const rangosDisponibles = [
 ];
 
 const GraficaInversorPortfolio = () => {
-  const [fullData, setFullData] = useState({ labels: [], values: [] });
-  const [chartData, setChartData] = useState(null);
-  const [rango, setRango] = useState(Infinity);
+  const [fullData, setFullData] = useState<{ labels: string[]; values: number[]; dates: number[] }>({ labels: [], values: [], dates: [] });
+  const [chartData, setChartData] = useState<any>(null);
+  const [rango, setRango] = useState<number>(Infinity);
   const [loading, setLoading] = useState(true);
+  const [lastPoint, setLastPoint] = useState<{ label?: string; value?: number }>({});
 
   useEffect(() => {
     const fetchHistorico = async () => {
@@ -64,7 +65,8 @@ const GraficaInversorPortfolio = () => {
           r.fecha.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })
         );
         const values = sorted.map(r => r.valor);
-        setFullData({ labels, values });
+        const dates = sorted.map(r => r.fecha.getTime());
+        setFullData({ labels, values, dates });
       } catch (err) {
         console.error('Error fetching historico:', err);
       } finally {
@@ -75,14 +77,29 @@ const GraficaInversorPortfolio = () => {
   }, []);
 
   useEffect(() => {
-    if (!fullData.labels.length) {
+    if (!fullData.labels.length || !fullData.dates.length) {
       setChartData(null);
       return;
     }
-    const total = fullData.labels.length;
-    const start = rango === Infinity ? 0 : Math.max(total - rango, 0);
-    const labels = fullData.labels.slice(start);
-    const dataSet = fullData.values.slice(start);
+    const total = fullData.dates.length;
+    const lastTimestamp = fullData.dates[total - 1];
+    let startIndex = 0;
+    if (rango === Infinity) {
+      startIndex = 0;
+    } else {
+      const msPerDay = 24 * 60 * 60 * 1000;
+      const cutoff = lastTimestamp - rango * msPerDay;
+      startIndex = fullData.dates.findIndex(ts => ts >= cutoff);
+      if (startIndex === -1) {
+        // if no point meets the cutoff, show the last available point
+        startIndex = total - 1;
+      }
+    }
+    const labels = fullData.labels.slice(startIndex);
+    const dataSet = fullData.values.slice(startIndex);
+    const lastLabel = labels.length ? labels[labels.length - 1] : undefined;
+    const lastValue = dataSet.length ? dataSet[dataSet.length - 1] : undefined;
+    setLastPoint({ label: lastLabel, value: lastValue });
     setChartData({
       labels,
       datasets: [
@@ -110,8 +127,8 @@ const GraficaInversorPortfolio = () => {
   return (
     <div className="grafica-wrapper">
       <div className="grafica-header">
-        <h3 className="grafica-titulo">Evolución del portfolio</h3>
-        <div className="selector-rango">
+        <h3 className="grafica-titulo">Evolución de portfolio</h3>
+          <div className="selector-rango">
           {rangosDisponibles.map(({ label, value }) => (
             <button
               key={value}

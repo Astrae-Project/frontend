@@ -122,7 +122,6 @@ const ChatGroup = ({ groupId }) => {
         const response = await customAxios.get(
           `http://localhost:5000/api/grupos/ver/${numericGroupId}/mensajes`
         );
-        console.log("Mensajes recibidos:", response.data.mensajes);
         setMessages(response.data.mensajes);
       } catch (error) {
         console.error("Error obteniendo mensajes:", error);
@@ -146,7 +145,6 @@ const ChatGroup = ({ groupId }) => {
     const newSocket = io(SOCKET_SERVER_URL, { withCredentials: true });
     newSocket.on("connect", () => {
       newSocket.emit("joinRoom", numericGroupId);
-      console.log(`Socket ${newSocket.id} unido a la sala ${numericGroupId}`);
     });
     newSocket.on("newMessage", (data) => {
       setMessages((prevMessages) => [...prevMessages, data]);

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import "./resumen-style.css";
 
 const ResumenPortfolio = () => {
-  const [portfolio, setPortfolio] = useState({});
+  const [portfolio, setPortfolio] = useState<any>({});
   const [distribucionSectores, setDistribucionSectores] = useState([]);
   const [cambiosPorcentuales, setCambiosPorcentuales] = useState(null);
   const [cambioUltimo, setCambioUltimo] = useState(null);
@@ -22,10 +22,44 @@ const ResumenPortfolio = () => {
         "http://localhost:5000/api/data/historicos",
         { withCredentials: true }
       );
-      const historico = historialResponse.data.historico || [];
+      const historicoRaw = historialResponse.data.historico || [];
 
-      setCambiosPorcentuales(calcularCambioPorcentual(Number(data.valor_total), historico));
-      setCambioUltimo(calcularCambioUltimo(Number(data.valor_total), historico));
+      // Helper para parsear números que puedan venir como strings con comas/u otros símbolos
+      const parseNumberSafe = (v: any) => {
+        if (v == null) return null;
+        if (typeof v === "number") return v;
+        if (typeof v === "string") {
+          // eliminar espacios y símbolos comunes de moneda
+          let s = v.replace(/\s+/g, "").replace(/[^0-9,\.\-]/g, "");
+          // si viene con comas como separador decimal (p. ej. "1.234,56"), convertir a formato JS
+          const hasComma = s.indexOf(",") !== -1;
+          const hasDot = s.indexOf(".") !== -1;
+          if (hasComma && hasDot) {
+            // asumir que el punto es separador de miles y la coma decimal
+            s = s.replace(/\./g, "").replace(/,/, ".");
+          } else if (hasComma && !hasDot) {
+            s = s.replace(/,/, ".");
+          }
+          const n = parseFloat(s);
+          return Number.isFinite(n) ? n : null;
+        }
+        return null;
+      };
+
+      const historialOrdenado = historicoRaw
+        .map((registro: any) => ({
+          ...registro,
+          fecha: new Date(registro.fecha),
+          valoracion: parseNumberSafe(registro.valoracion),
+        }))
+        .filter((r: any) => r.fecha && r.valoracion != null)
+        .sort((a: any, b: any) => a.fecha.getTime() - b.fecha.getTime());
+
+      const valorActualParsed = parseNumberSafe(data?.valor_total);
+
+      setCambiosPorcentuales(calcularCambioPorcentual(valorActualParsed, historialOrdenado));
+      setCambioUltimo(calcularCambioUltimo(historialOrdenado));
+
     } catch (error) {
       console.error("Error fetching portfolio:", error);
     }
@@ -35,49 +69,54 @@ const ResumenPortfolio = () => {
     fetchPortfolio();
   }, []);
 
-  function calcularDistribucionPorSector(inversiones) {
-    const conteo = {};
+  function calcularDistribucionPorSector(inversiones: any[]) {
+    const conteo: Record<string, number> = {};
     inversiones.forEach((inv) => {
-      const sector = inv.startup?.sector;
+      const sector = inv?.startup?.sector;
       if (sector) conteo[sector] = (conteo[sector] || 0) + 1;
     });
-    const total = inversiones.length;
+    const total: number = inversiones.length || 0;
     if (total === 0) return [];
-    return Object.entries(conteo).map(([sector, count]) => ({
-      sector,
-      count,
-      percentage: Number(((count / total) * 100).toFixed(2)),
-    }));
+    return Object.entries(conteo).map(([sector, count]) => {
+      const pct = Math.round((Number(count) / total) * 10000) / 100; // dos decimales
+      return {
+        sector,
+        count: Number(count),
+        percentage: pct,
+      };
+    });
   }
 
-  function calcularCambioPorcentual(valorActual, historico) {
-    if (!historico || valorActual == null) return null;
+  function calcularCambioPorcentual(valorActual: number, historico: any[]) {
+  if (!historico || valorActual == null) return null;
 
-    const historialOrdenado = historico
-      .map((registro) => ({
-        ...registro,
-        fecha: new Date(registro.fecha),
-        valoracion: Number(registro.valoracion),
-      }))
-      .sort((a, b) => a.fecha - b.fecha);
+  // `historico` ya viene ordenado cronológicamente y con campos procesados
+  const historialOrdenado = historico;
+  const ahora = new Date();
 
-    const ahora = new Date();
+    const obtenerCambio = (dias: number) => {
+      const fechaObjetivo = new Date(ahora);
+      fechaObjetivo.setDate(ahora.getDate() - dias);
 
-    const obtenerCambio = (dias) => {
-      const fechaLimite = new Date();
-      fechaLimite.setDate(ahora.getDate() - dias);
+      // Preferir el registro más cercano anterior o igual a la fecha objetivo
+      const registrosAntes = historialOrdenado.filter((r) => r.fecha <= fechaObjetivo);
+      let registroBase = null;
 
-      const registrosPrevios = historialOrdenado.filter(
-        (registro) => registro.fecha <= fechaLimite
-      );
+      if (registrosAntes.length > 0) {
+        registroBase = registrosAntes[registrosAntes.length - 1]; // más reciente antes de la fecha objetivo
+      } else {
+        // si no hay registros antes, tomar el primero después de la fecha objetivo
+        const registrosDespues = historialOrdenado.filter((r) => r.fecha > fechaObjetivo);
+        registroBase = registrosDespues.length > 0 ? registrosDespues[0] : null;
+      }
 
-      if (registrosPrevios.length === 0) return null;
+      if (!registroBase) return null;
 
-      const registroBase = registrosPrevios[registrosPrevios.length - 1];
-      const valorPasado = registroBase.valoracion;
-      if (valorPasado === 0) return null;
-
-      return ((valorActual - valorPasado) / valorPasado) * 100;
+  const valorPasado = Number(registroBase.valoracion);
+  if (!Number.isFinite(valorPasado) || valorPasado === 0) return null;
+  const va = Number(valorActual);
+  if (!Number.isFinite(va)) return null;
+  return ((va - valorPasado) / valorPasado) * 100;
     };
 
     return {
@@ -87,45 +126,54 @@ const ResumenPortfolio = () => {
     };
   }
 
-  // NUEVA función para calcular cambio % respecto al último valor histórico previo al actual
-  function calcularCambioUltimo(valorActual, historico) {
-    if (!historico || valorActual == null) return null;
+  function calcularCambioUltimo(historico) {
+    if (!historico || historico.length < 2) return null;
 
-    const historialOrdenado = historico
-      .map((registro) => ({
-        ...registro,
-        fecha: new Date(registro.fecha),
-        valoracion: Number(registro.valoracion),
-      }))
-      .sort((a, b) => a.fecha - b.fecha);
+    // ya viene ordenado cronológicamente
+    const ultimoHistorico = historico[historico.length - 1];
+    const anteriorHistorico = historico[historico.length - 2];
 
-    // Buscar el último valor histórico anterior al actual
-    // Suponemos que valorActual es el más reciente
-    let ultimoValor = null;
-    for (let i = historialOrdenado.length - 1; i >= 0; i--) {
-      if (historialOrdenado[i].valoracion !== valorActual) {
-        ultimoValor = historialOrdenado[i].valoracion;
-        break;
-      }
-    }
+    const valorUltimo = ultimoHistorico.valoracion;
+    const valorAnterior = anteriorHistorico.valoracion;
 
-    if (ultimoValor == null || ultimoValor === 0) return null;
+    if (valorAnterior == null || valorAnterior === 0) return null;
 
-    return ((valorActual - ultimoValor) / ultimoValor) * 100;
+    return ((valorUltimo - valorAnterior) / valorAnterior) * 100;
   }
 
   const formatoPorcentaje = (v) => {
-    if (v == null) return "—";
-    const num = Number(v);
-    const color = num > 0 ? "rgb(67,222,67)" : num < 0 ? "rgb(222,67,67)" : "#888";
-    return <span style={{ color, fontSize: 15, marginLeft: 8 }}>{num.toFixed(2)}%</span>;
+  if (v == null) return "—";
+  const num = Number(v);
+  if (!Number.isFinite(num)) return "—";
+  const color = num > 0 ? "rgb(67,222,67)" : num < 0 ? "rgb(222,67,67)" : "#888";
+  const texto = num > 0 ? `+${num.toFixed(2)}%` : `${num.toFixed(2)}%`;
+  return <span style={{ color, fontSize: 13}}>{texto}</span>;
   };
 
   const formatoPorcentajeGrande = (v) => {
-    if (v == null) return "—";
-    const num = Number(v);
-    const color = num > 0 ? "rgb(67,222,67)" : num < 0 ? "rgb(222,67,67)" : "#888";
-    return <span style={{ color, fontSize: 11 }}>{num.toFixed(2)}%</span>;
+  if (v == null) return "—";
+  const num = Number(v);
+  if (!Number.isFinite(num)) return "—";
+  const color = num > 0 ? "rgb(67,222,67)" : num < 0 ? "rgb(222,67,67)" : "#888";
+  const texto = num > 0 ? `+${num.toFixed(2)}%` : `${num.toFixed(2)}%`;
+  return <span style={{ color, fontSize: 11 }}>{texto}</span>;
+  };
+
+  // Render del cambio respecto al último histórico: flecha y color según signo
+  const renderCambioUltimo = (v) => {
+  if (v == null) return <span style={{ color: "#888", fontSize: 11 }}>—</span>;
+  const num = Number(v);
+  if (!Number.isFinite(num)) return <span style={{ color: "#888", fontSize: 11 }}>—</span>;
+  const color = num > 0 ? "rgb(67,222,67)" : num < 0 ? "rgb(222,67,67)" : "#888";
+  const icon = num > 0 ? "▲" : num < 0 ? "▼" : "—";
+  const texto = num > 0 ? `+${num.toFixed(2)}%` : `${num.toFixed(2)}%`;
+
+    return (
+      <span style={{ display: "inline-flex", alignItems: "center", gap: 4, color, fontSize: 11 }}>
+        <span style={{ fontSize: 11 }}>{icon}</span>
+        <span>{texto}</span>
+      </span>
+    );
   };
 
   const formatoValor = (v) => {
@@ -145,10 +193,10 @@ const ResumenPortfolio = () => {
       <div className="titulos" style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
         <h2 className="titulos-valor">Valor Total:</h2>
         <p className="valor-total" style={{ display: "flex", alignItems: "center" }}>
-          {formatoValor(portfolio.valor_total)}
+          {formatoValor(Number(portfolio?.valor_total || 0))}
         </p>
         <p className="cambio-ultimo" style={{ display: "flex", alignItems: "center" }}>
-          {formatoPorcentajeGrande(cambioUltimo)}
+          {renderCambioUltimo(cambioUltimo)}
         </p>
       </div>
 

@@ -1,7 +1,7 @@
 .carta {
   position: relative;
   display: grid;
-  grid-template-rows: auto 1fr 1fr ;
+  grid-template-rows: auto 1.3fr 1fr ;
   height: 100%;
   width: 230px;
   background-color: #10101A;
@@ -48,6 +48,9 @@
   margin-left: 12px;
   display: flex;
   flex-direction: column;
+  text-align: left;
+  position: relative;
+  bottom: -7px;
 }
 
 .carta-nombre {
@@ -57,7 +60,6 @@
 }
 
 .carta-username {
-  margin: 2px 0 0 0;
   font-size: 12px;
   color: #888888;
 }

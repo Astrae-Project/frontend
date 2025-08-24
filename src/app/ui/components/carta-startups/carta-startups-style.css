@@ -1,7 +1,7 @@
 .carta1 {
   position: relative;
   display: grid;
-  grid-template-rows: auto 1.2fr 1.2fr;
+  grid-template-rows: auto 1.2fr 1fr;
   height: 100%;
   width: 230px;            /* Ajustado un poco menor */
   background-color: #10101A;

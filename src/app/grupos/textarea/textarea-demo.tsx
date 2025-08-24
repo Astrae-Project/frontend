@@ -28,7 +28,6 @@ const Input = ({ onSendMessage, groupId }) => {
         `http://localhost:5000/api/grupos/data/${numericGroupId}`
       );
       setMembers(response.data.miembros || []);
-      console.log("Miembros del grupo:", response.data.miembros);
     } catch (error) {
       console.error("Error obteniendo datos del grupo:", error);
     }

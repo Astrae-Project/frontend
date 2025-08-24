@@ -22,7 +22,6 @@ const StartupsSeguidas = () => {
         "http://localhost:5000/api/data/startup/seguidas",
         { withCredentials: true }
       );
-      console.log(response.data); // Aquí accedemos correctamente a startups
 
       if (response.data && Array.isArray(response.data.startups)) {
         setStartups(response.data.startups); // Aquí accedemos correctamente a startups

@@ -1,6 +1,6 @@
 .contiene {
     position: relative;
-    display: block;  /* Cambiar a flex para asegurar que el scroll funcione correctamente */
+    display: flex;  /* Cambiar a flex para asegurar que el scroll funcione correctamente */
     height: 80%;
     width: 209.5%;  /* Ajusta el ancho al 100% del contenedor */
     overflow: hidden;

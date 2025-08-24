@@ -47,7 +47,7 @@
   position: absolute;
   display: flex;
   justify-content: space-between;
-  width: 80%;
+  width: 90%;
   margin-top: 5px;
   font-size: 13px;
   color: #cccccc;
@@ -55,7 +55,7 @@
 }
 
 .cambios-porcentuales p {
-  margin: 0;
+  margin-left: 5px;
 }
 
 .progress-container {

@@ -164,7 +164,6 @@ const InfoGrupos = ({ groupId }) => {
     }
   
     try {
-      console.log("Enviando solicitud para cambiar el rol...");
       await customAxios.put(
         `http://localhost:5000/api/grupos/cambio-rol/${groupId}/miembros/${selectedUser.id}`,
         { newRole },
@@ -172,7 +171,6 @@ const InfoGrupos = ({ groupId }) => {
       );
   
       // Actualizar la información del grupo
-      console.log("Obteniendo la información del grupo...");
       const { data } = await customAxios.get(
         `http://localhost:5000/api/grupos/data/${groupId}`,
         { withCredentials: true }

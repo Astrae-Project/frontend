@@ -38,7 +38,6 @@ export const CartaOferta = ({ oferta }) => {
   };
 
   useEffect(() => {
-    console.log("Datos de la oferta recibida:", oferta);
   }, [oferta]);
 
   const handleAccept = async () => {

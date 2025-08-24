@@ -437,7 +437,7 @@
   font-size: 9px;
   color: #888888; /* Un gris claro */
   top: 11px;
-  margin-left: -41px !important;
+  left: 5px;
   margin-right: 10px;
   text-overflow: ellipsis;
   white-space: nowrap; /* Evita saltos de línea */
@@ -560,17 +560,8 @@ ul {
 
 .btn-nombre{
   position: absolute;
-  top: 2%;
+  top: 6%;
   font-size: 9px;
-  color: #a390bf;
-  z-index: 99999999;
-  cursor: pointer;
-}
-
-.btn-nombre1{
-  position: absolute;
-  top: 2%;
-  font-size: 8px;
   color: #a390bf;
   z-index: 99999999;
   cursor: pointer;
@@ -828,6 +819,7 @@ ul :first-child{
   border: 2px dashed #151522;
   border-radius: 8px;
   height: 150px;
+  min-width: 90%;
   max-width: 90%;
   display: flex;
   align-items: center;

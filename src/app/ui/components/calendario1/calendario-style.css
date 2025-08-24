@@ -262,3 +262,60 @@
   cursor: pointer;
 }
 
+
+.evento-card {
+  width: 90%;
+  height: 90%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.evento-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #2a2a2d;
+  padding-bottom: 8px;
+}
+
+.evento-header h3 {
+  font-size: 18px;
+  color: #ffffff;
+  margin: 0;
+}
+
+.evento-fecha2 {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.evento-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.evento-dato {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  padding: 4px 0;
+}
+
+.dato-label {
+  font-weight: 500;
+  color: #cbd5e1;
+}
+
+.dato-valor {
+  color: #f1f5f9;
+}
+
+.evento-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+}

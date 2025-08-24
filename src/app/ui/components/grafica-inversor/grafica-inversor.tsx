@@ -33,17 +33,28 @@ const GraficaInversor = () => {
       });
   
       if (response.data && Array.isArray(response.data.historico)) {
-        const labels = response.data.historico.map((item) =>
-          new Date(item.fecha).toLocaleDateString()
-        );
-        const dataValues = response.data.historico.map((item) => Number(item.valoracion)); // Convertir a número
-  
-        const latestValue = dataValues[dataValues.length - 1] || 0; // Asegurar número
-        const previousValue = dataValues[dataValues.length - 2] || 0; // Asegurar número
-        const change = previousValue
-          ? ((latestValue - previousValue) / previousValue) * 100
-          : 0;
-  
+        // Hacer una copia y ordenar por fecha (ascendente) para asegurar orden cronológico
+        const historico = [...response.data.historico];
+        const sortedHistorico = historico.sort((a, b) => {
+          const ta = new Date(a.fecha).getTime() || 0;
+          const tb = new Date(b.fecha).getTime() || 0;
+          return ta - tb;
+        });
+
+        const labels = sortedHistorico.map((item) => {
+          try {
+            return new Date(item.fecha).toLocaleDateString('es-ES');
+          } catch (e) {
+            return String(item.fecha);
+          }
+        });
+
+        const dataValues = sortedHistorico.map((item) => Number(item.valoracion) || 0); // Convertir a número
+
+        const latestValue = dataValues[dataValues.length - 1] || 0; // Último (más reciente)
+        const previousValue = dataValues[dataValues.length - 2] || 0; // Penúltimo
+        const change = previousValue ? ((latestValue - previousValue) / previousValue) * 100 : 0;
+
         setTotalPortfolioValue(latestValue); // Actualizar con número válido
         setPercentageChange(Number(change.toFixed(2))); // Redondear a 2 decimales
         setData({

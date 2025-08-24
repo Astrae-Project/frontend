@@ -99,7 +99,7 @@ const MovimientosSeguidos = ({ username }) => {
                         <>
                           {movimiento.autor === 'inversor' && movimiento.startup && (
                             <span
-                              className="btn-nombre1"
+                              className="btn-nombre"
                               role="button"
                               onClick={() =>
                                 movimiento.startup?.usuario &&
@@ -113,7 +113,7 @@ const MovimientosSeguidos = ({ username }) => {
                           {/* Si es una inversión de una startup */}
                           {movimiento.autor === 'startup' && movimiento.inversor && (
                             <span
-                              className="btn-nombre1"
+                              className="btn-nombre"
                               role="button"
                               onClick={() =>
                                 movimiento.inversor?.usuario &&
@@ -138,7 +138,7 @@ const MovimientosSeguidos = ({ username }) => {
                           {/* Si es una oferta de una startup */}
                           {movimiento.autor === 'startup' && movimiento.inversor && (
                             <span
-                              className="btn-nombre1"
+                              className="btn-nombre"
                               role="button"
                               onClick={() =>
                                 movimiento.inversor?.usuario &&
@@ -152,7 +152,7 @@ const MovimientosSeguidos = ({ username }) => {
                           {/* Si es una oferta de un inversor */}
                           {movimiento.autor === 'inversor' && movimiento.startup && (
                             <span
-                              className="btn-nombre1"
+                              className="btn-nombre"
                               role="button"
                               onClick={() =>
                                 movimiento.startup?.usuario &&
@@ -175,7 +175,7 @@ const MovimientosSeguidos = ({ username }) => {
                       {movimiento.tipo_movimiento === "evento" && (
                         <>
                           <span
-                            className="btn-nombre1"
+                            className="btn-nombre"
                             role="button"
                             onClick={() =>
                               movimiento.creador &&

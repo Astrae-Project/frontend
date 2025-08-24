@@ -648,26 +648,58 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
         )}
 
         {formSubmitted && selectedEvent && (
-          <div className="evento-detalle">
-            <p>Título: {selectedEvent.titulo}</p>
-            <p><strong>Fecha:</strong> {new Date(selectedEvent.fecha_evento).toLocaleDateString()}</p>
-            <p><strong>Creado por:</strong> {selectedEvent.creador?.username || "Desconocido"}</p>
-            <p><strong>Tipo:</strong> {selectedEvent.tipo || "Desconocido"}</p>
-            <p><strong>Descripción:</strong> {selectedEvent.descripcion || "Desconocido"}</p>
-            <p><strong>Participantes:</strong> {selectedEvent.participantes || "Ninguno"}</p>
+          <div className="evento-card">
+            <div className="evento-header">
+              <h3>Evento</h3>
+              <span className="evento-fecha2">
+                {new Date(selectedEvent.fecha_evento).toLocaleDateString()}
+              </span>
+            </div>
 
-            <div className="contendor-botn-evento">
+            <div className="evento-body">
+              <div className="evento-dato">
+                <span className="dato-label">Título</span>
+                <span className="dato-valor">{selectedEvent.titulo}</span>
+              </div>
+
+              <div className="evento-dato">
+                <span className="dato-label">Descripción</span>
+                <span className="dato-valor">{selectedEvent.descripcion || "Sin descripción"}</span>
+              </div>
+
+              <div className="evento-dato">
+                <span className="dato-label">Tipo</span>
+                <span className="dato-valor">{selectedEvent.tipo || "Desconocido"}</span>
+              </div>
+
+              <div className="evento-dato">
+                <span className="dato-label">Creado por</span>
+                <span className="dato-valor">{selectedEvent.creador?.username || "Desconocido"}</span>
+              </div>
+
+              <div className="evento-dato">
+                <span className="dato-label">Participantes</span>
+                <span className="dato-valor">{selectedEvent.participantes || "Ninguno"}</span>
+              </div>
+            </div>
+
+            <div className="evento-footer">
               <button className="botn-eventos" onClick={() => setFormSubmitted(false)}>
                 Volver
               </button>
               {selectedEvent.esCreador !== true && (
-                <button className="botn-eventos enviar" onClick={handleUnirseEvento} disabled={!selectedEvent}>
+                <button
+                  className="botn-eventos enviar"
+                  onClick={handleUnirseEvento}
+                  disabled={!selectedEvent}
+                >
                   Unirse
                 </button>
               )}
             </div>
           </div>
         )}
+
 
         {activeBubble === "compartir-evento" && (
           <div>
