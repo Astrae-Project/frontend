@@ -8,12 +8,12 @@ export default function TerminosYCondiciones() {
       <p className="actualizacion">Última actualización: 27 de abril de 2025</p>
 
       <section className="section">
-        <p>Bienvenido a <strong>Astrae</strong>, plataforma digital que facilita la relación entre inversores y startups. Estos "Términos y Condiciones" (en adelante, "Términos") rigen el uso de nuestros servicios, la realización de inversiones y la prestación de cualquier otro servicio ofrecido a través de nuestro sitio web y aplicaciones.</p>
+        <p>Bienvenido a <strong>Astrae</strong>, plataforma digital que facilita la relación entre inversores y startups. Estos &quot;Términos y Condiciones&quot; (en adelante, &quot;Términos&quot;) rigen el uso de nuestros servicios, la realización de inversiones y la prestación de cualquier otro servicio ofrecido a través de nuestro sitio web y aplicaciones.</p>
       </section>
 
       <section className="section">
         <h2 className="subtitulo">1. Aceptación de los Términos</h2>
-        <p>Al registrarse, navegar o utilizar la plataforma Astrae ("Astrae", "nosotros", "la Plataforma"), usted ("Usuario", "Inversor" o "Startup", según corresponda) acepta estos Términos y nuestra Política de Privacidad. Si no está de acuerdo con alguno de los términos, no debe utilizar la Plataforma.</p>
+        <p>Al registrarse, navegar o utilizar la plataforma Astrae (&quot;Astrae&quot;, &quot;nosotros&quot;, &quot;la Plataforma&quot;), usted (&quot;Usuario&quot;, &quot;Inversor&quot; o &quot;Startup&quot;, según corresponda) acepta estos Términos y nuestra Política de Privacidad. Si no está de acuerdo con alguno de los términos, no debe utilizar la Plataforma.</p>
       </section>
 
       <section className="section">
