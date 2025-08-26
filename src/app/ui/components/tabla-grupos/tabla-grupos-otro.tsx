@@ -9,7 +9,7 @@ const TablaGruposOtro = ({ username }) => {
 
   const fetchGrupos = async () => {
     try {
-      const response = await customAxios.get(`http://localhost:5000/api/data/usuario/${username}`, {
+      const response = await customAxios.get(`https://backend-l3s8.onrender.com/api/data/usuario/${username}`, {
         withCredentials: true,
       });
 

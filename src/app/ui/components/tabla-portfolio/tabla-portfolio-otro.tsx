@@ -18,7 +18,7 @@ const TablaPortfolioOtro = ({ username }) => {
   // Función para obtener el portfolio
   const fetchPortfolio = async () => {
     try {
-      const response = await customAxios.get(`http://localhost:5000/api/data/usuario/${username}`, {
+      const response = await customAxios.get(`https://backend-l3s8.onrender.com/api/data/usuario/${username}`, {
         withCredentials: true, // Enviar cookies con la solicitud
       });
 
@@ -86,7 +86,7 @@ const TablaPortfolioOtro = ({ username }) => {
       }
 
       const { id_startup: startupId } = inversionData;
-      const { data } = await customAxios.get(`http://localhost:5000/api/data/startup/${startupId}`, {
+      const { data } = await customAxios.get(`https://backend-l3s8.onrender.com/api/data/startup/${startupId}`, {
         withCredentials: true,
       });
       setStartupDetails(data);

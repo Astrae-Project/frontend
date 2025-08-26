@@ -9,7 +9,7 @@ const Suscriptores = () => {
 
   const fetchEstadisticas = async () => {
     try {
-      const response = await customAxios.get("http://localhost:5000/api/data/usuario", {
+      const response = await customAxios.get("https://backend-l3s8.onrender.com/api/data/usuario", {
         withCredentials: true,
       });
 

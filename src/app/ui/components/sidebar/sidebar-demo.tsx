@@ -41,7 +41,7 @@ export function SidebarDemo() {
 
   const fetchRol = async () => {
     try {
-      const response = await customAxios.get("http://localhost:5000/api/data/usuario", { withCredentials: true });
+      const response = await customAxios.get("https://backend-l3s8.onrender.com/api/data/usuario", { withCredentials: true });
       if (response.data.startup) {
         setRol("startup");
       } else if (response.data.inversor) {

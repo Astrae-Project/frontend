@@ -10,7 +10,7 @@ export default function EventosyCalendario() {
 
   const fetchEventos = async () => {
     try {
-      const response = await customAxios.get("http://localhost:5000/api/data/eventos", {
+      const response = await customAxios.get("https://backend-l3s8.onrender.com/api/data/eventos", {
         withCredentials: true,
       });
       setEventos(response.data);

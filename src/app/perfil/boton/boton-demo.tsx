@@ -38,7 +38,7 @@ export function Botones() {
   // Obtener datos del usuario
   const fetchUsuario = async () => {
     try {
-      const response = await customAxios.get(`http://localhost:5000/api/data/usuario`, {
+      const response = await customAxios.get(`https://backend-l3s8.onrender.com/api/data/usuario`, {
         withCredentials: true,
       });
       setUser(response.data); // Almacenar la información del usuario
@@ -50,7 +50,7 @@ export function Botones() {
   // Obtener startups de la API
   const fetchStartups = async () => {
     try {
-      const response = await customAxios.get(`http://localhost:5000/api/data/startup`);
+      const response = await customAxios.get(`https://backend-l3s8.onrender.com/api/data/startup`);
       setStartups(response.data.startups); // Almacenar las startups
     } catch (error) {
       console.error("Error fetching startups:", error);
@@ -82,7 +82,7 @@ export function Botones() {
   const handleEditarPerfil = async () => {
     try {
       await customAxios.put(
-        `http://localhost:5000/api/perfil/editar-perfil`,
+        `https://backend-l3s8.onrender.com/api/perfil/editar-perfil`,
         formData
       );
       await fetchUsuario();

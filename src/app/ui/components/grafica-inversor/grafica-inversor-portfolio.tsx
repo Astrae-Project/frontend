@@ -44,7 +44,7 @@ const GraficaInversorPortfolio = () => {
     const fetchHistorico = async () => {
       try {
         const response = await customAxios.get(
-          'http://localhost:5000/api/data/historicos',
+          'https://backend-l3s8.onrender.com/api/data/historicos',
           { withCredentials: true }
         );
         const historico = Array.isArray(response.data.historico)

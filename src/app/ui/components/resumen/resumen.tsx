@@ -11,7 +11,7 @@ const ResumenPortfolio = () => {
   const fetchPortfolio = async () => {
     try {
       const response = await customAxios.get(
-        "http://localhost:5000/api/data/portfolio",
+        "https://backend-l3s8.onrender.com/api/data/portfolio",
         { withCredentials: true }
       );
       const data = response.data;
@@ -19,7 +19,7 @@ const ResumenPortfolio = () => {
       setDistribucionSectores(calcularDistribucionPorSector(data.inversiones || []));
 
       const historialResponse = await customAxios.get(
-        "http://localhost:5000/api/data/historicos",
+        "https://backend-l3s8.onrender.com/api/data/historicos",
         { withCredentials: true }
       );
       const historicoRaw = historialResponse.data.historico || [];

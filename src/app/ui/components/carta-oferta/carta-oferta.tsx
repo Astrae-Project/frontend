@@ -45,7 +45,7 @@ export const CartaOferta = ({ oferta }) => {
     setLoading(true);
     try {
       await customAxios.put(
-        `http://localhost:5000/api/invest/oferta/${oferta.id}/aceptar/${oferta.startup.usuario.id}`,
+        `https://backend-l3s8.onrender.com/api/invest/oferta/${oferta.id}/aceptar/${oferta.startup.usuario.id}`,
         {},
         { withCredentials: true }
       );
@@ -64,7 +64,7 @@ export const CartaOferta = ({ oferta }) => {
   const handleInvestClick = async () => {
     try {
       await customAxios.post(
-        `http://localhost:5000/api/invest/contraoferta/${oferta.id}/${oferta.startup.usuario.id}`,
+        `https://backend-l3s8.onrender.com/api/invest/contraoferta/${oferta.id}/${oferta.startup.usuario.id}`,
         {
           id_inversor: oferta.id_inversor,
           contraoferta_porcentaje: selectedPercentage,
@@ -88,7 +88,7 @@ export const CartaOferta = ({ oferta }) => {
   const handleReject = async () => {
     try {
       await customAxios.put(
-        `http://localhost:5000/api/invest/oferta/${oferta.id}/rechazar/${oferta.startup.usuario.id}`,
+        `https://backend-l3s8.onrender.com/api/invest/oferta/${oferta.id}/rechazar/${oferta.startup.usuario.id}`,
         {},
         { withCredentials: true }
       );

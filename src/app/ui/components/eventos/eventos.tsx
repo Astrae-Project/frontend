@@ -27,7 +27,7 @@ export default function Eventos({ fechaSeleccionada }) {
   const fetchEventos = async () => {
     try {
       const response = await customAxios.get(
-        "http://localhost:5000/api/evento/todos",
+        "https://backend-l3s8.onrender.com/api/evento/todos",
         { withCredentials: true }
       );
       if (Array.isArray(response.data)) {
@@ -101,7 +101,7 @@ export default function Eventos({ fechaSeleccionada }) {
   // Crear evento
   const handleCrearEvento = async (eventData) => {
     try {
-      await customAxios.post("http://localhost:5000/api/evento/crear", eventData);
+      await customAxios.post("https://backend-l3s8.onrender.com/api/evento/crear", eventData);
       setConfirmationMessage("¡Evento creado con éxito!");
       setMessageType("success");
       setFormSubmitted(true);
@@ -124,7 +124,7 @@ export default function Eventos({ fechaSeleccionada }) {
 
     try {
       const eventoId = selectedEvent.id;
-      await customAxios.post(`http://localhost:5000/api/evento/entrar/${eventoId}`);
+      await customAxios.post(`https://backend-l3s8.onrender.com/api/evento/entrar/${eventoId}`);
       setConfirmationMessage("Inscrito en el evento con éxito!");
       setMessageType("success");
       setFormSubmitted(true);
@@ -146,7 +146,7 @@ export default function Eventos({ fechaSeleccionada }) {
 
     try {
       const eventoId = selectedEvent.id;
-      await customAxios.get(`http://localhost:5000/api/evento/data/${eventoId}`);
+      await customAxios.get(`https://backend-l3s8.onrender.com/api/evento/data/${eventoId}`);
       setFormSubmitted(true);
     } catch (error) {
       setConfirmationMessage("Hubo un error al recuperar el evento.");

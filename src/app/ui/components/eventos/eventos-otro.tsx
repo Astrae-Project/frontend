@@ -14,7 +14,7 @@ export default function EventosOtro({ fechaSeleccionada, username }) {
   const fetchEventos = async () => {
     try {
       const response = await customAxios.get(
-        `http://localhost:5000/api/data/usuario/${username}`,
+        `https://backend-l3s8.onrender.com/api/data/usuario/${username}`,
         { withCredentials: true }
       );
       setEventos(response.data.eventos || []); // Asegúrate de acceder a la propiedad correcta

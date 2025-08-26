@@ -35,7 +35,7 @@ const TablaGrupos = () => {
   const handleCrearGrupo = async () => {
     try {
       const response = await customAxios.post(
-        "http://localhost:5000/api/grupos/crear",
+        "https://backend-l3s8.onrender.com/api/grupos/crear",
         formData,
         { withCredentials: true }
       );
@@ -57,7 +57,7 @@ const TablaGrupos = () => {
     if (!selectedGroup) return; // Verificación adicional
     try {
       const response = await customAxios.post(
-        `http://localhost:5000/api/grupos/unir/${selectedGroup.id}`,
+        `https://backend-l3s8.onrender.com/api/grupos/unir/${selectedGroup.id}`,
         {},
         { withCredentials: true }
       );
@@ -88,7 +88,7 @@ const TablaGrupos = () => {
   const fetchGrupos = async () => {
     try {
       const response = await customAxios.get(
-        "http://localhost:5000/api/data/grupos",
+        "https://backend-l3s8.onrender.com/api/data/grupos",
         { withCredentials: true }
       );
       if (Array.isArray(response.data)) {
@@ -105,7 +105,7 @@ const TablaGrupos = () => {
     const fetchTodosGrupos = async () => {
       try {
         const response = await customAxios.get(
-          "http://localhost:5000/api/data/todos-grupos",
+          "https://backend-l3s8.onrender.com/api/data/todos-grupos",
           { withCredentials: true }
         );
         if (Array.isArray(response.data)) {

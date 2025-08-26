@@ -19,7 +19,7 @@ export default function TimelineStartup() {
     async function fetchHitos() {
       try {
         const { data } = await customAxios.get(
-          'http://localhost:5000/api/data/usuario',
+          'https://backend-l3s8.onrender.com/api/data/usuario',
           { withCredentials: true }
         );
         setHitos(data.startup.hitos);

@@ -9,7 +9,7 @@ export default function EventosyCalendario1() {
 
   const fetchEventos = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/data/eventos", {
+      const response = await fetch("https://backend-l3s8.onrender.com/api/data/eventos", {
         credentials: "include",
       });
       if (!response.ok) throw new Error("Network response was not ok");

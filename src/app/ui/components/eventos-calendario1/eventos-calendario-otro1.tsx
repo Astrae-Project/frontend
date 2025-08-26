@@ -13,7 +13,7 @@ export default function EventosyCalendarioOtro1({ username }) {
     if (!username) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/data/usuario/${username}`, {
+      const response = await fetch(`https://backend-l3s8.onrender.com/api/data/usuario/${username}`, {
         credentials: "include",
       });
 

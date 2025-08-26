@@ -19,7 +19,7 @@ const StartupsSeguidas = () => {
   const fetchStartupsData = async () => {
     try {
       const response = await customAxios.get(
-        "http://localhost:5000/api/data/startup/seguidas",
+        "https://backend-l3s8.onrender.com/api/data/startup/seguidas",
         { withCredentials: true }
       );
 

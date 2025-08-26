@@ -16,7 +16,7 @@ export function OfertasPendientes({ username }) {
   const fetchOfertasData = async () => {
     try {
       const response = await customAxios.get(
-        "http://localhost:5000/api/data/ofertas",
+        "https://backend-l3s8.onrender.com/api/data/ofertas",
         {
           withCredentials: true,
         }

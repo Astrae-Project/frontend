@@ -19,7 +19,7 @@ const TablaPortfolio = () => {
   useEffect(() => {
     const fetchPortfolio = async () => {
       try {
-        const { data } = await customAxios.get('http://localhost:5000/api/data/portfolio', {
+        const { data } = await customAxios.get('https://backend-l3s8.onrender.com/api/data/portfolio', {
           withCredentials: true,
         });
         setPortfolio(data.inversiones);
@@ -80,7 +80,7 @@ const TablaPortfolio = () => {
       }
 
       const { id_startup: startupId } = inversionData;
-      const { data } = await customAxios.get(`http://localhost:5000/api/data/startup/${startupId}`, {
+      const { data } = await customAxios.get(`https://backend-l3s8.onrender.com/api/data/startup/${startupId}`, {
         withCredentials: true,
       });
       setStartupDetails(data);

@@ -43,7 +43,7 @@ const InfoGrupos = ({ groupId }) => {
     const fetchGrupo = async () => {
       try {
         const { data } = await customAxios.get(
-          `http://localhost:5000/api/grupos/data/${groupId}`,
+          `https://backend-l3s8.onrender.com/api/grupos/data/${groupId}`,
           { withCredentials: true }
         );
         setGrupo(data);
@@ -59,7 +59,7 @@ const InfoGrupos = ({ groupId }) => {
   // Cargar información del usuario actual
   const fetchUsuario = useCallback(async () => {
     try {
-      const { data } = await customAxios.get("http://localhost:5000/api/data/usuario", {
+      const { data } = await customAxios.get("https://backend-l3s8.onrender.com/api/data/usuario", {
         withCredentials: true,
       });
       setUsuario(data);
@@ -87,7 +87,7 @@ const InfoGrupos = ({ groupId }) => {
     setLoadingUsers(true);
     try {
       const { data } = await customAxios.get(
-        `http://localhost:5000/api/grupos/disponible/${groupId}`,
+        `https://backend-l3s8.onrender.com/api/grupos/disponible/${groupId}`,
         { withCredentials: true }
       );
       setAvailableUsers(data);
@@ -111,12 +111,12 @@ const InfoGrupos = ({ groupId }) => {
     if (!selectedUser || !groupId) return;
     try {
       await customAxios.post(
-        `http://localhost:5000/api/grupos/anadir/${groupId}/miembro/${selectedUser.id}`,
+        `https://backend-l3s8.onrender.com/api/grupos/anadir/${groupId}/miembro/${selectedUser.id}`,
         { withCredentials: true }
       );
       // Actualizar la información del grupo
       const { data } = await customAxios.get(
-        `http://localhost:5000/api/grupos/data/${groupId}`,
+        `https://backend-l3s8.onrender.com/api/grupos/data/${groupId}`,
         { withCredentials: true }
       );
       setGrupo(data);
@@ -140,13 +140,13 @@ const InfoGrupos = ({ groupId }) => {
     try {
       // Eliminar al usuario del grupo usando DELETE y pasando el id en la URL
       await customAxios.delete(
-        `http://localhost:5000/api/grupos/eliminar/${groupId}/miembro/${selectedUser.id}`,
+        `https://backend-l3s8.onrender.com/api/grupos/eliminar/${groupId}/miembro/${selectedUser.id}`,
         { withCredentials: true },
       );
   
       // Actualizar la información del grupo
       const { data } = await customAxios.get(
-        `http://localhost:5000/api/grupos/data/${groupId}`,
+        `https://backend-l3s8.onrender.com/api/grupos/data/${groupId}`,
         { withCredentials: true }
       );
   
@@ -165,14 +165,14 @@ const InfoGrupos = ({ groupId }) => {
   
     try {
       await customAxios.put(
-        `http://localhost:5000/api/grupos/cambio-rol/${groupId}/miembros/${selectedUser.id}`,
+        `https://backend-l3s8.onrender.com/api/grupos/cambio-rol/${groupId}/miembros/${selectedUser.id}`,
         { newRole },
         { withCredentials: true }
       );
   
       // Actualizar la información del grupo
       const { data } = await customAxios.get(
-        `http://localhost:5000/api/grupos/data/${groupId}`,
+        `https://backend-l3s8.onrender.com/api/grupos/data/${groupId}`,
         { withCredentials: true }
       );
   

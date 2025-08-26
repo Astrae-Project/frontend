@@ -31,7 +31,7 @@ const Info = () => {
 
   const fetchDatos = async () => {
     try {
-      const response = await customAxios.get(`http://localhost:5000/api/data/usuario`, {
+      const response = await customAxios.get(`https://backend-l3s8.onrender.com/api/data/usuario`, {
         withCredentials: true, // Asegúrate de que la configuración se mantenga
       });
       
@@ -113,7 +113,7 @@ const Info = () => {
 
     try {
       const response = await customAxios.post(
-        `http://localhost:5000/api/perfil/subir-documento/${user.id}`,
+        `https://backend-l3s8.onrender.com/api/perfil/subir-documento/${user.id}`,
         formData,
         {
           withCredentials: true

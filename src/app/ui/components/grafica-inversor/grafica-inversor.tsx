@@ -28,7 +28,7 @@ const GraficaInversor = () => {
   
   const fetchValorPortfolio = async () => {
     try {
-      const response = await customAxios.get('http://localhost:5000/api/data/historicos', {
+      const response = await customAxios.get('https://backend-l3s8.onrender.com/api/data/historicos', {
         withCredentials: true,
       });
   

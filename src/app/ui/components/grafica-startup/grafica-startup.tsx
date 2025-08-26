@@ -38,7 +38,7 @@ const GraficaStartup = () => {
   // Función para obtener los datos históricos de valoraciones
   const fetchValorStartup = async () => {
     try {
-      const response = await customAxios.get('http://localhost:5000/api/data/historicos', {
+      const response = await customAxios.get('https://backend-l3s8.onrender.com/api/data/historicos', {
         withCredentials: true, // Enviar cookies con la solicitud
       });
 
