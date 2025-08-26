@@ -51,7 +51,7 @@ const Inicio = () => {
         <h1 className="text-2xl font-semibold mb-4">Sesión expirada</h1>
         <p className="mb-6 text-center">Para continuar, inicia sesión de nuevo.</p>
         <button
-          onClick={() => window.location.href = 'http://localhost:4321/inicio-sesion'}
+          onClick={() => window.location.href = 'http://https://landing-fu62u3718-astraes-projects-b730cac9.vercel.app/inicio-sesion'}
           className="relative w-auto h-[35px] bg-[#6e4ba3] border border-[#1E202F] rounded-[7px] text-[13.5px] px-[25px]"
         >
           Iniciar Sesión
