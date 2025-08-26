@@ -4,7 +4,7 @@ import customAxios from "@/service/api.mjs";
 import { useState, useEffect } from "react";
 import { BentoGridPerfilOtro } from "./bento-perfil-otro/bento-perfil-otro";
 
-export default function PerfilOtro( { username } ) {
+export default function PerfilOtro({ params }: { params: { username: string } }) {
   
   const [isLoading, setIsLoading] = useState(true);
   const [sessionExpired, setSessionExpired] = useState(false);
