@@ -156,7 +156,7 @@ export function BentoGridInicio({username}) {
       <h1 className="hero">
         Hola {rol === "inversor" ? usuario?.nombre : usuario.usuario.username  }, bienvenido de nuevo
       </h1>
-      <Placeholder />
+      <Placeholder username={username} />
       
       {rol === "inversor" ? (
         <>
@@ -168,7 +168,7 @@ export function BentoGridInicio({username}) {
             <GraficaInversor />
           </div>
           <div className="apartado">
-            <MovimientosRecientes1 />
+            <MovimientosRecientes1 username={username} />
           </div>
           <div className="apartado">
             <EventosyCalendario />
@@ -177,9 +177,9 @@ export function BentoGridInicio({username}) {
             <Notificaciones></Notificaciones>
           </div>
           <div className="apartado">
-            <MovimientosSeguidos />
+            <MovimientosSeguidos username={username} />
           </div>
-           <StartupsRecomendadas />
+           <StartupsRecomendadas username={username} />
 
           <Bubble
         show={!!activeBubble}
@@ -332,9 +332,9 @@ export function BentoGridInicio({username}) {
             <Notificaciones />
           </div>
           <div className="apartado">
-            <MovimientosSeguidos />
+            <MovimientosSeguidos username={username} />
           </div>
-          <OfertasPendientes />
+          <OfertasPendientes username={username} />
 
           <Bubble
             show={!!activeBubble}
