@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "../../../perfil/bento-perfil/bento-perfil-style.css";
 import { IconMoneybag, IconStar } from "@tabler/icons-react";
-import Bubble from "../bubble/bubble.jsx";
+import Bubble from "../bubble/bubble";
 import customAxios from "@/service/api.mjs";
-import PerfilOtro from "@/app/perfil-otro/page.jsx";
+import PerfilOtro from "@/app/perfil-otro/page";
 
 const PerfilOtroComponent: any = PerfilOtro;
 

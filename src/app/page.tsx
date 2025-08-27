@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BentoGridInicio } from "./ui/components/bento-inicio/bento-inicio-demo.jsx";
+import { BentoGridInicio } from "./ui/components/bento-inicio/bento-inicio-demo";
 import customAxios from "@/service/api.mjs"; // Debe tener baseURL y withCredentials: true
 
 const Inicio = () => {

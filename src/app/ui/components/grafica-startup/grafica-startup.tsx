@@ -4,7 +4,7 @@ import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, Title, Tooltip, Legend, LineElement, PointElement, Filler } from 'chart.js';
 import './grafica-startup-style.css';
 import { IconTriangleFilled, IconTriangleInvertedFilled } from '@tabler/icons-react';
-import MovimientosRecientesInversion from '../movimientos-recientes/movimientos-recientes-inversion.jsx';
+import MovimientosRecientesInversion from '../movimientos-recientes/movimientos-recientes-inversion';
 
 // Registrar los componentes necesarios de Chart.js
 ChartJS.register(CategoryScale, LinearScale, Title, Tooltip, Legend, LineElement, PointElement, Filler);

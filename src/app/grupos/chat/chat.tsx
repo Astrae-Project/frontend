@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { io, Socket } from "socket.io-client";
-import Input from "../textarea/textarea-demo.jsx";
+import Input from "../textarea/textarea-demo";
 import "./chat-style.css";
 import { IconDotsVertical, IconLogout2, IconPencil, IconUserShield } from "@tabler/icons-react";
 import customAxios from "@/service/api.mjs";
-import Bubble from "@/app/ui/components/bubble/bubble.jsx";
+import Bubble from "@/app/ui/components/bubble/bubble";
 
 const SOCKET_SERVER_URL = "https://backend-l3s8.onrender.com";
 

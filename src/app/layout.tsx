@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./ui/global.css";
-import { SidebarDemo } from "./ui/components/sidebar/sidebar-demo.jsx";
+import { SidebarDemo } from "./ui/components/sidebar/sidebar-demo";
 import { Providers } from "./provider";
 
 export const metadata: Metadata = {

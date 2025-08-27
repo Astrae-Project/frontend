@@ -2,7 +2,7 @@
 
 import customAxios from "@/service/api.mjs";
 import { useState, useEffect } from "react";
-import { BentoGridAjustes } from "./bento-ajustes/bento-ajustes.jsx";
+import { BentoGridAjustes } from "./bento-ajustes/bento-ajustes";
 
 export default function Ajustes() {
 
