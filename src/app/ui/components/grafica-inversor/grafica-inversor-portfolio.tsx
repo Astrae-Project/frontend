@@ -51,15 +51,18 @@ const GraficaInversorPortfolio = () => {
           ? response.data.historico
           : [];
         if (!historico.length) {
-          setFullData({ labels: [], values: [] });
+          // incluir dates para respetar la tipificación
+          setFullData({ labels: [], values: [], dates: [] });
+          setLoading(false);
           return;
         }
         const sorted = historico
-          .map(r => ({
+          .map((r: any) => ({
             fecha: new Date(r.fecha),
             valor: Number(r.valoracion)
           }))
-          .sort((a, b) => a.fecha - b.fecha);
+          // usar getTime() para la comparación (más explícito y compatible con TS)
+          .sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
 
         const labels = sorted.map(r =>
           r.fecha.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })
@@ -69,6 +72,7 @@ const GraficaInversorPortfolio = () => {
         setFullData({ labels, values, dates });
       } catch (err) {
         console.error('Error fetching historico:', err);
+        setFullData({ labels: [], values: [], dates: [] });
       } finally {
         setLoading(false);
       }
@@ -91,7 +95,7 @@ const GraficaInversorPortfolio = () => {
       const cutoff = lastTimestamp - rango * msPerDay;
       startIndex = fullData.dates.findIndex(ts => ts >= cutoff);
       if (startIndex === -1) {
-        // if no point meets the cutoff, show the last available point
+        // si no hay puntos que cumplan el cutoff, mostrar el último disponible
         startIndex = total - 1;
       }
     }
@@ -131,7 +135,7 @@ const GraficaInversorPortfolio = () => {
           <div className="selector-rango">
           {rangosDisponibles.map(({ label, value }) => (
             <button
-              key={value}
+              key={String(value)}
               className={rango === value ? 'activo' : ''}
               onClick={() => setRango(value)}
               aria-label={`Últimos ${label}`}
