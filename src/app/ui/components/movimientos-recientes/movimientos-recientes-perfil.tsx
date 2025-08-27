@@ -5,6 +5,8 @@ import Bubble from "../bubble/bubble";
 import customAxios from "@/service/api.mjs";
 import PerfilOtro from "@/app/perfil-otro/page";
 
+const PerfilOtroComponent: any = PerfilOtro;
+
 const MovimientosRecientes = () => {
   const [movimientosRecientes, setMovimientosRecientes] = useState([]);
   const [activeBubble, setActiveBubble] = useState(null); // Tipo de burbuja activa
@@ -171,12 +173,12 @@ const MovimientosRecientes = () => {
       ) : (
         <p className="texto-vacio">No hay movimientos recientes</p>
       )}
-      <Bubble show={!!activeBubble} onClose={handleBubbleClose}>
+      <Bubble show={!!activeBubble} onClose={handleBubbleClose} message={undefined} type={undefined}>
         {activeBubble === "perfil" && bubbleData && (
-          <PerfilOtro username={bubbleData.username}></PerfilOtro>
+          <PerfilOtroComponent username={bubbleData.username}></PerfilOtroComponent>
         )}
         {activeBubble === "perfil-startup" && bubbleData && (
-          <PerfilOtro username={bubbleData.usuario.username}></PerfilOtro>
+          <PerfilOtroComponent username={bubbleData.usuario.username}></PerfilOtroComponent>
         )}
         {activeBubble === "eventos" && bubbleData && (
           <div className="eventos-detalle">

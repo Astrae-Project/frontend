@@ -5,6 +5,8 @@ import Bubble from "../bubble/bubble";
 import customAxios from "@/service/api.mjs";
 import PerfilOtro from "@/app/perfil-otro/page";
 
+const PerfilOtroComponent: any = PerfilOtro;
+
 const MovimientosRecientesInversion = ({ username }) => {
   const [movimientosRecientes, setMovimientosRecientes] = useState([]);
   const [activeBubble, setActiveBubble] = useState(null); // Tipo de burbuja activa
@@ -138,14 +140,12 @@ const MovimientosRecientesInversion = ({ username }) => {
             })}
           </ul>
       ) : (
-        <p>No hay movimientos recientes.</p>
-      )}
-      <Bubble show={!!activeBubble} onClose={handleBubbleClose}>
+      <Bubble show={!!activeBubble} onClose={handleBubbleClose} message={undefined} type={undefined}>
         {activeBubble === "perfil" && bubbleData && (
-          <PerfilOtro username={bubbleData.username}></PerfilOtro>
+          <PerfilOtroComponent username={bubbleData.username}></PerfilOtroComponent>
         )}
         {activeBubble === "perfil-inversor" && bubbleData && (
-          <PerfilOtro username={bubbleData.usuario.username}></PerfilOtro>
+          <PerfilOtroComponent username={bubbleData.usuario.username}></PerfilOtroComponent>
         )}
         {activeBubble === "inversion" && bubbleData && (
           <div className="inversion-detalle">
@@ -164,7 +164,9 @@ const MovimientosRecientesInversion = ({ username }) => {
           </div>
         )}
       </Bubble>
+        )}
     </div>
+
   );
 };
 

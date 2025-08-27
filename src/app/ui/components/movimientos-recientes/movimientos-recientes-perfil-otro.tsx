@@ -164,7 +164,7 @@ const MovimientosRecientesOtro = ({ username }) => {
       ) : (
         <p>No hay movimientos recientes.</p>
       )}
-      <Bubble show={!!activeBubble} onClose={handleBubbleClose}>
+      <Bubble show={!!activeBubble} onClose={handleBubbleClose} message={undefined} type={undefined}>
         {activeBubble === "perfil" && bubbleData && (
           <div className="perfil-detalle">
             <p><strong>Usuario:</strong> {bubbleData.username || "Cargando..."}</p>
