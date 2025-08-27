@@ -3,7 +3,12 @@ import './carta-oferta-style.css';
 import Bubble from '../bubble/bubble';
 import customAxios from '@/service/api.mjs';
 
-export const CartaOferta = ({ oferta }) => {
+interface CartaOfertaProps {
+  oferta: any;
+  onClick?: () => void; // <- añadimos onClick opcional
+}
+
+export const CartaOferta = ({ oferta, onClick } : CartaOfertaProps) => {
   const [activeBubble, setActiveBubble] = useState(null);
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);

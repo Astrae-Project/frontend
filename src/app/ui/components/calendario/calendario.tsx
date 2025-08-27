@@ -372,7 +372,7 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
                   id="descripcion"
                   name="descripcion" // Añadir el name
                   placeholder="Detalles del evento"
-                  rows="4"
+                  rows={4}
                   className="form-control"
                 ></textarea>
               </div>
@@ -528,7 +528,6 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
               </div>
               <div className="form-group">
                 <textarea
-                  type="text"
                   id="descripcion"
                   className="form-control"
                   value={editFormData.descripcion}

@@ -6,6 +6,8 @@ import Bubble from '../bubble/bubble';
 import customAxios from '../../../../service/api.mjs';
 import PerfilOtro from '@/app/perfil-otro/page';
 
+const PerfilOtroComponent: any = PerfilOtro;
+
 const TablaPortfolioOtro = ({ username }) => {
   const [portfolio, setPortfolio] = useState([]); // Estado para el portfolio
   const [selectedInversion, setSelectedInversion] = useState(null); // Inversión seleccionada
@@ -147,7 +149,7 @@ const TablaPortfolioOtro = ({ username }) => {
         type={messageType}
       >
         {activeBubble === 'perfil-startup' && bubbleData && (
-          <PerfilOtro username={bubbleData.usuario.username} />
+          <PerfilOtroComponent username={bubbleData.usuario.username} />
         )}
       </Bubble>
     </div>

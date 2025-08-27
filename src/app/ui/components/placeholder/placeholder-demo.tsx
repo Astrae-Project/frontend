@@ -6,7 +6,9 @@ import "./placeholder-style.css";
 import Bubble from "../bubble/bubble";
 import PerfilOtro from "@/app/perfil-otro/page";
 
-export function Placeholder({ username }) {
+const PerfilOtroComponent: any = PerfilOtro;
+
+export function Placeholder() {
   const [searchQuery, setSearchQuery] = useState("");
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -153,9 +155,9 @@ export function Placeholder({ username }) {
             )}
           </ul>
         )}
-        <Bubble show={!!activeBubble} onClose={handleBubbleClose}>
+        <Bubble show={!!activeBubble} onClose={handleBubbleClose} message={undefined} type={undefined}>
           {activeBubble === "perfil" && bubbleData && (
-            <PerfilOtro username={bubbleData.username} />
+            <PerfilOtroComponent username={bubbleData.username} />
           )}
         </Bubble>
       </div>

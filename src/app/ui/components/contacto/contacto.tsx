@@ -4,14 +4,27 @@ import './contacto-style.css';
 import { IconPlus } from '@tabler/icons-react';
 import Bubble from '../bubble/bubble';
 
-const InformacionContacto = ({ contacto, fetchContacto }) => {
-  const [activeBubble, setActiveBubble] = useState(null);
-  const [confirmationMessage, setConfirmationMessage] = useState(null);
-  const [messageType, setMessageType] = useState(null);
+type ContactData = {
+  correo: string;
+  twitter: string;
+  linkedin: string;
+  facebook: string;
+  instagram: string;
+};
+
+interface InformacionContactoProps {
+  contacto: Partial<ContactData> | null;
+  fetchContacto: () => void;
+}
+
+const InformacionContacto: React.FC<InformacionContactoProps> = ({ contacto, fetchContacto }) => {
+  const [activeBubble, setActiveBubble] = useState<string | null>(null);
+  const [confirmationMessage, setConfirmationMessage] = useState<string | null>(null);
+  const [messageType, setMessageType] = useState<string | null>(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [step, setStep] = useState(1);
-  const [selectedContact, setSelectedContact] = useState(null);
-  const [formData, setFormData] = useState({
+  const [selectedContact, setSelectedContact] = useState<keyof ContactData | null>(null);
+  const [formData, setFormData] = useState<ContactData>({
     correo: contacto?.correo || '',
     twitter: contacto?.twitter || '',
     linkedin: contacto?.linkedin || '',
@@ -46,14 +59,16 @@ const InformacionContacto = ({ contacto, fetchContacto }) => {
     }
   };
 
-  const handleSelectContact = (contactType) => {
+  const handleSelectContact = (contactType: keyof ContactData) => {
     setSelectedContact(contactType);
-    setFormData({ [contactType]: contacto?.[contactType] || '' }); // Garantiza valor controlado
+    // Merge with previous state so we keep all keys and avoid type mismatch
+    setFormData(prev => ({ ...prev, [contactType]: contacto?.[contactType] || '' } as ContactData));
     setStep(2); // Avanzamos al paso 2 para mostrar el formulario
   };
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name as keyof ContactData]: value } as ContactData));
   };
 
   // Construimos un array con los elementos de contacto y aplicamos directamente slice(0, 4)
@@ -185,14 +200,14 @@ const InformacionContacto = ({ contacto, fetchContacto }) => {
 };
 
 export default function Contacto() {
-  const [contacto, setContacto] = useState(null);
+  const [contacto, setContacto] = useState<Partial<ContactData> | null>(null);
 
   const fetchContacto = async () => {
     try {
       const response = await customAxios.get('https://api.astraesystem.com/api/data/contacto', {
         withCredentials: true,
       });
-      setContacto(response.data);
+      setContacto(response.data as Partial<ContactData>);
     } catch (error) {
       console.error('Error al obtener los datos de contacto:', error);
     }

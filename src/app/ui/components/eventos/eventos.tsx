@@ -7,6 +7,8 @@ import customAxios from "@/service/api.mjs";
 import Bubble from "../bubble/bubble";
 import PerfilOtro from "@/app/perfil-otro/page";
 
+const PerfilOtroComponent: any = PerfilOtro;
+
 export default function Eventos({ fechaSeleccionada }) {
   const [eventos, setEventos] = useState([]);
   const [eventosFiltrados, setEventosFiltrados] = useState([]);
@@ -203,7 +205,7 @@ export default function Eventos({ fechaSeleccionada }) {
         type={messageType} // Pasar el tipo de mensaje (success o error)
       >
         {activeBubble === "perfil" && bubbleData && (
-          <PerfilOtro username={bubbleData.creador?.username} />
+          <PerfilOtroComponent username={bubbleData.creador?.username} />
         )}
         {activeBubble === "crear-evento" && !formSubmitted && (
           <div>
@@ -235,7 +237,7 @@ export default function Eventos({ fechaSeleccionada }) {
                   id="descripcion"
                   name="descripcion" // Añadir el name
                   placeholder="Detalles del evento"
-                  rows="4"
+                  rows={4}
                   className="form-control"
                 ></textarea>
               </div>

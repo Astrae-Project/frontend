@@ -5,6 +5,8 @@ import customAxios from "@/service/api.mjs";
 import Bubble from "../bubble/bubble";
 import PerfilOtro from "@/app/perfil-otro/page";
 
+const PerfilOtroComponent: any = PerfilOtro;
+
 export default function EventosOtro({ fechaSeleccionada, username }) {
   const [eventos, setEventos] = useState([]);
   const [eventosFiltrados, setEventosFiltrados] = useState([]);
@@ -102,9 +104,9 @@ export default function EventosOtro({ fechaSeleccionada, username }) {
       )}
 
       {/* Componente Bubble */}
-      <Bubble show={!!activeBubble} onClose={handleBubbleClose}>
+      <Bubble show={!!activeBubble} onClose={handleBubbleClose} message={undefined} type={undefined}>
         {activeBubble === "perfil" && bubbleData && (
-          <PerfilOtro username={bubbleData.creador?.username} />
+          <PerfilOtroComponent username={bubbleData.creador?.username} />
         )}
       </Bubble>
     </div>

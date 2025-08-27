@@ -6,7 +6,7 @@ import "./ofertas-pendientes-style.css";
 import customAxios from "@/service/api.mjs";
 import { CartaOferta } from "../carta-oferta/carta-oferta";
 
-export function OfertasPendientes({ username }) {
+export function OfertasPendientes() {
   const [ofertas, setOfertas] = useState([]); // Reemplazado "startups" por "ofertas"
   const [displayedOfertas, setDisplayedOfertas] = useState([]);
   const [bubbleData, setBubbleData] = useState(null);

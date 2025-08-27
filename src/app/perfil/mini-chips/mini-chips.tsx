@@ -1,20 +1,30 @@
-"use client";
+'use client';
 
+import React from "react";
 import { Chip } from "@heroui/react";
-import './mini-chips-style.modules.css'
+import './mini-chips-style.modules.css';
 
 interface MiniChipsProps {
-    label: string;
-    tooltipText: string; // Información para la burbuja
+  label: React.ReactNode;           // acepta JSX, string, number...
+  tooltipText?: string | null;      // opcional
+  className?: string;
+  id?: string;
 }
 
-export function MiniChips({ label, tooltipText }: MiniChipsProps) {
+export function MiniChips({ label, tooltipText, className, id }: MiniChipsProps) {
   return (
-    <Chip className="mini-chip">
-      {label}
-      {tooltipText && (
-        <span className="tooltip">{tooltipText}</span>
-      )}
-    </Chip>
+    <div className={`mini-chips-wrapper ${className ?? ""}`} id={id}>
+      <Chip className="mini-chip-otro" aria-label={typeof label === "string" ? String(label) : undefined}>
+        {label}
+        {tooltipText ? (
+          <span className="tooltip" role="note" aria-hidden="true">
+            {tooltipText}
+          </span>
+        ) : null}
+      </Chip>
+    </div>
   );
 }
+
+// Export por defecto también, por compatibilidad con imports default
+export default MiniChips;

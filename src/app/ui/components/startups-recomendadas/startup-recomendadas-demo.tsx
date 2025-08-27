@@ -8,7 +8,9 @@ import Bubble from "../bubble/bubble"; // Asegúrate de tener el componente Bubb
 import customAxios from "@/service/api.mjs";
 import PerfilOtro from "@/app/perfil-otro/page";
 
-export function StartupsRecomendadas({ username }) {
+const PerfilOtroComponent: any = PerfilOtro;
+
+export function StartupsRecomendadas() {
   const [startups, setStartups] = useState([]); // Inicializar como un arreglo vacío
   const [displayedStartups, setDisplayedStartups] = useState([]);
   const [bubbleData, setBubbleData] = useState(null);
@@ -74,8 +76,8 @@ export function StartupsRecomendadas({ username }) {
       </ScrollShadow>
 
       {activeBubble && bubbleData && (
-        <Bubble show={activeBubble} onClose={closeBubble}>
-          <PerfilOtro username={bubbleData.usuario?.username || "Desconocido"} />
+        <Bubble show={activeBubble} onClose={closeBubble} message={undefined} type={undefined}>
+          <PerfilOtroComponent username={bubbleData.usuario?.username || "Desconocido"} />
         </Bubble>
       )}
     </div>

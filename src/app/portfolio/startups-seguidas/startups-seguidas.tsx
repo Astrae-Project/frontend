@@ -2,12 +2,13 @@
 
 import { ScrollShadow } from "@heroui/react";
 import { CartaSeguidas } from "../../ui/components/carta-startups/carta-startups-seguidas";
-
 import "./startups-seguidas-style.css";
 import PerfilOtro from "@/app/perfil-otro/page";
 import customAxios from "@/service/api.mjs";
 import { useState, useEffect, useMemo } from "react";
 import Bubble from "@/app/ui/components/bubble/bubble";
+
+const PerfilOtroComponent: any = PerfilOtro;
 
 const StartupsSeguidas = () => {
   const [startups, setStartups] = useState([]); // Inicializar como array vacío
@@ -71,8 +72,8 @@ const StartupsSeguidas = () => {
       ))}
 
       {activeBubble && bubbleData && (
-        <Bubble show={activeBubble} onClose={closeBubble}>
-          <PerfilOtro username={bubbleData.username || "Desconocido"} />
+        <Bubble show={activeBubble} onClose={closeBubble} message={undefined} type={undefined}>
+          <PerfilOtroComponent username={bubbleData.username || "Desconocido"} />
         </Bubble>
       )}
     </ScrollShadow>

@@ -140,7 +140,7 @@ const Notificaciones = () => {
           </div>
         </div>
 
-        <Bubble show={bubbleData !== null} onClose={handleBubbleClose}>
+        <Bubble show={bubbleData !== null} onClose={handleBubbleClose} message={undefined} type={undefined}>
           {bubbleData && (
             <>
               <div className="bubble-notificaciones">
