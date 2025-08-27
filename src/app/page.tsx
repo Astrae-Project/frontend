@@ -7,6 +7,7 @@ import customAxios from "@/service/api.mjs"; // Debe tener baseURL y withCredent
 const Inicio = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [sessionExpired, setSessionExpired] = useState(false);
+  const [usuario, setUsuario] = useState(null);
 
   useEffect(() => {
     const verificarSesion = async () => {
@@ -30,6 +31,23 @@ const Inicio = () => {
 
     verificarSesion();
   }, []);
+
+  useEffect(() => {
+    const fetchUsuario = async () => {
+      try {
+      const response = await customAxios.get(`https://api.astraesystem.com/api/data/usuario`, {
+        withCredentials: true, // Enviar cookies con la solicitud
+      });
+      setUsuario(response.data);
+      } catch (error) {
+        console.error("Error al obtener datos del usuario:", error);
+      }
+    };
+
+    if (!sessionExpired) {
+      fetchUsuario();
+    }
+  }, [sessionExpired]);
 
   if (isLoading) {
     return (
@@ -64,7 +82,7 @@ const Inicio = () => {
   return (
     <main>
       <section>
-        <BentoGridInicio />
+        {usuario && <BentoGridInicio username={usuario.username} />}
       </section>
     </main>
   );
