@@ -85,7 +85,7 @@ export default function ContactoOtro({ username }) {
 
       try {
         const response = await customAxios.get(
-          `https://backend-l3s8.onrender.com/api/data/usuario/${username}`,
+          `https://api.astraesystem.com/api/data/usuario/${username}`,
           {
             withCredentials: true,
           }

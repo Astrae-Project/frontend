@@ -37,7 +37,7 @@ export default function HitosDashboard() {
     async function fetchHitos() {
       try {
         const { data } = await customAxios.get(
-          `https://backend-l3s8.onrender.com/api/data/usuario`,
+          `https://api.astraesystem.com/api/data/usuario`,
           { withCredentials: true }
         );
         setHitos(data.startup.hitos || []);
@@ -88,7 +88,7 @@ const handleCrear = async e => {
   e.preventDefault();
   try {
     const response = await customAxios.post(
-      `https://backend-l3s8.onrender.com/api/perfil/startups/${startupId}/hitos`,
+      `https://api.astraesystem.com/api/perfil/startups/${startupId}/hitos`,
       editFormData,
       { withCredentials: true }
     );
@@ -110,7 +110,7 @@ const handleEliminar = async () => {
   }
   try {
     const response = await customAxios.delete(
-      `https://backend-l3s8.onrender.com/api/perfil/hitos/${selectedHito.id}`,
+      `https://api.astraesystem.com/api/perfil/hitos/${selectedHito.id}`,
       { withCredentials: true }
     );
     setConfirmationMessage("Hito eliminado");
@@ -142,7 +142,7 @@ const handleEditar = async e => {
   e.preventDefault();
   try {
     const response = await customAxios.put(
-      `https://backend-l3s8.onrender.com/api/perfil/hitos/${selectedHito.id}`,
+      `https://api.astraesystem.com/api/perfil/hitos/${selectedHito.id}`,
       editFormData,
       { withCredentials: true }
     );

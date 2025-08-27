@@ -10,7 +10,7 @@ export function Chips() {
 
   const fetchUsuario = async () => {
     try {
-      const response = await customAxios.get("https://backend-l3s8.onrender.com/api/data/usuario", {
+      const response = await customAxios.get("https://api.astraesystem.com/api/data/usuario", {
         withCredentials: true, // Cambiado a 'true' (booleano)
       });
       setUsuario(response.data); // Asumiendo que los datos contienen información sobre si es inversor o startup

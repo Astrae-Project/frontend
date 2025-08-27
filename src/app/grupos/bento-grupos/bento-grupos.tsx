@@ -6,7 +6,7 @@ import ChatGroup from "../chat/chat";
 import ListaGrupos from "../lista-grupos/lista-grupos";
 import InfoGrupos from "../info-grupos/info-grupos";
 
-const BentoGridGrupos = ({ user }) => {
+const BentoGridGrupos = () => {
   const [selectedGroupId, setSelectedGroupId] = useState(null);
 
   const handleGroupSelect = (groupId) => {
@@ -20,7 +20,7 @@ const BentoGridGrupos = ({ user }) => {
           <ListaGrupos onGroupSelect={handleGroupSelect} />
         </div>
         <div className="apartado2">
-          <ChatGroup groupId={selectedGroupId} user={user} />
+          <ChatGroup groupId={selectedGroupId}/>
         </div>
         <div className="apartado2">
           <InfoGrupos groupId={selectedGroupId} />

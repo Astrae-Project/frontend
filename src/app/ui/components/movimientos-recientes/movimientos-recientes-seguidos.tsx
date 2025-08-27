@@ -11,7 +11,7 @@ const MovimientosSeguidos = ({ username }) => {
 
   const fetchMovimientosSeguidos = async () => {
     try {
-      const response = await customAxios.get(`https://backend-l3s8.onrender.com/api/data/movimientos-seguidos`, {
+      const response = await customAxios.get(`https://api.astraesystem.com/api/data/movimientos-seguidos`, {
         withCredentials: true,
       });
   

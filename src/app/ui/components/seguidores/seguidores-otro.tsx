@@ -9,7 +9,7 @@ const SeguidoresOtro = ({username}) => {
     if (!username) return;
 
     try {
-      const response = await customAxios.get(`https://backend-l3s8.onrender.com/api/data/usuario/${username}`, {
+      const response = await customAxios.get(`https://api.astraesystem.com/api/data/usuario/${username}`, {
         withCredentials: true,
       });
       setSeguidores(response.data.seguidores || 0);

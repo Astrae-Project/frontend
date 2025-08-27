@@ -47,7 +47,7 @@ const ChatGroup = ({ groupId }) => {
   const fetchRol = async () => {
     try {
       const response = await customAxios.get(
-        `https://backend-l3s8.onrender.com/api/data/usuario`,
+        `https://api.astraesystem.com/api/data/usuario`,
         { withCredentials: true }
       );
       setCurrentUser(
@@ -66,7 +66,7 @@ const ChatGroup = ({ groupId }) => {
     if (!numericGroupId) return;
     try {
       const response = await customAxios.get(
-        `https://backend-l3s8.onrender.com/api/grupos/data/${numericGroupId}`
+        `https://api.astraesystem.com/api/grupos/data/${numericGroupId}`
       );
       setGroupData(response.data);
       setPermisos(response.data.permisos);
@@ -81,7 +81,7 @@ const ChatGroup = ({ groupId }) => {
 
   const actualizarPermiso = async (permisoId, nuevoValor) => {
   try {
-    await customAxios.put(`https://backend-l3s8.onrender.com/api/grupos/cambio-permiso/${numericGroupId}`, {
+    await customAxios.put(`//backend-l3s8.onrender.com/api/grupos/cambio-permiso/${numericGroupId}`, {
       groupId: numericGroupId,
       permiso: permisoId,
       abierto: nuevoValor,
@@ -120,7 +120,7 @@ const ChatGroup = ({ groupId }) => {
     const fetchMessages = async () => {
       try {
         const response = await customAxios.get(
-          `https://backend-l3s8.onrender.com/api/grupos/ver/${numericGroupId}/mensajes`
+          `https://api.astraesystem.com/api/grupos/ver/${numericGroupId}/mensajes`
         );
         setMessages(response.data.mensajes);
       } catch (error) {
@@ -207,7 +207,7 @@ const ChatGroup = ({ groupId }) => {
   const handleEditarGrupo = async () => {
     try {
       await customAxios.put(
-        `https://backend-l3s8.onrender.com/api/grupos/datos/${groupId}`,
+        `https://api.astraesystem.com/api/grupos/datos/${groupId}`,
         formData
       );
       await fetchGroupData();
@@ -222,7 +222,7 @@ const ChatGroup = ({ groupId }) => {
   const handleSalirGrupo = async () => {
     try {
       await customAxios.delete(
-        `https://backend-l3s8.onrender.com/api/grupos/salir/${groupId}`
+        `https://api.astraesystem.com/api/grupos/salir/${groupId}`
       );
       setActiveBubble(null);
       setGroupData(null);
@@ -254,7 +254,7 @@ const ChatGroup = ({ groupId }) => {
           },
         ]);
         await customAxios.post(
-          `https://backend-l3s8.onrender.com/api/grupos/enviar/${numericGroupId}/mensajes`,
+          `https://api.astraesystem.com/api/grupos/enviar/${numericGroupId}/mensajes`,
           messageData
         );
         socket.emit("sendMessage", {

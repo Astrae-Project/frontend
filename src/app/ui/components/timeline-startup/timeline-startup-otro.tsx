@@ -19,7 +19,7 @@ export default function TimelineStartupOtro({ username }: { username: string }) 
     async function fetchHitos() {
       try {
         const { data } = await customAxios.get(
-          `https://backend-l3s8.onrender.com/api/data/usuario/${username}`,
+          `https://api.astraesystem.com/api/data/usuario/${username}`,
           { withCredentials: true }
         );
         setHitos(data.startup.hitos);

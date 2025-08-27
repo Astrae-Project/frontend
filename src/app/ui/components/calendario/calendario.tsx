@@ -70,7 +70,7 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
   const fetchEventos = async () => {
     try {
       const response = await customAxios.get(
-        "https://backend-l3s8.onrender.com/api/evento/todos",
+        "https://api.astraesystem.com/api/evento/todos",
         { withCredentials: true }
       );
       if (Array.isArray(response.data)) {
@@ -125,7 +125,7 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
   // Crear evento
   const handleCrearEvento = async (eventData) => {
     try {
-      await customAxios.post("https://backend-l3s8.onrender.com/api/evento/crear", eventData);
+      await customAxios.post("https://api.astraesystem.com/api/evento/crear", eventData);
       setConfirmationMessage("¡Evento creado con éxito!");
       setMessageType("success");
       setFormSubmitted(true);
@@ -149,7 +149,7 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
   
     try {
       const eventoId = selectedEvent.id;
-      const response = await customAxios.delete(`https://backend-l3s8.onrender.com/api/evento/eliminar/${eventoId}`);
+      const response = await customAxios.delete(`https://api.astraesystem.com/api/evento/eliminar/${eventoId}`);
   
       // Actualizar el estado para eliminar el evento del listado
       setConfirmationMessage("Evento eliminado con éxito");
@@ -174,7 +174,7 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
   
     try {
       const eventoId = selectedEvent.id;
-      const response = await customAxios.delete(`https://backend-l3s8.onrender.com/api/evento/salir/${eventoId}`);
+      const response = await customAxios.delete(`https://api.astraesystem.com/api/evento/salir/${eventoId}`);
   
       setConfirmationMessage("Te has desinscrito del evento con éxito");
       setMessageType("success");
@@ -208,7 +208,7 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
 
     try {
       const eventoId = selectedEvent.id;
-      const response = await customAxios.put(`https://backend-l3s8.onrender.com/api/evento/datos/${eventoId}`, eventData);
+      const response = await customAxios.put(`https://api.astraesystem.com/api/evento/datos/${eventoId}`, eventData);
 
       setConfirmationMessage("¡Evento editado con éxito!"); // Mensaje de éxito
       setMessageType("success"); // Tipo de mensaje de éxito
@@ -230,7 +230,7 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
 
     try {
       const eventoId = selectedEvent.id;
-      const response = await customAxios.get(`https://backend-l3s8.onrender.com/api/evento/data/${eventoId}`);
+      const response = await customAxios.get(`https://api.astraesystem.com/api/evento/data/${eventoId}`);
       setFormSubmitted(true); // Cambiar el estado para ocultar el formulario
     } catch (error) {
       setConfirmationMessage("Hubo un error al recuperar el evento."); // Mensaje de error
@@ -249,7 +249,7 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
 
     try {
       const eventoId = selectedEvent.id;
-      const response = await customAxios.post(`https://backend-l3s8.onrender.com/api/evento/entrar/${eventoId}`);
+      const response = await customAxios.post(`https://api.astraesystem.com/api/evento/entrar/${eventoId}`);
       setConfirmationMessage("Inscrito en el evento con éxito!"); // Mensaje de éxito
       setMessageType("success"); // Tipo de mensaje de éxito
       setFormSubmitted(true); // Cambiar el estado para ocultar el formulario

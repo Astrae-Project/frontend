@@ -35,7 +35,7 @@ const TablaGrupos = () => {
   const handleCrearGrupo = async () => {
     try {
       const response = await customAxios.post(
-        "https://backend-l3s8.onrender.com/api/grupos/crear",
+        "https://api.astraesystem.com/api/grupos/crear",
         formData,
         { withCredentials: true }
       );
@@ -57,7 +57,7 @@ const TablaGrupos = () => {
     if (!selectedGroup) return; // Verificación adicional
     try {
       const response = await customAxios.post(
-        `https://backend-l3s8.onrender.com/api/grupos/unir/${selectedGroup.id}`,
+        `https://api.astraesystem.com/api/grupos/unir/${selectedGroup.id}`,
         {},
         { withCredentials: true }
       );
@@ -88,7 +88,7 @@ const TablaGrupos = () => {
   const fetchGrupos = async () => {
     try {
       const response = await customAxios.get(
-        "https://backend-l3s8.onrender.com/api/data/grupos",
+        "https://api.astraesystem.com/api/data/grupos",
         { withCredentials: true }
       );
       if (Array.isArray(response.data)) {
@@ -105,7 +105,7 @@ const TablaGrupos = () => {
     const fetchTodosGrupos = async () => {
       try {
         const response = await customAxios.get(
-          "https://backend-l3s8.onrender.com/api/data/todos-grupos",
+          "https://api.astraesystem.com/api/data/todos-grupos",
           { withCredentials: true }
         );
         if (Array.isArray(response.data)) {

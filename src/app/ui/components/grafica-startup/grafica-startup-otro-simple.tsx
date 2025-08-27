@@ -28,7 +28,7 @@ const GraficaStartupOtroSimple = ({ username }) => {
 
   const fetchValorStartup = async () => {
     try {
-      const response = await customAxios.get(`https://backend-l3s8.onrender.com/api/data/usuario/${username}`, {
+      const response = await customAxios.get(`https://api.astraesystem.com/api/data/usuario/${username}`, {
         withCredentials: true,
       });
 

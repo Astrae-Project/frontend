@@ -39,7 +39,7 @@ export function Placeholder({ username }) {
     try {
       setIsLoading(true);
       const response = await customAxios.get(
-        "https://backend-l3s8.onrender.com/api/data/todos-usuarios",
+        "https://api.astraesystem.com/api/data/todos-usuarios",
         { withCredentials: true }
       );
       if (response.data?.usuarios instanceof Array) {

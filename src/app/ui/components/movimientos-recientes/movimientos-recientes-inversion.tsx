@@ -12,7 +12,7 @@ const MovimientosRecientesInversion = ({ username }) => {
 
   const fetchMovimientosRecientes = async () => {
     try {
-      const response = await customAxios.get(`https://backend-l3s8.onrender.com/api/data/movimientos-inversion`, {
+      const response = await customAxios.get(`https://api.astraesystem.com/api/data/movimientos-inversion`, {
         withCredentials: true,
       });
   

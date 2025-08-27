@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Crear una instancia personalizada de axios
 const customAxios = axios.create({
-  baseURL: "https://backend-l3s8.onrender.com/api",
+  baseURL: "https://api.astraesystem.com/api",
   withCredentials: true, // Asegúrate de que las cookies se envíen
 });
 
@@ -30,7 +30,7 @@ customAxios.interceptors.response.use(
 
   export const generateRefreshToken = async () => {
     try {
-      const response = await customAxios.post("https://backend-l3s8.onrender.com/api/auth/refrescar-token");
+      const response = await customAxios.post("https://api.astraesystem.com/api/auth/refrescar-token");
    
       if (response.data.accessToken) {
         } else {

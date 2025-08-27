@@ -25,7 +25,7 @@ const Input = ({ onSendMessage, groupId }) => {
     if (!numericGroupId) return;
     try {
       const response = await customAxios.get(
-        `https://backend-l3s8.onrender.com/api/grupos/data/${numericGroupId}`
+        `https://api.astraesystem.com/api/grupos/data/${numericGroupId}`
       );
       setMembers(response.data.miembros || []);
     } catch (error) {

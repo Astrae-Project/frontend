@@ -16,7 +16,7 @@ export function OfertasPendientes({ username }) {
   const fetchOfertasData = async () => {
     try {
       const response = await customAxios.get(
-        "https://backend-l3s8.onrender.com/api/data/ofertas",
+        "https://api.astraesystem.com/api/data/ofertas",
         {
           withCredentials: true,
         }

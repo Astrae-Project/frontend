@@ -8,7 +8,7 @@ const InversionesRealizadas = () => {
 
   const fetchEstadisticas = async () => {
     try {
-      const response = await customAxios.get("https://backend-l3s8.onrender.com/api/data/usuario", {
+      const response = await customAxios.get("https://api.astraesystem.com/api/data/usuario", {
         withCredentials: true,
       });
       // Verifica la respuesta

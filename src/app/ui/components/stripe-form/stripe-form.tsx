@@ -80,14 +80,14 @@ export default function FormularioInversion({ selectedStartup, onClose }) {
 
       // 2. Enviar paymentMethodId al backend antes de crear la oferta
       await customAxios.post(
-        'https://backend-l3s8.onrender.com/api/stripe/metodo-pago',
+        'https://api.astraesystem.com/api/stripe/metodo-pago',
         { paymentMethodId },
         { withCredentials: true }
       );
 
       // 3. Crear la oferta para obtener clientSecret
       const { data } = await customAxios.post(
-        'https://backend-l3s8.onrender.com/api/invest/oferta',
+        'https://api.astraesystem.com/api/invest/oferta',
         {
           id_startup: selectedStartup.id,
           porcentaje_ofrecido: selectedPercentage,

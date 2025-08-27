@@ -30,7 +30,7 @@ const InformacionContacto = ({ contacto, fetchContacto }) => {
   const handleAñadirContacto = async () => {
     try {
       const response = await customAxios.put(
-        'https://backend-l3s8.onrender.com/api/perfil/cambiar-datos',
+        'https://api.astraesystem.com/api/perfil/cambiar-datos',
         formData,
         { withCredentials: true }
       );
@@ -189,7 +189,7 @@ export default function Contacto() {
 
   const fetchContacto = async () => {
     try {
-      const response = await customAxios.get('https://backend-l3s8.onrender.com/api/data/contacto', {
+      const response = await customAxios.get('https://api.astraesystem.com/api/data/contacto', {
         withCredentials: true,
       });
       setContacto(response.data);
