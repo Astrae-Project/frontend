@@ -5,7 +5,7 @@ const StarRatingOtro = ({ puntuacionMedia }) => {
   const totalStars = 5;
   const filledStars = Math.floor(puntuacionMedia); // Estrellas completas
   const hasHalfStar = puntuacionMedia % 1 >= 0.5; // Si hay un medio (0.5 o más)
-  const starFraction = (puntuacionMedia - filledStars).toFixed(2); // Parte fraccionaria de la puntuación
+  const starFraction = parseFloat((puntuacionMedia - filledStars).toFixed(2)); // Parte fraccionaria de la puntuación (como número)
 
   const stars = [];
 
