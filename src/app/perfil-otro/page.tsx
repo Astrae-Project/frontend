@@ -1,17 +1,17 @@
 'use client'
 
+import React, { useState, useEffect, Suspense } from "react";
 import customAxios from "@/service/api.mjs";
-import { useState, useEffect } from "react";
 import { BentoGridPerfilOtro } from "./bento-perfil-otro/bento-perfil-otro";
 import { useSearchParams } from "next/navigation";
 
 export default function PerfilOtro() {
-  
   const [isLoading, setIsLoading] = useState(true);
   const [sessionExpired, setSessionExpired] = useState(false);
-  const searchParams = useSearchParams();
-  const username = searchParams.get("username"); // <-- lo que viene de la otra página
 
+  // useSearchParams() vive en un componente cliente — OK — pero debemos envolver la UI que lo usa en Suspense
+  const searchParams = useSearchParams();
+  const username = searchParams?.get("username") ?? "";
 
   useEffect(() => {
     const verificarSesion = async () => {
@@ -21,14 +21,14 @@ export default function PerfilOtro() {
         // Token renovado → podemos mostrar la página
         setIsLoading(false);
       } catch (error: any) {
-        if (error.response?.status === 403) {
+        if (error?.response?.status === 403) {
           // No hay refresh token → sesión expirada
           setSessionExpired(true);
         } else {
           // Cualquier otro error de red/servidor
           console.error("Error inesperado al refrescar token:", error);
         }
-        // ¡Muy importante! Quitamos el loading en todos los casos
+        // Quitamos el loading en todos los casos
         setIsLoading(false);
       }
     };
@@ -39,17 +39,11 @@ export default function PerfilOtro() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <img
-          src="/Logo.svg"
-          alt="Cargando..."
-          className="heartbeat"
-        />
+        <img src="/Logo.svg" alt="Cargando..." className="heartbeat" />
       </div>
     );
   }
-  
 
-  // Si detectamos sesión expirada (403), mostramos el aviso
   if (sessionExpired) {
     return (
       <div className="flex flex-col items-center justify-center h-screen p-4">
@@ -65,11 +59,28 @@ export default function PerfilOtro() {
     );
   }
 
+  // Envuelve la parte que usa useSearchParams / renderiza la UI cliente en Suspense
   return (
     <main>
-      <div>
-        <BentoGridPerfilOtro username={username} />
-      </div>
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center h-screen">
+            <img src="/Logo.svg" alt="Cargando..." className="heartbeat" />
+          </div>
+        }
+      >
+        {username ? (
+          <div>
+            <BentoGridPerfilOtro username={username} />
+          </div>
+        ) : (
+          // Si entras sin username en query, evita render errors y muestra aviso (puedes personalizar)
+          <div className="flex flex-col items-center justify-center h-48 p-4">
+            <p className="mb-2">No se ha especificado el usuario en la URL.</p>
+            <p className="text-sm text-muted">Accede desde la lista de usuarios o añade ?username=usuario</p>
+          </div>
+        )}
+      </Suspense>
     </main>
   );
 }
