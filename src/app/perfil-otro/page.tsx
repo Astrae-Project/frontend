@@ -3,12 +3,15 @@
 import customAxios from "@/service/api.mjs";
 import { useState, useEffect } from "react";
 import { BentoGridPerfilOtro } from "./bento-perfil-otro/bento-perfil-otro";
+import { useSearchParams } from "next/navigation";
 
-export default function PerfilOtro({ searchParams }: { searchParams: { username?: string } }) {
-  const username = searchParams?.username ?? undefined;
+export default function PerfilOtro() {
   
   const [isLoading, setIsLoading] = useState(true);
   const [sessionExpired, setSessionExpired] = useState(false);
+  const searchParams = useSearchParams();
+  const username = searchParams.get("username"); // <-- lo que viene de la otra página
+
 
   useEffect(() => {
     const verificarSesion = async () => {
@@ -53,7 +56,7 @@ export default function PerfilOtro({ searchParams }: { searchParams: { username?
         <h1 className="text-2xl font-semibold mb-4">Sesión expirada</h1>
         <p className="mb-6 text-center">Para continuar, inicia sesión de nuevo.</p>
         <button
-          onClick={() => window.location.href = 'https://www.astraesystem.com/inicio-sesion'}
+          onClick={() => window.location.href = 'https://landing-fu62u3718-astraes-projects-b730cac9.vercel.app/inicio-sesion'}
           className="relative w-auto h-[35px] bg-[#6e4ba3] border border-[#1E202F] rounded-[7px] text-[13.5px] px-[25px]"
         >
           Iniciar Sesión
