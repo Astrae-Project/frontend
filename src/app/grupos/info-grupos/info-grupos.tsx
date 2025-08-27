@@ -13,7 +13,8 @@ import {
   IconUserCog
 } from "@tabler/icons-react";
 import Bubble from "@/app/ui/components/bubble/bubble";
-import PerfilOtro from "@/app/perfil-otro/page";
+// IMPORT CORREGIDO: en vez de importar la page, importamos el componente cliente reutilizable
+import { BentoGridPerfilOtro } from "@/app/perfil-otro/bento-perfil-otro/bento-perfil-otro";
 import { se } from "date-fns/locale";
 
 const InfoGrupos = ({ groupId }) => {
@@ -445,8 +446,9 @@ const InfoGrupos = ({ groupId }) => {
         message={confirmationMessage}
         type={messageType}
       >
-        {activeBubble === "perfil-miembro" && (
-          <PerfilOtro username={selectedUser.username}></PerfilOtro>
+        {activeBubble === "perfil-miembro" && selectedUser && (
+          // Usamos el componente cliente reutilizable que acepta username
+          <BentoGridPerfilOtro username={selectedUser.username} />
         )}
 
         {activeBubble === "cambiar-rol" && (
