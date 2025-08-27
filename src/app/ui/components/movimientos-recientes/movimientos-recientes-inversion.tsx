@@ -7,7 +7,7 @@ import PerfilOtro from "@/app/perfil-otro/page";
 
 const PerfilOtroComponent: any = PerfilOtro;
 
-const MovimientosRecientesInversion = ({ username }) => {
+const MovimientosRecientesInversion = () => {
   const [movimientosRecientes, setMovimientosRecientes] = useState([]);
   const [activeBubble, setActiveBubble] = useState(null); // Tipo de burbuja activa
   const [bubbleData, setBubbleData] = useState(null); // Datos de la burbuja

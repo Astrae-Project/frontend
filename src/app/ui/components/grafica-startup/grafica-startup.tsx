@@ -1,5 +1,5 @@
 import customAxios from '@/service/api.mjs';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, Title, Tooltip, Legend, LineElement, PointElement, Filler } from 'chart.js';
 import './grafica-startup-style.css';
@@ -24,7 +24,7 @@ const GraficaStartup = () => {
     ],
   });
 
-  const [totalStartupValue, setTotalStartupValue] = useState(0);
+  const [totalStartupValue, setTotalStartupValue] = useState<string>('0');
   const [percentageChange, setPercentageChange] = useState(0);
 
   // Función para formatear los números (miles con puntos y decimales con coma)
@@ -102,7 +102,7 @@ const GraficaStartup = () => {
           top: '1.5px', // Mover hacia abajo
         }
         }>
-          {totalStartupValue.toLocaleString('es-ES')}€ 
+          {totalStartupValue.toLocaleString()}€ 
         </span>
         <p className='cambio-valor'
         style={{
