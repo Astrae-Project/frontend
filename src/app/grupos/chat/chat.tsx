@@ -1,130 +1,142 @@
 'use client';
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 import Input from "../textarea/textarea-demo";
 import "./chat-style.css";
-import { IconDotsVertical, IconLogout2, IconPencil, IconPin, IconUserShield } from "@tabler/icons-react";
+import { IconDotsVertical, IconLogout2, IconPencil, IconUserShield } from "@tabler/icons-react";
 import customAxios from "@/service/api.mjs";
 import Bubble from "@/app/ui/components/bubble/bubble";
 
 const SOCKET_SERVER_URL = "https://backend-l3s8.onrender.com";
 
-const ChatGroup = ({ groupId }) => {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [socket, setSocket] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [groupData, setGroupData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [openDropdownId, setOpenDropdownId] = useState(null);
-  const [selectedGroup, setSelectedGroup] = useState(null);
-  const [activeBubble, setActiveBubble] = useState(null);
-  const [confirmationMessage, setConfirmationMessage] = useState("");
-  const [messageType, setMessageType] = useState("");
-  const [formData, setFormData] = useState({
-    nombre: groupData ? groupData.nombre : "",
-    descripcion: groupData ? groupData.descripcion : "",
-    tipo: groupData ? groupData.tipo : "privado",
-  });
-  const dropdownRef = useRef(null);
-  const [permisos, setPermisos] = useState([]);
+interface ChatGroupProps {
+  groupId?: number | string | null;
+  user?: any;
+}
 
-  
-  // Referencias para el scroll
-  const chatContainerRef = useRef(null);
-  const messagesEndRef = useRef(null);
+interface Message {
+  contenido: string;
+  id_emisor?: number;
+  id_grupo?: number;
+  fecha_envio?: string;
+  emisor?: { id?: number; username?: string; avatar?: string };
+  [k: string]: any;
+}
+
+const ChatGroup: React.FC<ChatGroupProps> = ({ groupId, user }) => {
+  const [currentUser, setCurrentUser] = useState<any>(user ?? null);
+  const socketRef = useRef<Socket | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [groupData, setGroupData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [openDropdownId, setOpenDropdownId] = useState<any>(null);
+  const [selectedGroup, setSelectedGroup] = useState<any>(null);
+  const [activeBubble, setActiveBubble] = useState<string | null>(null);
+  const [confirmationMessage, setConfirmationMessage] = useState<string>("");
+  const [messageType, setMessageType] = useState<string>("");
+  const [permisos, setPermisos] = useState<any[]>([]);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+  // Scroll refs
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const numericGroupId = groupId ? parseInt(String(groupId).trim(), 10) : null;
 
-  const isCurrentUserAdmin = () => {
-    const currentMember = groupData?.miembros.find(miembro => miembro.id === currentUserId);
-    return currentMember && currentMember.rol.toLowerCase() === 'administrador';
-  };
-
   const currentUserId = currentUser ? currentUser.id : null;
 
-  // Obtener datos del usuario
+  const isCurrentUserAdmin = () => {
+    const currentMember = groupData?.miembros?.find((miembro: any) => miembro.id === currentUserId);
+    return !!(currentMember && (String(currentMember.rol || "").toLowerCase() === "administrador"));
+  };
+
+  // --- Fetch usuario (si no llega desde props) ---
   const fetchRol = async () => {
     try {
-      const response = await customAxios.get(
-        `https://api.astraesystem.com/api/data/usuario`,
-        { withCredentials: true }
-      );
-      setCurrentUser(
-        response.data.inversor?.usuario || response.data.startup?.usuario
-      );
+      console.log("[Chat] fetchRol: pidiendo usuario");
+      const response = await customAxios.get(`/data/usuario`, { withCredentials: true });
+      const usuario = response.data.inversor?.usuario || response.data.startup?.usuario;
+      console.log("[Chat] fetchRol: usuario obtenido", usuario);
+      setCurrentUser(usuario);
     } catch (error) {
-      console.error("Error obteniendo datos del usuario:", error);
+      console.error("[Chat] Error obteniendo datos del usuario:", error);
     }
   };
 
   useEffect(() => {
-    fetchRol();
+    if (!currentUser) fetchRol();
+    // si user prop cambia, actualizamos
   }, []);
 
+  // --- Fetch datos del grupo ---
   const fetchGroupData = async () => {
     if (!numericGroupId) return;
     try {
-      const response = await customAxios.get(
-        `https://api.astraesystem.com/api/grupos/data/${numericGroupId}`
-      );
+      console.log(`[Chat] fetchGroupData: pidiendo datos del grupo ${numericGroupId}`);
+      const response = await customAxios.get(`/grupos/data/${numericGroupId}`);
+      console.log("[Chat] fetchGroupData: datos recibidos", response.data);
       setGroupData(response.data);
-      setPermisos(response.data.permisos);
+      setPermisos(response.data.permisos ?? []);
     } catch (error) {
-      console.error("Error obteniendo datos del grupo:", error);
+      console.error("[Chat] Error obteniendo datos del grupo:", error);
     }
   };
-  
+
   useEffect(() => {
     fetchGroupData();
   }, [numericGroupId]);
 
-  const actualizarPermiso = async (permisoId, nuevoValor) => {
-  try {
-    await customAxios.put(`//backend-l3s8.onrender.com/api/grupos/cambio-permiso/${numericGroupId}`, {
-      groupId: numericGroupId,
-      permiso: permisoId,
-      abierto: nuevoValor,
-    });
-  } catch (error) {
-    console.error("Error actualizando permiso:", error);
-  }
-};
-  useEffect(() => {
-    if (permisos.length > 0) {
-      permisos.forEach((permiso) => {
-        actualizarPermiso(permiso.permiso, permiso.abierto);
-      });
+  // --- Actualizar permiso (fix URL y guard) ---
+  const actualizarPermiso = async (permisoId: string, nuevoValor: boolean) => {
+    if (!numericGroupId) return;
+    try {
+      console.log(`[Chat] actualizarPermiso: ${permisoId} -> ${nuevoValor}`);
+      await customAxios.put(
+        `https://backend-l3s8.onrender.com/api/grupos/cambio-permiso/${numericGroupId}`,
+        {
+          groupId: numericGroupId,
+          permiso: permisoId,
+          abierto: nuevoValor,
+        }
+      );
+    } catch (error: any) {
+      console.error("[Chat] Error actualizando permiso:", error?.response ?? error);
     }
-  }, [permisos]);
+  };
 
-  const togglePermiso = (permisoId) => {
-  setPermisos((prev) =>
-    prev.map((permiso) => {
-      if (permiso.permiso === permisoId) {
-        const nuevoValor = !permiso.abierto;
-        // Llamada al backend
-        actualizarPermiso(permisoId, nuevoValor);
-        return { ...permiso, abierto: nuevoValor };
-      }
-      return permiso;
+  useEffect(() => {
+    // Si permisos vienen del servidor, no reenvíes inmediatamente todos (esto puede provocar bucle).
+    // Aquí simplemente sincronizamos estado local con servidor sólo si hay cambios manuales (togglePermiso).
+    // Por seguridad, no mandamos masivamente al montar.
+  }, []);
+
+  const togglePermiso = (permisoId: string) => {
+    setPermisos((prev) =>
+      prev.map((permiso) => {
+        if (permiso.permiso === permisoId) {
+          const nuevoValor = !permiso.abierto;
+          // Llamada al backend
+          actualizarPermiso(permisoId, nuevoValor);
+          return { ...permiso, abierto: nuevoValor };
+        }
+        return permiso;
       })
     );
   };
 
-  
-  // Obtener mensajes
+  // --- Fetch mensajes iniciales ---
   useEffect(() => {
     if (!numericGroupId) return;
     setIsLoading(true);
     const fetchMessages = async () => {
       try {
-        const response = await customAxios.get(
-          `https://api.astraesystem.com/api/grupos/ver/${numericGroupId}/mensajes`
-        );
-        setMessages(response.data.mensajes);
+        console.log(`[Chat] fetchMessages: grupo ${numericGroupId}`);
+        const response = await customAxios.get(`/grupos/ver/${numericGroupId}/mensajes`);
+        console.log("[Chat] fetchMessages: recibidos", response.data?.mensajes?.length ?? 0);
+        setMessages(response.data.mensajes ?? []);
       } catch (error) {
-        console.error("Error obteniendo mensajes:", error);
+        console.error("[Chat] Error obteniendo mensajes:", error);
       } finally {
         setIsLoading(false);
       }
@@ -132,28 +144,35 @@ const ChatGroup = ({ groupId }) => {
     fetchMessages();
   }, [numericGroupId]);
 
-  // Hacer scroll al final cuando se carguen los mensajes
+  // Scroll to bottom
   useEffect(() => {
     if (chatContainerRef.current && !isLoading) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [messages, isLoading]);
 
-  // Conexión con Socket.IO
+  // --- Socket.IO: conectar / escuchar / limpiar ---
   useEffect(() => {
     if (!numericGroupId) return;
+
+    console.log(`[Chat] Conectando socket al servidor ${SOCKET_SERVER_URL} para grupo ${numericGroupId}`);
     const newSocket = io(SOCKET_SERVER_URL, { withCredentials: true });
+
     newSocket.on("connect", () => {
+      console.log("[Chat:socket] conectado, id:", newSocket.id);
       newSocket.emit("joinRoom", numericGroupId);
     });
-    newSocket.on("newMessage", (data) => {
+
+    newSocket.on("newMessage", (data: Message) => {
+      console.log("[Chat:socket] newMessage recibido:", data);
       setMessages((prevMessages) => [...prevMessages, data]);
+      // Autoscroll si estamos cerca del final
       if (chatContainerRef.current) {
         const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
         const isAtBottom = scrollHeight - scrollTop - clientHeight < 100;
         if (isAtBottom) {
           setTimeout(() => {
-            chatContainerRef.current.scrollTo({
+            chatContainerRef.current?.scrollTo({
               top: chatContainerRef.current.scrollHeight,
               behavior: "smooth",
             });
@@ -161,84 +180,100 @@ const ChatGroup = ({ groupId }) => {
         }
       }
     });
-    newSocket.on("connect_error", (err) => {
-      console.error("Error de conexión:", err);
+
+    newSocket.on("connect_error", (err: any) => {
+      console.error("[Chat:socket] Error de conexión:", err);
     });
-    setSocket(newSocket);
-    return () => newSocket.disconnect();
+
+    socketRef.current = newSocket;
+
+    return () => {
+      console.log("[Chat] Desconectando socket");
+      try {
+        socketRef.current?.disconnect();
+      } catch (e) {
+        console.warn("[Chat] Error al desconectar socket:", e);
+      }
+      socketRef.current = null;
+    };
   }, [numericGroupId]);
 
-  const handleDropdownClick = (e, miembro) => {
-    e.stopPropagation();
-    setOpenDropdownId(openDropdownId === miembro.id ? null : miembro.id);
-  };
-
+  // Dropdown click outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
       if (
-        dropdownRef.current && 
-        !dropdownRef.current.contains(event.target) &&
-        !event.target.closest('.btn-dropdown')
+        dropdownRef.current &&
+        !dropdownRef.current.contains(target) &&
+        !target.closest(".btn-dropdown")
       ) {
         setOpenDropdownId(null);
       }
     };
-  
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-  
+
   const closeBubble = () => {
     setActiveBubble(null);
     setConfirmationMessage("");
     setMessageType("");
   };
 
+  // Edit group form state (actualizado al abrir editar)
+  const [formData, setFormData] = useState({
+    nombre: "",
+    descripcion: "",
+    tipo: "privado",
+  });
+
   useEffect(() => {
     if (activeBubble === "editar-grupo" && selectedGroup) {
       setFormData({
         nombre: selectedGroup.nombre || "",
         descripcion: selectedGroup.descripcion || "",
-        tipo: selectedGroup.tipo || "publico"
+        tipo: selectedGroup.tipo || "publico",
       });
     }
   }, [activeBubble, selectedGroup]);
-  
+
   const handleEditarGrupo = async () => {
     try {
-      await customAxios.put(
-        `https://api.astraesystem.com/api/grupos/datos/${groupId}`,
-        formData
-      );
+      console.log("[Chat] handleEditarGrupo", formData);
+      await customAxios.put(`/grupos/datos/${groupId}`, formData);
       await fetchGroupData();
       setActiveBubble(null);
-    } catch (error) {
-      console.error("Error editando grupo:", error);
-      setConfirmationMessage(error.response.data.message);
-      setMessageType("error");
-    }
-  };  
-
-  const handleSalirGrupo = async () => {
-    try {
-      await customAxios.delete(
-        `https://api.astraesystem.com/api/grupos/salir/${groupId}`
-      );
-      setActiveBubble(null);
-      setGroupData(null);
-      setConfirmationMessage("Has salido del grupo correctamente.");
+      setConfirmationMessage("Grupo editado correctamente");
       setMessageType("success");
-    } catch (error) {
-      console.error("Error saliendo del grupo:", error);
-      setConfirmationMessage(error.response.data.message);
+    } catch (error: any) {
+      console.error("[Chat] Error editando grupo:", error?.response ?? error);
+      setConfirmationMessage(error?.response?.data?.message ?? "Error editando grupo");
       setMessageType("error");
     }
   };
 
-  // Función para enviar el mensaje. Recibe el contenido como argumento.
+  const handleSalirGrupo = async () => {
+    try {
+      await customAxios.delete(`/grupos/salir/${groupId}`);
+      setActiveBubble(null);
+      setGroupData(null);
+      setConfirmationMessage("Has salido del grupo correctamente.");
+      setMessageType("success");
+    } catch (error: any) {
+      console.error("[Chat] Error saliendo del grupo:", error?.response ?? error);
+      setConfirmationMessage(error?.response?.data?.message ?? "Error saliendo del grupo");
+      setMessageType("error");
+    }
+  };
+
+  // Enviar mensaje
   const handleSendMessage = useCallback(
-    async (messageContent) => {
-      if (!socket || !numericGroupId || !currentUser) return;
+    async (messageContent: string) => {
+      if (!socketRef.current || !numericGroupId || !currentUser) {
+        console.warn("[Chat] No se puede enviar mensaje, faltan datos", { socket: !!socketRef.current, numericGroupId, currentUser });
+        return;
+      }
       try {
         const messageData = {
           contenido: messageContent,
@@ -246,6 +281,8 @@ const ChatGroup = ({ groupId }) => {
           id_grupo: numericGroupId,
           fecha_envio: new Date().toISOString(),
         };
+
+        // Optimistic UI
         setMessages((prevMessages) => [
           ...prevMessages,
           {
@@ -253,46 +290,52 @@ const ChatGroup = ({ groupId }) => {
             emisor: { id: currentUser.id, username: currentUser.username },
           },
         ]);
-        await customAxios.post(
-          `https://api.astraesystem.com/api/grupos/enviar/${numericGroupId}/mensajes`,
-          messageData
-        );
-        socket.emit("sendMessage", {
+
+        // Guardar en backend
+        await customAxios.post(`/grupos/enviar/${numericGroupId}/mensajes`, messageData);
+
+        // Emitir socket
+        socketRef.current.emit("sendMessage", {
           ...messageData,
           username: currentUser.username,
         });
+
+        // Scroll final
         if (chatContainerRef.current) {
           chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
       } catch (error) {
-        console.error("Error al enviar mensaje:", error);
+        console.error("[Chat] Error al enviar mensaje:", error);
       }
     },
-    [socket, numericGroupId, currentUser]
+    [numericGroupId, currentUser]
   );
 
-  function formatHourMinutes(fecha) {
+  // Helpers para formato de fecha/hora
+  function formatHourMinutes(fecha?: string) {
+    if (!fecha) return "";
     const date = new Date(fecha);
     const horas = date.getHours().toString().padStart(2, "0");
     const minutos = date.getMinutes().toString().padStart(2, "0");
     return `${horas}:${minutos}`;
   }
 
-  function formatDateSeparator(fecha) {
+  function formatDateSeparator(fecha?: string) {
+    if (!fecha) return "";
     const date = new Date(fecha);
-    const options = { day: "numeric", month: "long" };
+    const options = { day: "numeric", month: "long" } as const;
     return date.toLocaleDateString("es-ES", options);
   }
 
-  function isValidDate(date) {
+  function isValidDate(date: Date) {
     return date instanceof Date && !isNaN(date.getTime());
   }
 
   const renderMessagesWithSeparators = () => {
-    const elements = [];
+    const elements: React.ReactNode[] = [];
     let lastDateKey = "";
     messages.forEach((msg, index) => {
-      const msgDate = new Date(msg.fecha_envio);
+      const msgDate = new Date(msg.fecha_envio ?? "");
       let msgDateKey = "";
       if (isValidDate(msgDate)) {
         msgDateKey = msgDate.toISOString().split("T")[0];
@@ -305,15 +348,15 @@ const ChatGroup = ({ groupId }) => {
           lastDateKey = msgDateKey;
         }
       } else {
-        console.error("Fecha inválida en mensaje:", msg.fecha_envio);
+        console.error("[Chat] Fecha inválida en mensaje:", msg.fecha_envio);
       }
 
-      const isMyMessage = currentUser && msg.emisor.id === currentUser.id;
+      const isMyMessage = currentUser && msg.emisor && msg.emisor.id === currentUser.id;
       let showHeader = true;
       if (!isMyMessage && index > 0) {
         const prevMsg = messages[index - 1];
-        if (prevMsg.emisor.id === msg.emisor.id) {
-          const prevDateKey = new Date(prevMsg.fecha_envio).toISOString().split("T")[0];
+        if (prevMsg?.emisor?.id === msg?.emisor?.id) {
+          const prevDateKey = new Date(prevMsg.fecha_envio ?? "").toISOString().split("T")[0];
           if (prevDateKey === msgDateKey) {
             showHeader = false;
           }
@@ -338,14 +381,14 @@ const ChatGroup = ({ groupId }) => {
             {showHeader && (
               <div className="avatar-miembro">
                 <img
-                  src={msg.emisor.avatar || "/default-avatar.png"}
+                  src={msg.emisor?.avatar || "/default-avatar.png"}
                   className="avatar-imagen"
                   alt="Avatar"
                 />
               </div>
             )}
             <div className="message-content">
-              {showHeader && <p className="username">{msg.emisor.username}</p>}
+              {showHeader && <p className="username">{msg.emisor?.username}</p>}
               <div className={`chat-message ${messageClass}`}>
                 <span className="contenido">{msg.contenido}</span>
                 <span className="message-time" id="time1">{formatHourMinutes(msg.fecha_envio)}</span>
@@ -379,42 +422,45 @@ const ChatGroup = ({ groupId }) => {
             <div className="header-icons">
               <div className="dropdown-ref" ref={dropdownRef}>
                 <button
-                  onClick={(e) => handleDropdownClick(e, groupData)}
-                  className="iconos"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenDropdownId(openDropdownId === groupData?.id ? null : groupData?.id);
+                  }}
+                  className="iconos btn-dropdown"
                 >
                   <IconDotsVertical />
                 </button>
                 {openDropdownId && (
-                  <div 
-                    className="dropdown1" 
+                  <div
+                    className="dropdown1"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {isCurrentUserAdmin() && (
-                    <>
-                      <button
-                        className="btn-dropdown1"
-                        id="ver-perfil1"
-                        onClick={() => {
-                          setSelectedGroup(groupData);
-                          setActiveBubble("editar-grupo");
-                        }}
-                      >
-                        <IconPencil />
-                        <p>Editar</p>
-                      </button>
-                      <button
-                        className="btn-dropdown1"
-                        id="permisos1"
-                        onClick={() => {
-                          setSelectedGroup(groupData);
-                          setActiveBubble("permisos");
-                        }}
-                      >
-                        <IconUserShield />
-                        <p>Permisos</p>
-                      </button>
-                    </>
-                    )}                             
+                      <>
+                        <button
+                          className="btn-dropdown1"
+                          id="ver-perfil1"
+                          onClick={() => {
+                            setSelectedGroup(groupData);
+                            setActiveBubble("editar-grupo");
+                          }}
+                        >
+                          <IconPencil />
+                          <p>Editar</p>
+                        </button>
+                        <button
+                          className="btn-dropdown1"
+                          id="permisos1"
+                          onClick={() => {
+                            setSelectedGroup(groupData);
+                            setActiveBubble("permisos");
+                          }}
+                        >
+                          <IconUserShield />
+                          <p>Permisos</p>
+                        </button>
+                      </>
+                    )}
                     <button
                       className="btn-dropdown1"
                       id="eliminar1"
@@ -432,6 +478,7 @@ const ChatGroup = ({ groupId }) => {
               </div>
             </div>
           </div>
+
           <div className="chat-messages" ref={chatContainerRef}>
             {isLoading ? (
               <div className="flex items-center justify-center h-screen">
@@ -448,6 +495,7 @@ const ChatGroup = ({ groupId }) => {
               </>
             )}
           </div>
+
           <Input onSendMessage={handleSendMessage} groupId={groupId} />
         </>
       )}
