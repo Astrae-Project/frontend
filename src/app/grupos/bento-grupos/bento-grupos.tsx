@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import "./bento-grupos-style.css";
-import ChatGroup from "../chat/chat";
-import ListaGrupos from "../lista-grupos/lista-grupos";
-import InfoGrupos from "../info-grupos/info-grupos";
+import ChatGroup from "../chat/chat.jsx";
+import ListaGrupos from "../lista-grupos/lista-grupos.jsx";
+import InfoGrupos from "../info-grupos/info-grupos.jsx";
 
 const BentoGridGrupos = () => {
   const [selectedGroupId, setSelectedGroupId] = useState(null);

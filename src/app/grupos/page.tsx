@@ -2,7 +2,7 @@
 
 import customAxios from "@/service/api.mjs";
 import { useState, useEffect } from "react";
-import BentoGridGrupos from "./bento-grupos/bento-grupos";
+import BentoGridGrupos from "./bento-grupos/bento-grupos.jsx";
 
 export default function Grupos() {
 
