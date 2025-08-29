@@ -340,6 +340,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
               tooltipText="Sector favorito"
             />
             <MiniChipsOtro
+              isStars={true}
               label={<StarRating puntuacionMedia={puntuacionMedia} />}
               tooltipText={`Puntuación Media: ${puntuacionMedia}`}
             />

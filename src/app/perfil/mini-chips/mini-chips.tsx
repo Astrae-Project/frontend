@@ -5,20 +5,15 @@ import { Chip } from "@heroui/react";
 import './mini-chips-style.modules.css';
 
 interface MiniChipsProps {
-  label: React.ReactNode;           // acepta JSX, string, number...
-  tooltipText?: string | null;      // opcional
+  label: React.ReactNode;
+  tooltipText?: string | null;
   className?: string;
   id?: string;
+  isStars?: boolean; // nuevo prop opcional
 }
 
-export function MiniChips({ label, tooltipText, className, id }: MiniChipsProps) {
-
-  let extraClass = "";
-
-  // Si el tooltipText es dinámico (número, puntuación, etc.)
-  if (tooltipText && !isNaN(Number(tooltipText))) {
-    extraClass = "chip-rating";
-  }
+export function MiniChips({ label, tooltipText, className, id, isStars }: MiniChipsProps) {
+  const extraClass = isStars ? "chip-estrellas" : "";
 
   return (
     <div className={`mini-chips-wrapper ${className ?? ""}`} id={id}>
