@@ -12,7 +12,7 @@
     align-items: center;
 }
 
-.chip-rating {
+.chip-rating .mini-chip{
     padding: 8px 13px 8px 13px !important;
 }
 

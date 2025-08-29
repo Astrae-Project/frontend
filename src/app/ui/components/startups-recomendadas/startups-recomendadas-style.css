@@ -34,3 +34,10 @@
     overflow: hidden; /* Evita que el contenido desborde */
     width: 203.5%;
 }
+
+.texto-empty1 {
+    height: 100%;
+    text-align: center;
+    justify-content: center;
+    align-content: center;
+}

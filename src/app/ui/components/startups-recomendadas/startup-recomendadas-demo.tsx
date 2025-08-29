@@ -67,7 +67,7 @@ export function StartupsRecomendadas() {
     <div className="apartado-raro">
       <ScrollShadow size={1000} orientation="horizontal" className="contiene1">
         {displayedStartups.length === 0 ? (
-          <p className="texto-empty">No hay startups recomendadas</p>
+          <p className="texto-empty1">No hay startups recomendadas</p>
         ) : (
           displayedStartups.map((startup) => (
             <Carta
