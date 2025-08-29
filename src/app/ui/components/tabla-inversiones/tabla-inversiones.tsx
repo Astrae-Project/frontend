@@ -7,7 +7,6 @@ const TablaInversiones = () => {
   const [ofertas, setOfertas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeBubble, setActiveBubble] = useState(null);
-  const [error, setError] = useState(null);
   const [confirmationMessage, setConfirmationMessage] = useState("");
   const [messageType, setMessageType] = useState("");
 
@@ -19,7 +18,6 @@ const TablaInversiones = () => {
         });
         setOfertas(data);
       } catch (err) {
-        setError(err.response?.data?.message || err.message);
       } finally {
         setLoading(false);
       }
@@ -94,38 +92,36 @@ const TablaInversiones = () => {
 
   if (loading)
     return <div className="no-ofertas">Cargando ofertas…</div>;
-  if (error) return <div className="no-ofertas">Error: {error}</div>;
-  if (!ofertas.length)
-    return (
-      <div className="no-ofertas">
-        <h2>No hay ofertas disponibles</h2>
-      </div>
-    );
 
-  return (
-    <div className="apartado3 tabla-inversiones-wrapper">
-      <div className="custom-table-container">
-        <table className="custom-table">
-          <thead>
+return (
+  <div className="apartado3 tabla-inversiones-wrapper">
+    <div className="custom-table-container">
+      <table className="custom-table">
+        <thead>
+          <tr>
+            <th>Startup</th>
+            <th>Monto</th>
+            <th>Ofrecido %</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ofertas.length === 0 ? (
             <tr>
-              <th>Startup</th>
-              <th>Monto</th>
-              <th>Ofrecido %</th>
-              <th>Estado</th>
-              <th>Fecha</th>
+              <td colSpan={5} style={{ textAlign: "center" }}>
+                No hay startups seguidas
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {ofertas.map((oferta) => (
+          ) : (
+            ofertas.map((oferta) => (
               <tr key={oferta.id}>
                 <td>{oferta.startup?.usuario.username}</td>
                 <td>{formatoValor(oferta.monto_ofrecido)}</td>
                 <td>{oferta.porcentaje_ofrecido}%</td>
                 <td>
                   <span
-                    className={`estado-badge ${getEstadoClass(
-                      oferta.estado
-                    )}`}
+                    className={`estado-badge ${getEstadoClass(oferta.estado)}`}
                     onClick={() => openBubble(oferta)}
                   >
                     {oferta.estado}
@@ -133,55 +129,56 @@ const TablaInversiones = () => {
                 </td>
                 <td>{formatoFecha(oferta.fecha_creacion)}</td>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            ))
+          )}
+        </tbody>
+      </table>
+    </div>
 
-      <Bubble
-        show={!!activeBubble}
-        onClose={closeBubble}
-        message={confirmationMessage}
-        type={messageType}
-      >
-        {activeBubble && (
-          <div className="oferta-card">
-            <div className="oferta-header">
-              <h3>Contraoferta</h3>
-              <span>{formatoFecha(activeBubble.fecha_creacion)}</span>
+    <Bubble
+      show={!!activeBubble}
+      onClose={closeBubble}
+      message={confirmationMessage}
+      type={messageType}
+    >
+      {activeBubble && (
+        <div className="oferta-card">
+          <div className="oferta-header">
+            <h3>Contraoferta</h3>
+            <span>{formatoFecha(activeBubble.fecha_creacion)}</span>
+          </div>
+          <div className="oferta-body">
+            <div>
+              <strong>Startup:</strong>{" "}
+              {activeBubble.startup.usuario.username}
             </div>
-            <div className="oferta-body">
-              <div>
-                <strong>Startup:</strong>{" "}
-                {activeBubble.startup.usuario.username}
-              </div>
-              <div>
-                <strong>Monto:</strong>{" "}
-                {formatoValor(activeBubble.contraoferta_monto)}
-              </div>
-              <div>
-                <strong>% Ofrecido:</strong>{" "}
-                {activeBubble.contraoferta_porcentaje}%
-              </div>
+            <div>
+              <strong>Monto:</strong>{" "}
+              {formatoValor(activeBubble.contraoferta_monto)}
             </div>
-            <div className="oferta-footer">
-              <button
-                className="btn btn-rechazar"
-                onClick={handleReject}
-              >
-                Rechazar
-              </button>
-              <button
-                className="btn btn-aceptar"
-                onClick={handleAccept}
-              >
-                Aceptar
-              </button>
+            <div>
+              <strong>% Ofrecido:</strong>{" "}
+              {activeBubble.contraoferta_porcentaje}%
             </div>
           </div>
-        )}
-      </Bubble>
-    </div>
+          <div className="oferta-footer">
+            <button
+              className="btn btn-rechazar"
+              onClick={handleReject}
+            >
+              Rechazar
+            </button>
+            <button
+              className="btn btn-aceptar"
+              onClick={handleAccept}
+            >
+              Aceptar
+            </button>
+          </div>
+        </div>
+      )}
+    </Bubble>
+  </div>
   );
 };
 

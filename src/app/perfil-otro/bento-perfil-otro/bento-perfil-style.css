@@ -99,17 +99,12 @@
   flex-wrap: wrap;
 }
 
-.contenedor-ancho div:nth-child(4){
-  justify-content: center;
-  padding-top: 1.6%;
-}
-
 .contenedor-ancho div:nth-child(5), .contenedor-ancho1 div:nth-child(5){
-  margin-top: 1px;
+  margin-top: -18px;
 }
 
 .contenedor-ancho div:nth-child(6), .contenedor-ancho1 div:nth-child(6){
-  margin-top: 1px;
+  margin-top: -18px;
 }
 
 .seccion{

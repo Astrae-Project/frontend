@@ -48,7 +48,7 @@ export function StartupsRecomendadas() {
   };
 
   useEffect(() => {
-    setDisplayedStartups(getRandomStartups(6)); // Mostrar 6 startups aleatorias
+    setDisplayedStartups(getRandomStartups(10)); // Mostrar 6 startups aleatorias
   }, [startups]);
 
   // Manejar la apertura de la burbuja
@@ -66,13 +66,17 @@ export function StartupsRecomendadas() {
   return (
     <div className="apartado-raro">
       <ScrollShadow size={1000} orientation="horizontal" className="contiene1">
-        {displayedStartups.map((startup) => (
-          <Carta
-            key={startup.id} // Usar "id" único de la startup como key
-            startup={startup}
-            onClick={() => handleShowBubble(startup)}
-          />
-        ))}
+        {displayedStartups.length === 0 ? (
+          <p>No hay startups recomendadas</p>
+        ) : (
+          displayedStartups.map((startup) => (
+            <Carta
+              key={startup.id}
+              startup={startup}
+              onClick={() => handleShowBubble(startup)}
+            />
+          ))
+        )}
       </ScrollShadow>
 
       {activeBubble && bubbleData && (

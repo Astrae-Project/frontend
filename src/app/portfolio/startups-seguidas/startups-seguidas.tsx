@@ -5,7 +5,7 @@ import { CartaSeguidas } from "../../ui/components/carta-startups/carta-startups
 import "./startups-seguidas-style.css";
 import PerfilOtro from "@/app/perfil-otro/page";
 import customAxios from "@/service/api.mjs";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import Bubble from "@/app/ui/components/bubble/bubble";
 
 const PerfilOtroComponent: any = PerfilOtro;
@@ -63,13 +63,16 @@ const StartupsSeguidas = () => {
 
   return (
     <ScrollShadow size={1000} orientation="horizontal" className="contiene">
-      {displayedStartups.map((startup) => (
+      {displayedStartups.length === 0 ? (
+          <p>No hay startups seguidas</p>
+        ) : (
+          displayedStartups.map((startup) => (
         <CartaSeguidas
           key={startup.username} // Se usa username como clave (debe ser único)
           startup={startup}
           onClick={() => handleShowBubble(startup)}
         />
-      ))}
+      )))}
 
       {activeBubble && bubbleData && (
         <Bubble show={activeBubble} onClose={closeBubble} message={undefined} type={undefined}>
