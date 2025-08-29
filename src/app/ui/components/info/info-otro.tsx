@@ -24,7 +24,7 @@ import "../../../perfil/estrellas/estrellas-style.modules.css";
 import customAxios from "@/service/api.mjs";
 import { BotonesOtro } from "@/app/perfil-otro/boton/boton-otro";
 import { ChipsOtro } from "@/app/perfil-otro/chip/chip-otro";
-import StarRatingOtro from "../../../perfil/estrellas/estrellas";
+import StarRating from "../../../perfil/estrellas/estrellas";
 import { MiniChipsOtro } from "@/app/perfil-otro/mini-chips/mini-chips";
 import Bubble from "../bubble/bubble";
 
@@ -340,8 +340,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
               tooltipText="Sector favorito"
             />
             <MiniChipsOtro
-              id="star-rating"
-              label={<StarRatingOtro puntuacionMedia={puntuacionMedia} />}
+              label={<StarRating puntuacionMedia={puntuacionMedia} />}
               tooltipText={`Puntuación Media: ${puntuacionMedia}`}
             />
             <MiniChipsOtro

@@ -96,25 +96,23 @@ const TablaInversiones = () => {
 return (
   <div className="apartado3 tabla-inversiones-wrapper">
     <div className="custom-table-container">
-      <table className="custom-table">
-        <thead>
-          <tr>
-            <th>Startup</th>
-            <th>Monto</th>
-            <th>Ofrecido %</th>
-            <th>Estado</th>
-            <th>Fecha</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ofertas.length === 0 ? (
+      {ofertas.length === 0 ? (
+        <div className="no-ofertas">
+          No hay inversiones realizadas
+        </div>
+      ) : (
+        <table className="custom-table">
+          <thead>
             <tr>
-              <td colSpan={5} style={{ textAlign: "center" }}>
-                No hay startups seguidas
-              </td>
+              <th>Startup</th>
+              <th>Monto</th>
+              <th>Ofrecido %</th>
+              <th>Estado</th>
+              <th>Fecha</th>
             </tr>
-          ) : (
-            ofertas.map((oferta) => (
+          </thead>
+          <tbody>
+            {ofertas.map((oferta) => (
               <tr key={oferta.id}>
                 <td>{oferta.startup?.usuario.username}</td>
                 <td>{formatoValor(oferta.monto_ofrecido)}</td>
@@ -129,10 +127,10 @@ return (
                 </td>
                 <td>{formatoFecha(oferta.fecha_creacion)}</td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
 
     <Bubble
@@ -178,7 +176,7 @@ return (
         </div>
       )}
     </Bubble>
-  </div>
+    </div>
   );
 };
 

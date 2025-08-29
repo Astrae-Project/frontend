@@ -11,10 +11,9 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-  padding: 24px;
+  width: 100%;
   text-align: center;
-  color: #aaa;
-  font-size: 1rem;
+  color: #eee;
 }
 
 /* Contenedor de la tabla con scroll suave y SIN scrollbar visible */

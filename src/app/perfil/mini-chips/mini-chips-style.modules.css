@@ -12,8 +12,8 @@
     align-items: center;
 }
 
-#star-rating {
-    padding: 8px 13px 8px 13px;
+.chip-rating {
+    padding: 8px 13px 8px 13px !important;
 }
 
 .tooltip {

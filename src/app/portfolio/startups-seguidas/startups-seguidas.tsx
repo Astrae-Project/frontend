@@ -64,7 +64,7 @@ const StartupsSeguidas = () => {
   return (
     <ScrollShadow size={1000} orientation="horizontal" className="contiene">
       {displayedStartups.length === 0 ? (
-          <p>No hay startups seguidas</p>
+          <p className="texto-empty">No hay startups seguidas</p>
         ) : (
           displayedStartups.map((startup) => (
         <CartaSeguidas

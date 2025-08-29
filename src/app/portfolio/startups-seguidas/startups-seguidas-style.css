@@ -32,4 +32,10 @@
 
 .contiene span:last-child{
     margin-right: 0;
-  }
+}
+
+.texto-empty {
+    align-self: center;
+    width: 100%;
+    text-align: center;
+}

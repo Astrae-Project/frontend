@@ -12,6 +12,14 @@ interface MiniChipsProps {
 }
 
 export function MiniChips({ label, tooltipText, className, id }: MiniChipsProps) {
+
+  let extraClass = "";
+
+  // Si el tooltipText es dinámico (número, puntuación, etc.)
+  if (tooltipText && !isNaN(Number(tooltipText))) {
+    extraClass = "chip-rating";
+  }
+
   return (
     <div className={`mini-chips-wrapper ${className ?? ""}`} id={id}>
       <Chip className="mini-chip" aria-label={typeof label === "string" ? String(label) : undefined}>
