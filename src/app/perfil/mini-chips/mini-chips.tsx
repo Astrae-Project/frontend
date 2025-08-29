@@ -16,7 +16,7 @@ export function MiniChips({ label, tooltipText, className, id, isStars }: MiniCh
   const extraClass = isStars ? "chip-estrellas" : "";
 
   return (
-    <div className={`mini-chips-wrapper ${className ?? ""}`} id={id}>
+    <div className={`mini-chips-wrapper ${className ?? ""} ${extraClass}`} id={id}>
       <Chip className="mini-chip" aria-label={typeof label === "string" ? String(label) : undefined}>
         {label}
         {tooltipText ? (

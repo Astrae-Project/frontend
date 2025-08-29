@@ -14,9 +14,9 @@ interface MiniChipsProps {
 
 export function MiniChipsOtro({ label, tooltipText, className, id, isStars }: MiniChipsProps) {
   const extraClass = isStars ? "chip-estrellas" : "";
-  
+
   return (
-    <div className={`mini-chips-wrapper ${className ?? ""}`} id={id}>
+    <div className={`mini-chips-wrapper ${className ?? ""} ${extraClass}`} id={id}>
       <Chip className="mini-chip-otro" aria-label={typeof label === "string" ? String(label) : undefined}>
         {label}
         {tooltipText ? (
