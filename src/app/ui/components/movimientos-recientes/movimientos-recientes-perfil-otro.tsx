@@ -4,6 +4,17 @@ import Bubble from "../bubble/bubble";
 import Perfil from "../../../perfil/page";
 import { IconStar, IconMoneybag, IconCalendarEvent } from "@tabler/icons-react";
 import customAxios from "@/service/api.mjs";
+import dynamic from "next/dynamic";
+import { FC } from "react";
+
+// Tipado del componente dinámico
+interface PerfilOtroProps {
+  username: string;
+}
+const PerfilOtroComponent: FC<PerfilOtroProps> = dynamic(
+  () => import('@/app/perfil-otro/PerfilOtroCliente'),
+  { ssr: false }
+) as unknown as FC<PerfilOtroProps>;
 
 const MovimientosRecientesOtro = ({ username }) => {
   const [movimientosRecientes, setMovimientosRecientes] = useState([]);
@@ -166,12 +177,10 @@ const MovimientosRecientesOtro = ({ username }) => {
       )}
       <Bubble show={!!activeBubble} onClose={handleBubbleClose} message={undefined} type={undefined}>
         {activeBubble === "perfil" && bubbleData && (
-          <div className="perfil-detalle">
-            <p><strong>Usuario:</strong> {bubbleData.username || "Cargando..."}</p>
-          </div>
+          <PerfilOtroComponent username={bubbleData.username}></PerfilOtroComponent>
         )}
-        {activeBubble === "perfil-startup" && bubbleData && (
-          <Perfil />
+        {activeBubble === "perfil-inversor" && bubbleData && (
+          <PerfilOtroComponent username={bubbleData.usuario.username}></PerfilOtroComponent>
         )}
         {activeBubble === "eventos" && bubbleData && (
           <div className="eventos-detalle">
