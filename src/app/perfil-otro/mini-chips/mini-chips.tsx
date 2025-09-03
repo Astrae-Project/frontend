@@ -15,7 +15,7 @@ interface MiniChipsProps {
 export function MiniChipsOtro({ label, tooltipText, className, id, isStars }: MiniChipsProps) {
   return (
     <div className={`mini-chips-wrapper ${className ?? ""}`} id={id}>
-      <Chip className={`mini-chip ${isStars ? "chip-estrellas" : ""}`}>
+      <Chip className={`mini-chip-otro ${isStars ? "chip-estrellas" : ""}`}>
         {label}
         {tooltipText ? (
           <span className="tooltip" role="note" aria-hidden="true">

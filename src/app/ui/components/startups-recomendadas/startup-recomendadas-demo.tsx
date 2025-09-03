@@ -7,8 +7,17 @@ import { Carta } from "../carta-startups/carta-startups";
 import Bubble from "../bubble/bubble"; // Asegúrate de tener el componente Bubble importado
 import customAxios from "@/service/api.mjs";
 import PerfilOtro from "@/app/perfil-otro/page";
+import dynamic from "next/dynamic";
+import { FC } from "react";
 
-const PerfilOtroComponent: any = PerfilOtro;
+// Tipado del componente dinámico
+interface PerfilOtroProps {
+  username: string;
+}
+const PerfilOtroComponent: FC<PerfilOtroProps> = dynamic(
+  () => import('@/app/perfil-otro/PerfilOtroCliente'),
+  { ssr: false }
+) as unknown as FC<PerfilOtroProps>;
 
 export function StartupsRecomendadas() {
   const [startups, setStartups] = useState([]); // Inicializar como un arreglo vacío

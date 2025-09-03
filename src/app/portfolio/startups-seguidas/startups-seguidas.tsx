@@ -3,12 +3,20 @@
 import { ScrollShadow } from "@heroui/react";
 import { CartaSeguidas } from "../../ui/components/carta-startups/carta-startups-seguidas";
 import "./startups-seguidas-style.css";
-import PerfilOtro from "@/app/perfil-otro/page";
 import customAxios from "@/service/api.mjs";
 import { useState, useEffect } from "react";
 import Bubble from "@/app/ui/components/bubble/bubble";
+import dynamic from "next/dynamic";
+import React, { FC } from "react";
 
-const PerfilOtroComponent: any = PerfilOtro;
+// Tipado del componente dinámico
+interface PerfilOtroProps {
+  username: string;
+}
+const PerfilOtroComponent: FC<PerfilOtroProps> = dynamic(
+  () => import('@/app/perfil-otro/PerfilOtroCliente'),
+  { ssr: false }
+) as unknown as FC<PerfilOtroProps>;
 
 const StartupsSeguidas = () => {
   const [startups, setStartups] = useState([]); // Inicializar como array vacío
@@ -76,7 +84,7 @@ const StartupsSeguidas = () => {
 
       {activeBubble && bubbleData && (
         <Bubble show={activeBubble} onClose={closeBubble} message={undefined} type={undefined}>
-          <PerfilOtroComponent username={bubbleData.username || "Desconocido"} />
+          <PerfilOtroComponent username={bubbleData.username} />
         </Bubble>
       )}
     </ScrollShadow>

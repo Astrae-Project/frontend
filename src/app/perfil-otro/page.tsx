@@ -1,51 +1,50 @@
 'use client'
 
+import React, { useState, useEffect } from "react";
 import customAxios from "@/service/api.mjs";
-import { useState, useEffect } from "react";
 import { BentoGridPerfilOtro } from "./bento-perfil-otro/bento-perfil-otro";
 
-export default function PerfilOtro(username) {
-  
+export default function PerfilOtro(props) {
+  // Extrae username de múltiples formas que Next puede pasar (params, searchParams, props direct)
+  const username = (() => {
+    if (!props) return "";
+    if (typeof props === "string") return props;
+    if (typeof props.username === "string") return props.username;
+    if (typeof props.params?.username === "string") return props.params.username;
+    if (typeof props.route?.params?.username === "string") return props.route.params.username;
+    if (typeof props.searchParams?.username === "string") return props.searchParams.username;
+    return ""; // fallback
+  })();
+
   const [isLoading, setIsLoading] = useState(true);
   const [sessionExpired, setSessionExpired] = useState(false);
 
   useEffect(() => {
     const verificarSesion = async () => {
       try {
-        // Llama al endpoint relativo; customAxios ya apunta a /api con withCredentials
         await customAxios.post("/auth/refrescar-token");
-        // Token renovado → podemos mostrar la página
         setIsLoading(false);
-      } catch (error: any) {
-        if (error.response?.status === 403) {
-          // No hay refresh token → sesión expirada
+      } catch (error) {
+        const status = error?.response?.status;
+        if (status === 403) {
           setSessionExpired(true);
         } else {
-          // Cualquier otro error de red/servidor
           console.error("Error inesperado al refrescar token:", error);
         }
-        // ¡Muy importante! Quitamos el loading en todos los casos
         setIsLoading(false);
       }
     };
-
     verificarSesion();
   }, []);
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <img
-          src="/Logo.svg"
-          alt="Cargando..."
-          className="heartbeat"
-        />
+        <img src="/Logo.svg" alt="Cargando..." className="heartbeat" />
       </div>
     );
   }
-  
 
-  // Si detectamos sesión expirada (403), mostramos el aviso
   if (sessionExpired) {
     return (
       <div className="flex flex-col items-center justify-center h-screen p-4">

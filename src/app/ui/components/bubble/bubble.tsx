@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import "./bubble-style.css"; // Archivo CSS para el diseño y animaciones
 import { IconCircleCheck, IconCircleX, IconHelp } from "@tabler/icons-react";

@@ -3,9 +3,19 @@ import "../../../perfil/bento-perfil/bento-perfil-style.css";
 import { IconMoneybag, IconCalendarEvent, IconStar } from "@tabler/icons-react";
 import Bubble from "../bubble/bubble";
 import customAxios from "@/service/api.mjs";
-import PerfilOtro from "@/app/perfil-otro/page";
+import dynamic from "next/dynamic";
+import { FC } from "react";
 
-const PerfilOtroComponent: any = PerfilOtro;
+interface PerfilOtroProps {
+  username: string;
+}
+
+// Indicarle a TypeScript que el componente dinámico tiene estas props
+const PerfilOtroComponent: FC<PerfilOtroProps> = dynamic(
+  () => import('@/app/perfil-otro/PerfilOtroCliente'),
+  { ssr: false }
+) as unknown as FC<PerfilOtroProps>;
+
 
 const MovimientosRecientes1 = () => {
   const [movimientosRecientes, setMovimientosRecientes] = useState([]);
@@ -66,6 +76,13 @@ const MovimientosRecientes1 = () => {
       return `${monto}€`; // Para cantidades menores a mil
     }
   };
+
+  const safeUsernameFrom = (obj) => {
+    if (!obj) return "";
+    if (typeof obj === "string") return obj;
+    return obj.username ?? obj.usuario?.username ?? "";
+  };
+
 
   return (
     <div className="seccion" id="reciente-componente1">
@@ -175,10 +192,10 @@ const MovimientosRecientes1 = () => {
       )}
       <Bubble show={!!activeBubble} onClose={handleBubbleClose} message={undefined} type={undefined}>
         {activeBubble === "perfil" && bubbleData && (
-          <PerfilOtroComponent username={bubbleData.usuario.username}></PerfilOtroComponent>
+          <PerfilOtroComponent username={safeUsernameFrom(bubbleData)} />
         )}
         {activeBubble === "perfil-startup" && bubbleData && (
-          <PerfilOtroComponent username={bubbleData.usuario.username}></PerfilOtroComponent>
+          <PerfilOtroComponent username={safeUsernameFrom(bubbleData)} />
         )}
         {activeBubble === "eventos" && bubbleData && (
           <div className="eventos-detalle">

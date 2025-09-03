@@ -1,32 +1,50 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, FC } from "react";
 import customAxios from "@/service/api.mjs";
 import "./placeholder-style.css";
 import Bubble from "../bubble/bubble";
-import PerfilOtro from "@/app/perfil-otro/page";
+import dynamic from "next/dynamic";
 
-const PerfilOtroComponent: any = PerfilOtro;
+// Tipado del componente dinámico
+interface PerfilOtroProps {
+  username: string;
+}
+const PerfilOtroComponent: FC<PerfilOtroProps> = dynamic(
+  () => import('@/app/perfil-otro/PerfilOtroCliente'),
+  { ssr: false }
+) as unknown as FC<PerfilOtroProps>;
+
+// Tipos locales
+type UserType = {
+  id?: string | number;
+  username?: string;
+  avatar?: string;
+  inversores?: any[];
+  startups?: any[];
+  [k: string]: any;
+};
 
 export function Placeholder() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [users, setUsers] = useState([]);
-  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [users, setUsers] = useState<UserType[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<UserType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [activeBubble, setActiveBubble] = useState(null);
-  const [bubbleData, setBubbleData] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [activeBubble, setActiveBubble] = useState<string | null>(null);
+  const [bubbleData, setBubbleData] = useState<UserType | null>(null);
   const [isListVisible, setIsListVisible] = useState(false);
 
-  const inputRef = useRef(null);
-  const listRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const listRef = useRef<HTMLUListElement | null>(null);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node | null;
       if (
-        inputRef.current && !inputRef.current.contains(event.target) &&
-        listRef.current && !listRef.current.contains(event.target) &&
-        !event.target.closest(".bubble-container")
+        inputRef.current && !inputRef.current.contains(target) &&
+        listRef.current && !listRef.current.contains(target) &&
+        !(target instanceof Element && target.closest(".bubble-container"))
       ) {
         setIsListVisible(false);
         setActiveBubble(null);
@@ -40,10 +58,7 @@ export function Placeholder() {
   const fetchUsuarios = async () => {
     try {
       setIsLoading(true);
-      const response = await customAxios.get(
-        "/data/todos-usuarios",
-        { withCredentials: true }
-      );
+      const response = await customAxios.get("/data/todos-usuarios", { withCredentials: true });
       if (response.data?.usuarios instanceof Array) {
         setUsers(response.data.usuarios);
         setError(null);
@@ -68,15 +83,18 @@ export function Placeholder() {
       setFilteredUsers(users);
     } else {
       const q = searchQuery.toLowerCase();
-      setFilteredUsers(
-        users.filter(u => u.username.toLowerCase().includes(q))
-      );
+      setFilteredUsers(users.filter(u => (u.username ?? "").toLowerCase().includes(q)));
     }
   }, [searchQuery, users]);
 
   const handleBubbleClose = () => {
     setActiveBubble(null);
     setBubbleData(null);
+  };
+
+  const safeUsernameFrom = (user: UserType | null) => {
+    if (!user) return "";
+    return user.username ?? user.usuario?.username ?? "";
   };
 
   return (
@@ -91,22 +109,37 @@ export function Placeholder() {
           onChange={e => setSearchQuery(e.target.value)}
           onFocus={() => setIsListVisible(true)}
         />
+
         {isListVisible && (
-          <ul ref={listRef} className="lista-usuarios">
+          <ul ref={listRef} className="lista-usuarios" role="list">
             {isLoading ? (
-              <p>Cargando usuarios...</p>
+              <li className="loading">Cargando usuarios...</li>
             ) : error ? (
-              <p className="error-message">{error}</p>
+              <li className="error-message">{error}</li>
             ) : filteredUsers.length > 0 ? (
               filteredUsers.map(user => {
-                const esInversor = user.inversores?.length > 0;
-                const esStartup = user.startups?.length > 0;
+                const esInversor = Array.isArray(user.inversores) && user.inversores.length > 0;
+                const esStartup = Array.isArray(user.startups) && user.startups.length > 0;
+
                 return (
                   <li
-                    key={user.id}
+                    key={user.id ?? user.username}
                     className="inversion-item"
                     role="button"
-                    onClick={() => setActiveBubble("perfil")}
+                    tabIndex={0}
+                    onClick={() => {
+                      // asignamos bubbleData y abrimos la burbuja
+                      setBubbleData(user);
+                      setActiveBubble("perfil");
+                      setIsListVisible(false);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        setBubbleData(user);
+                        setActiveBubble("perfil");
+                        setIsListVisible(false);
+                      }
+                    }}
                   >
                     <div className="portfolio-icono">
                       <img
@@ -115,30 +148,21 @@ export function Placeholder() {
                         alt="Avatar"
                       />
                     </div>
+
                     <div className="startup-lista">
                       {esInversor ? (
                         <>
-                          <p className="nombre-startup">
-                            {user.username || "Desconocido"}
-                          </p>
-                          <p className="username-startup">
-                            {user.inversores[0].nombre}
-                          </p>
+                          <p className="nombre-startup">{user.username || "Desconocido"}</p>
+                          <p className="username-startup">{user.inversores[0]?.nombre ?? ""}</p>
                         </>
                       ) : esStartup ? (
                         <>
-                          <p className="nombre-startup">
-                            {user.startups[0].nombre}
-                          </p>
-                          <p className="username-startup">
-                            {user.username || "Desconocido"}
-                          </p>
+                          <p className="nombre-startup">{user.startups[0]?.nombre ?? "Sin nombre"}</p>
+                          <p className="username-startup">{user.username || "Desconocido"}</p>
                         </>
                       ) : (
                         <>
-                          <p className="username-startup">
-                            {user.username || "Desconocido"}
-                          </p>
+                          <p className="username-startup">{user.username || "Desconocido"}</p>
                           <p className="nombre-startup">Sin datos</p>
                         </>
                       )}
@@ -147,7 +171,7 @@ export function Placeholder() {
                 );
               })
             ) : (
-              <li style={{ padding: "20px", display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
+              <li className="no-results">
                 <div style={{ textAlign: "center" }}>
                   <p style={{ margin: 0 }}>No se encontraron usuarios</p>
                 </div>
@@ -155,9 +179,12 @@ export function Placeholder() {
             )}
           </ul>
         )}
+
         <Bubble show={!!activeBubble} onClose={handleBubbleClose} message={undefined} type={undefined}>
-          {activeBubble === "perfil" && bubbleData && (
-            <PerfilOtroComponent username={bubbleData.username} />
+          {activeBubble === "perfil" && bubbleData &&(
+            <div className="bubble-container">
+              <PerfilOtroComponent username={safeUsernameFrom(bubbleData)} />
+            </div>
           )}
         </Bubble>
       </div>

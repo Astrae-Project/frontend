@@ -4,8 +4,17 @@ import { IconMoneybag, IconStar } from "@tabler/icons-react";
 import Bubble from "../bubble/bubble";
 import customAxios from "@/service/api.mjs";
 import PerfilOtro from "@/app/perfil-otro/page";
+import dynamic from "next/dynamic";
+import { FC } from "react";
 
-const PerfilOtroComponent: any = PerfilOtro;
+// Tipado del componente dinámico
+interface PerfilOtroProps {
+  username: string;
+}
+const PerfilOtroComponent: FC<PerfilOtroProps> = dynamic(
+  () => import('@/app/perfil-otro/PerfilOtroCliente'),
+  { ssr: false }
+) as unknown as FC<PerfilOtroProps>;
 
 const MovimientosRecientesInversion = () => {
   const [movimientosRecientes, setMovimientosRecientes] = useState([]);
