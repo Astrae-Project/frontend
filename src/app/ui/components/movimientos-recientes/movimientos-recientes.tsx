@@ -175,10 +175,8 @@ const MovimientosRecientes1 = () => {
       )}
       <Bubble show={!!activeBubble} onClose={handleBubbleClose} message={undefined} type={undefined}>
         {activeBubble === "perfil" && bubbleData && (
-  <>
-    {console.log("DEBUG bubbleData.creador:", bubbleData.creador)}
-    <PerfilOtroComponent username={bubbleData.creador?.username} />
-  </>        )}
+          <PerfilOtroComponent username={bubbleData.creador?.username ?? ""} />
+        )}
         {activeBubble === "perfil-startup" && bubbleData && (
           <PerfilOtroComponent username={bubbleData.usuario.username}></PerfilOtroComponent>
         )}
