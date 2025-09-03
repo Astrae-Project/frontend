@@ -68,6 +68,7 @@ const MovimientosRecientesInversion = () => {
   };
 
   return (
+    <>
     <div className="contenido-scrollable" id="movimientos-sin-eventos">
       {movimientosRecientes.length > 0 ? (
           <ul className="movimientos-lista">
@@ -140,6 +141,11 @@ const MovimientosRecientesInversion = () => {
             })}
           </ul>
       ) : (
+        <p className='texto vacio'>No hay movimientos</p>
+      )}
+    </div>
+
+      
       <Bubble show={!!activeBubble} onClose={handleBubbleClose} message={undefined} type={undefined}>
         {activeBubble === "perfil" && bubbleData && (
           <PerfilOtroComponent username={bubbleData.username}></PerfilOtroComponent>
@@ -164,9 +170,7 @@ const MovimientosRecientesInversion = () => {
           </div>
         )}
       </Bubble>
-        )}
-    </div>
-
+    </>
   );
 };
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { JSX, useEffect, useRef, useState } from "react";
+import React, { JSX, useEffect, useRef, useState, useMemo } from "react";
 import Bubble from "../bubble/bubble";
 import "../calendario1/calendario-style.css";
 import "../bento-inicio/bento-inicio-style.css";
@@ -14,9 +14,6 @@ import {
 } from "@tabler/icons-react";
 import customAxios from "@/service/api.mjs";
 
-/**
- * Tipos
- */
 interface Hito {
   id: string;
   titulo: string;
@@ -64,14 +61,40 @@ export default function HitosDashboard(): JSX.Element {
   }, []);
 
   // --- Utilidades
-  const getQuarter = (iso: string): string => {
-    const d = new Date(iso);
+  const getQuarter = (isoOrDate: string | Date): string => {
+    const d = typeof isoOrDate === "string" ? new Date(isoOrDate) : isoOrDate;
     return `Q${Math.floor(d.getMonth() / 3) + 1} ${d.getFullYear()}`;
+  };
+
+  const getQuarterStartDate = (quarterKey: string): Date => {
+    // quarterKey = "Q1 2025"
+    const [qPart, yearPart] = quarterKey.split(" ");
+    const qNum = parseInt(qPart.replace("Q", ""), 10);
+    const year = parseInt(yearPart, 10);
+    const month = (qNum - 1) * 3;
+    return new Date(year, month, 1);
+  };
+
+  const addQuarters = (date: Date, n: number) => {
+    const d = new Date(date);
+    d.setMonth(d.getMonth() + n * 3);
+    return d;
+  };
+
+  const generateQuarterKeysBetween = (start: Date, end: Date): string[] => {
+    const keys: string[] = [];
+    let cur = new Date(start.getFullYear(), Math.floor(start.getMonth() / 3) * 3, 1);
+    const last = new Date(end.getFullYear(), Math.floor(end.getMonth() / 3) * 3, 1);
+    while (cur <= last) {
+      keys.push(getQuarter(cur));
+      cur = addQuarters(cur, 1);
+    }
+    return keys;
   };
 
   const getCurrentQuarterKey = (): string => {
     const now = new Date();
-    return `Q${Math.floor(now.getMonth() / 3) + 1} ${now.getFullYear()}`;
+    return getQuarter(now);
   };
 
   const groupByQ = (arr: Hito[]): Grupos => {
@@ -85,17 +108,14 @@ export default function HitosDashboard(): JSX.Element {
 
   const calcProgress = (group: Hito[]): number => {
     const tot = group.length;
+    if (!tot) return 0;
     const done = group.filter(h => h.estado === "cumplido").length;
-    return tot ? Math.round((done / tot) * 100) : 0;
+    return Math.round((done / tot) * 100);
   };
 
-  // --- Acciones sobre hito
+  // --- Acciones sobre hito (sin cambios)
   const handleSelectHito = (h: Hito) => setSelectedHito(prev => (prev?.id === h.id ? null : h));
-
-  const confirmarSeleccion = () => {
-    if (selectedHito) setFormSubmitted(true);
-  };
-
+  const confirmarSeleccion = () => { if (selectedHito) setFormSubmitted(true); };
   const closeBubble = () => {
     setActiveBubble(null);
     setFormSubmitted(false);
@@ -123,7 +143,6 @@ export default function HitosDashboard(): JSX.Element {
       setConfirmationMessage("Hito creado");
       setMessageType("success");
       setFormSubmitted(true);
-      // Opcional: volver a recargar hitos
     } catch (error) {
       console.error("Error al crear hito:", error);
       setConfirmationMessage("Error al crear");
@@ -146,7 +165,6 @@ export default function HitosDashboard(): JSX.Element {
       setMessageType("success");
       setFormSubmitted(true);
       setSelectedHito(null);
-      // Opcional: actualizar lista localmente filtrando el eliminado
       setHitos(prev => prev.filter(h => h.id !== selectedHito.id));
     } catch (error) {
       console.error("Error al eliminar hito:", error);
@@ -181,7 +199,6 @@ export default function HitosDashboard(): JSX.Element {
       setConfirmationMessage("Hito editado");
       setMessageType("success");
       setFormSubmitted(true);
-      // Opcional: actualizar hitos localmente
       setHitos(prev => prev.map(h => (h.id === selectedHito.id ? { ...h, ...editFormData } as Hito : h)));
     } catch (error) {
       console.error("Error al editar hito:", error);
@@ -192,14 +209,46 @@ export default function HitosDashboard(): JSX.Element {
   };
 
   // --- Filtrado y agrupación
-  const filtered: Hito[] = searchQuery
-    ? hitos.filter(h =>
-      (h.titulo ?? "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (h.fechaObjetivo ?? "").includes(searchQuery)
-    )
-    : hitos;
+  const filtered: Hito[] = useMemo(() => (
+    searchQuery
+      ? hitos.filter(h =>
+        (h.titulo ?? "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (h.fechaObjetivo ?? "").includes(searchQuery)
+      )
+      : hitos
+  ), [hitos, searchQuery]);
 
-  const grupos: Grupos = groupByQ(filtered);
+  const grupos = useMemo(() => groupByQ(filtered), [filtered]);
+
+  // --- Asegurar que haya keys (quarters) aunque no haya hitos
+  const orderedQuarterKeys = useMemo(() => {
+    const now = new Date();
+    const currentQ = getCurrentQuarterKey();
+
+    if (filtered.length === 0) {
+      // Si no hay hitos: mostrar current + siguientes 2 quarters (puedes cambiar 2 por más)
+      const fallbackStart = getQuarterStartDate(currentQ);
+      const fallbackEnd = addQuarters(fallbackStart, 2);
+      return generateQuarterKeysBetween(fallbackStart, fallbackEnd);
+    }
+
+    // Si hay hitos: calcula min y max fecha y añade margen futuro (1 quarter)
+    const fechas = filtered.map(h => new Date(h.fechaObjetivo));
+    const minDate = new Date(Math.min(...fechas.map(d => d.getTime())));
+    const maxDate = new Date(Math.max(...fechas.map(d => d.getTime())));
+    // garantizar inclusión del quarter actual y añadir 1 quarter futuro
+    const start = minDate < now ? minDate : now;
+    const end = addQuarters(maxDate > now ? maxDate : now, 1);
+    return generateQuarterKeysBetween(start, end);
+  }, [filtered]);
+
+  const gruposCompleto: Grupos = useMemo(() => {
+    const out: Grupos = {};
+    for (const q of orderedQuarterKeys) {
+      out[q] = grupos[q] ? grupos[q].slice().sort((a, b) => +new Date(a.fechaObjetivo) - +new Date(b.fechaObjetivo)) : [];
+    }
+    return out;
+  }, [grupos, orderedQuarterKeys]);
 
   // --- Formato de fecha
   const fmt = (iso: string) => {
@@ -212,30 +261,19 @@ export default function HitosDashboard(): JSX.Element {
 
   // --- Auto-scroll al quarter actual (o al más cercano)
   useEffect(() => {
-    if (!hitos || hitos.length === 0) return;
-
+    // siempre intentamos scrollear al quarter actual si existe
     const currentQ = getCurrentQuarterKey();
-
     if (quarterRefs.current[currentQ]) {
       quarterRefs.current[currentQ]?.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
     }
-
-    // buscar el hito con fecha más cercana
-    const fechas = hitos.map(h => new Date(h.fechaObjetivo).getTime());
-    const now = Date.now();
-    const difs = fechas.map(d => Math.abs(d - now));
-    const min = Math.min(...difs);
-    const idx = difs.indexOf(min);
-    if (idx >= 0 && hitos[idx]) {
-      const closestHito = hitos[idx];
-      const qKey = getQuarter(closestHito.fechaObjetivo);
-      if (quarterRefs.current[qKey]) {
-        quarterRefs.current[qKey]?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+    // sino, intenta con el primer quarter renderizado
+    const firstKey = orderedQuarterKeys[0];
+    if (firstKey && quarterRefs.current[firstKey]) {
+      quarterRefs.current[firstKey]?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hitos]); // solo depende de hitos
+  }, [orderedQuarterKeys]);
 
   return (
     <div className="seccion" id="hitos-dashboard">
@@ -246,7 +284,7 @@ export default function HitosDashboard(): JSX.Element {
       <div className="hitos-dashboard">
         <div className="contenido-scrollable">
           <div className="listado-quarters">
-            {Object.entries(grupos).map(([q, arr]) => (
+            {Object.entries(gruposCompleto).map(([q, arr]) => (
               <section
                 className="grupo-quarter"
                 key={q}
@@ -262,17 +300,29 @@ export default function HitosDashboard(): JSX.Element {
                   </div>
                 </div>
                 <div className="lista-hitos">
-                  {arr.map(h => (
-                    <div key={h.id} className={`hito-card`}>
+                  {arr.length > 0 ? (
+                    arr.map(h => (
+                      <div key={h.id} className={`hito-card`}>
+                        <div className="info">
+                          <h3>{h.titulo}</h3>
+                          <div className="info-footer">
+                            <span className={`badge ${h.estado}`}>{h.estado}</span>
+                            <p className="info-fecha">{fmt(h.fechaObjetivo)}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="hito-card placeholder">
                       <div className="info">
-                        <h3>{h.titulo}</h3>
+                        <h3 className="placeholder-title">Sin hitos</h3>
                         <div className="info-footer">
-                          <span className={`badge ${h.estado}`}>{h.estado}</span>
-                          <p className="info-fecha">{fmt(h.fechaObjetivo)}</p>
+                          <span className="badge placeholder-badge">—</span>
+                          <p className="info-fecha">Añade un hito para este quarter</p>
                         </div>
                       </div>
                     </div>
-                  ))}
+                  )}
                 </div>
               </section>
             ))}
