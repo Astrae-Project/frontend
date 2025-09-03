@@ -14,7 +14,7 @@ const MovimientosRecientesInversion = () => {
 
   const fetchMovimientosRecientes = async () => {
     try {
-      const response = await customAxios.get(`https://api.astraesystem.com/api/data/movimientos-inversion`, {
+      const response = await customAxios.get(`/data/movimientos-inversion`, {
         withCredentials: true,
       });
   

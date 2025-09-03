@@ -58,7 +58,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
   // Fetch del rol del usuario
   const fetchRol = async () => {
     try {
-      const response = await customAxios.get("https://api.astraesystem.com/api/data/usuario", {
+      const response = await customAxios.get("/data/usuario", {
         withCredentials: true,
       });
 
@@ -74,7 +74,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
   const fetchDatos = async () => {
     try {
       const response = await customAxios.get(
-        `https://api.astraesystem.com/api/data/usuario/${username}`,
+        `/data/usuario/${username}`,
         { withCredentials: true }
       );
 
@@ -105,7 +105,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
     if (!usuario || !usuario.id) return;
     try {
       const response = await customAxios.get(
-        `https://api.astraesystem.com/api/perfil/documento/${usuario.id}`,
+        `/perfil/documento/${usuario.id}`,
         { withCredentials: true }
       );
       setDocumentos(response.data);
@@ -127,7 +127,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
 
     try {
       const response = await customAxios.get(
-        `https://api.astraesystem.com/api/perfil/documento/download/${documento.id}`,
+        `/perfil/documento/download/${documento.id}`,
         {
           responseType: "blob",
           withCredentials: true,
@@ -219,12 +219,12 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
     
       try {
 
-        const startupResponse = await customAxios.get("https://api.astraesystem.com/api/data/usuario", {
+        const startupResponse = await customAxios.get("/data/usuario", {
           withCredentials: true,
         });
   
         const inversorResponse = await customAxios.get(
-          `https://api.astraesystem.com/api/data/usuario/${username}`,
+          `/data/usuario/${username}`,
           { withCredentials: true }
         );
         
@@ -251,7 +251,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
     
         // Enviar los datos a la API de reseñas
         await customAxios.post(
-          "https://api.astraesystem.com/api/perfil/resena",
+          "/perfil/resena",
           {
             id_inversor: idInversor,
             id_startup: idStartup,

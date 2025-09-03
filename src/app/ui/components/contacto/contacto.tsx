@@ -43,7 +43,7 @@ const InformacionContacto: React.FC<InformacionContactoProps> = ({ contacto, fet
   const handleAñadirContacto = async () => {
     try {
       const response = await customAxios.put(
-        'https://api.astraesystem.com/api/perfil/cambiar-datos',
+        '/perfil/cambiar-datos',
         formData,
         { withCredentials: true }
       );
@@ -204,7 +204,7 @@ export default function Contacto() {
 
   const fetchContacto = async () => {
     try {
-      const response = await customAxios.get('https://api.astraesystem.com/api/data/contacto', {
+      const response = await customAxios.get('/data/contacto', {
         withCredentials: true,
       });
       setContacto(response.data as Partial<ContactData>);

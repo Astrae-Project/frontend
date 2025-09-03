@@ -29,7 +29,7 @@ const GraficaStartupOtro = ({ username }) => {
   // Función para obtener los datos históricos de valoraciones basadas en el username
   const fetchValorStartup = async () => {
     try {
-      const response = await customAxios.get(`https://api.astraesystem.com/api/data/usuario/${username}`, {
+      const response = await customAxios.get(`/data/usuario/${username}`, {
         withCredentials: true, // Enviar cookies con la solicitud
       });
 

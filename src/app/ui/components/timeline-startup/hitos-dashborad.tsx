@@ -45,7 +45,7 @@ export default function HitosDashboard(): JSX.Element {
     async function fetchHitos() {
       try {
         const { data } = await customAxios.get(
-          `https://api.astraesystem.com/api/data/usuario`,
+          `/data/usuario`,
           { withCredentials: true }
         );
         const startup = data?.startup;
@@ -136,7 +136,7 @@ export default function HitosDashboard(): JSX.Element {
     }
     try {
       await customAxios.post(
-        `https://api.astraesystem.com/api/perfil/startups/${startupId}/hitos`,
+        `/perfil/startups/${startupId}/hitos`,
         editFormData,
         { withCredentials: true }
       );
@@ -158,7 +158,7 @@ export default function HitosDashboard(): JSX.Element {
     }
     try {
       await customAxios.delete(
-        `https://api.astraesystem.com/api/perfil/hitos/${selectedHito.id}`,
+        `/perfil/hitos/${selectedHito.id}`,
         { withCredentials: true }
       );
       setConfirmationMessage("Hito eliminado");
@@ -192,7 +192,7 @@ export default function HitosDashboard(): JSX.Element {
     if (!selectedHito) return;
     try {
       await customAxios.put(
-        `https://api.astraesystem.com/api/perfil/hitos/${selectedHito.id}`,
+        `/perfil/hitos/${selectedHito.id}`,
         editFormData,
         { withCredentials: true }
       );

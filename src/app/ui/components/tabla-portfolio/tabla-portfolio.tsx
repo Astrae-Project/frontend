@@ -21,7 +21,7 @@ const TablaPortfolio = () => {
   useEffect(() => {
     const fetchPortfolio = async () => {
       try {
-        const { data } = await customAxios.get('https://api.astraesystem.com/api/data/portfolio', {
+        const { data } = await customAxios.get('/data/portfolio', {
           withCredentials: true,
         });
         setPortfolio(data.inversiones);
@@ -82,7 +82,7 @@ const TablaPortfolio = () => {
       }
 
       const { id_startup: startupId } = inversionData;
-      const { data } = await customAxios.get(`https://api.astraesystem.com/api/data/startup/${startupId}`, {
+      const { data } = await customAxios.get(`/data/startup/${startupId}`, {
         withCredentials: true,
       });
       setStartupDetails(data);

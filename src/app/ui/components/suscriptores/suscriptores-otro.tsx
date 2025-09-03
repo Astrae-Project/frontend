@@ -11,7 +11,7 @@ const SuscriptoresOtro = ({ username }) => {
     if (!username) return; // No intentar la solicitud si username no está definido
 
     try {
-      const response = await customAxios.get(`https://api.astraesystem.com/api/data/usuario/${username}`, {
+      const response = await customAxios.get(`/data/usuario/${username}`, {
         withCredentials: true,
       });
 

@@ -38,7 +38,7 @@ const GraficaStartup = () => {
   // Función para obtener los datos históricos de valoraciones
   const fetchValorStartup = async () => {
     try {
-      const response = await customAxios.get('https://api.astraesystem.com/api/data/historicos', {
+      const response = await customAxios.get('/data/historicos', {
         withCredentials: true, // Enviar cookies con la solicitud
       });
 

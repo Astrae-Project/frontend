@@ -31,7 +31,7 @@ const ListaGrupos = ({ onGroupSelect }) => {
   const fetchGrupos = async () => {
     try {
       const { data } = await customAxios.get(
-        "https://api.astraesystem.com/api/data/grupos",
+        "/data/grupos",
         { withCredentials: true }
       );
       setGrupos(Array.isArray(data) ? data : []);
@@ -44,7 +44,7 @@ const ListaGrupos = ({ onGroupSelect }) => {
   const fetchTodosGrupos = async () => {
     try {
       const { data } = await customAxios.get(
-        "https://api.astraesystem.com/api/data/todos-grupos",
+        "/data/todos-grupos",
         { withCredentials: true }
       );
       setTodosGrupos(Array.isArray(data) ? data : []);
@@ -64,7 +64,7 @@ const ListaGrupos = ({ onGroupSelect }) => {
       for (const { grupo } of grupos) {
         try {
           const { data } = await customAxios.get(
-            `https://api.astraesystem.com/api/grupos/ver/${grupo.id}/mensajes`
+            `/grupos/ver/${grupo.id}/mensajes`
           );
           setUltimoMensajePorGrupo(prev => ({
             ...prev,
@@ -85,7 +85,7 @@ const ListaGrupos = ({ onGroupSelect }) => {
   const handleCrearGrupo = async () => {
     try {
       await customAxios.post(
-        "https://api.astraesystem.com/api/grupos/crear",
+        "/grupos/crear",
         formData,
         { withCredentials: true }
       );
@@ -108,7 +108,7 @@ const ListaGrupos = ({ onGroupSelect }) => {
     if (!selectedToJoin) return;
     try {
       await customAxios.post(
-        `https://api.astraesystem.com/api/grupos/unir/${selectedToJoin.id}`,
+        `/grupos/unir/${selectedToJoin.id}`,
         {},
         { withCredentials: true }
       );

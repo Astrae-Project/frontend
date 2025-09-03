@@ -20,7 +20,7 @@ const TablaPortfolioOtro = ({ username }) => {
   // Función para obtener el portfolio
   const fetchPortfolio = async () => {
     try {
-      const response = await customAxios.get(`https://api.astraesystem.com/api/data/usuario/${username}`, {
+      const response = await customAxios.get(`/data/usuario/${username}`, {
         withCredentials: true, // Enviar cookies con la solicitud
       });
 
@@ -88,7 +88,7 @@ const TablaPortfolioOtro = ({ username }) => {
       }
 
       const { id_startup: startupId } = inversionData;
-      const { data } = await customAxios.get(`https://api.astraesystem.com/api/data/startup/${startupId}`, {
+      const { data } = await customAxios.get(`/data/startup/${startupId}`, {
         withCredentials: true,
       });
       setStartupDetails(data);

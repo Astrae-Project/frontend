@@ -20,7 +20,7 @@ const Notificaciones = () => {
   useEffect(() => {
     const fetchNotificaciones = async () => {
       try {
-        const { data } = await customAxios.get("https://api.astraesystem.com/api/data/notificaciones");
+        const { data } = await customAxios.get("/data/notificaciones");
         setNotificaciones(data);
       } catch (error) {
         console.error("Error al obtener notificaciones:", error);
@@ -98,7 +98,7 @@ const Notificaciones = () => {
   const handleMarcarLeido = async () => {
     if (!notificacionActual) return;
     try {
-      await customAxios.put('https://api.astraesystem.com/api/perfil/leido', { id: notificacionActual.id });
+      await customAxios.put('/perfil/leido', { id: notificacionActual.id });
       handleBubbleClose();
     } catch (error) {
       console.error('Error al marcar como leído:', error);

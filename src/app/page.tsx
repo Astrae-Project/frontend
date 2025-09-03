@@ -35,7 +35,7 @@ const Inicio = () => {
   useEffect(() => {
     const fetchUsuario = async () => {
       try {
-      const response = await customAxios.get(`https://api.astraesystem.com/api/data/usuario`, {
+      const response = await customAxios.get(`/data/usuario`, {
         withCredentials: true, // Enviar cookies con la solicitud
       });
       setUsuario(response.data);

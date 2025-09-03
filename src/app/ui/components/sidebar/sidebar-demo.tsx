@@ -41,7 +41,7 @@ export function SidebarDemo() {
 
   const fetchRol = async () => {
     try {
-      const response = await customAxios.get("https://api.astraesystem.com/api/data/usuario", { withCredentials: true });
+      const response = await customAxios.get("/data/usuario", { withCredentials: true });
       if (response.data.startup) {
         setRol("startup");
       } else if (response.data.inversor) {

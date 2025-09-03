@@ -13,7 +13,7 @@ export default function EventosyCalendarioOtro1({ username }) {
     if (!username) return;
 
     try {
-      const response = await fetch(`https://api.astraesystem.com/api/data/usuario/${username}`, {
+      const response = await fetch(`/data/usuario/${username}`, {
         credentials: "include",
       });
 

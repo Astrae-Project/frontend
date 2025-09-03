@@ -9,7 +9,7 @@ export default function EventosyCalendario1() {
 
   const fetchEventos = async () => {
     try {
-      const response = await fetch("https://api.astraesystem.com/api/data/eventos", {
+      const response = await fetch("/data/eventos", {
         credentials: "include",
       });
       if (!response.ok) throw new Error("Network response was not ok");

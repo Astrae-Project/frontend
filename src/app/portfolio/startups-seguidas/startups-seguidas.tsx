@@ -20,7 +20,7 @@ const StartupsSeguidas = () => {
   const fetchStartupsData = async () => {
     try {
       const response = await customAxios.get(
-        "https://api.astraesystem.com/api/data/startup/seguidas",
+        "/data/startup/seguidas",
         { withCredentials: true }
       );
 

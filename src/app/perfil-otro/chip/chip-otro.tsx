@@ -10,7 +10,7 @@ export function ChipsOtro({username}) {
 
   const fetchUsuario = async () => {
     try {
-      const response = await customAxios.get(`https://api.astraesystem.com/api/data/usuario/${username}`, {
+      const response = await customAxios.get(`/data/usuario/${username}`, {
         withCredentials: true, // Cambiado a 'true' (booleano)
       });
       setUsuario(response.data); // Asumiendo que los datos contienen información sobre si es inversor o startup

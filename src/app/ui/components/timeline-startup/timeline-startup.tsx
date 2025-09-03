@@ -19,7 +19,7 @@ export default function TimelineStartup() {
     async function fetchHitos() {
       try {
         const { data } = await customAxios.get(
-          'https://api.astraesystem.com/api/data/usuario',
+          '/data/usuario',
           { withCredentials: true }
         );
         setHitos(data.startup.hitos);

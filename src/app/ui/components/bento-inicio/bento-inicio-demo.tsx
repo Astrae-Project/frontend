@@ -44,7 +44,7 @@ export function BentoGridInicio({username}) {
 
   const fetchRol = async () => {
     try {
-      const response = await customAxios.get(`https://api.astraesystem.com/api/data/usuario`, {
+      const response = await customAxios.get(`/data/usuario`, {
         withCredentials: true, // Enviar cookies con la solicitud
       });
 
@@ -68,7 +68,7 @@ export function BentoGridInicio({username}) {
     // Obtener startups de la API
     const fetchStartups = async () => {
       try {
-        const response = await customAxios.get(`https://api.astraesystem.com/api/data/startup`);
+        const response = await customAxios.get(`/data/startup`);
         setStartups(response.data.startups); // Almacenar las startups
       } catch (error) {
         console.error("Error fetching startups:", error);
@@ -84,7 +84,7 @@ export function BentoGridInicio({username}) {
     const handleCrearGrupo = async () => {
       try {
         const response = await customAxios.post(
-          "https://api.astraesystem.com/api/grupos/crear",
+          "/grupos/crear",
           formData,
           { withCredentials: true }
         );
@@ -106,7 +106,7 @@ export function BentoGridInicio({username}) {
 
     try {
       const response = await customAxios.post(
-        `https://api.astraesystem.com/api/invest/oferta`,
+        `/invest/oferta`,
         {
           id_startup: selectedStartup.id,
           porcentaje_ofrecido: selectedPercentage,

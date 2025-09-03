@@ -11,7 +11,7 @@ const ResumenPortfolio = () => {
   const fetchPortfolio = async () => {
     try {
       const response = await customAxios.get(
-        "https://api.astraesystem.com/api/data/portfolio",
+        "/data/portfolio",
         { withCredentials: true }
       );
       const data = response.data;
@@ -19,7 +19,7 @@ const ResumenPortfolio = () => {
       setDistribucionSectores(calcularDistribucionPorSector(data.inversiones || []));
 
       const historialResponse = await customAxios.get(
-        "https://api.astraesystem.com/api/data/historicos",
+        "/data/historicos",
         { withCredentials: true }
       );
       const historicoRaw = historialResponse.data.historico || [];

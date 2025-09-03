@@ -50,7 +50,7 @@ export const CartaOferta = ({ oferta, onClick } : CartaOfertaProps) => {
     setLoading(true);
     try {
       await customAxios.put(
-        `https://api.astraesystem.com/api/invest/oferta/${oferta.id}/aceptar/${oferta.startup.usuario.id}`,
+        `/invest/oferta/${oferta.id}/aceptar/${oferta.startup.usuario.id}`,
         {},
         { withCredentials: true }
       );
@@ -69,7 +69,7 @@ export const CartaOferta = ({ oferta, onClick } : CartaOfertaProps) => {
   const handleInvestClick = async () => {
     try {
       await customAxios.post(
-        `https://api.astraesystem.com/api/invest/contraoferta/${oferta.id}/${oferta.startup.usuario.id}`,
+        `/invest/contraoferta/${oferta.id}/${oferta.startup.usuario.id}`,
         {
           id_inversor: oferta.id_inversor,
           contraoferta_porcentaje: selectedPercentage,
@@ -93,7 +93,7 @@ export const CartaOferta = ({ oferta, onClick } : CartaOfertaProps) => {
   const handleReject = async () => {
     try {
       await customAxios.put(
-        `https://api.astraesystem.com/api/invest/oferta/${oferta.id}/rechazar/${oferta.startup.usuario.id}`,
+        `/invest/oferta/${oferta.id}/rechazar/${oferta.startup.usuario.id}`,
         {},
         { withCredentials: true }
       );

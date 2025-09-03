@@ -9,7 +9,7 @@ const Suscriptores = () => {
 
   const fetchEstadisticas = async () => {
     try {
-      const response = await customAxios.get("https://api.astraesystem.com/api/data/usuario", {
+      const response = await customAxios.get("/data/usuario", {
         withCredentials: true,
       });
 

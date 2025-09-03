@@ -93,7 +93,7 @@ const ChatGroup: React.FC<ChatGroupProps> = ({ groupId, user }) => {
     try {
       console.log(`[Chat] actualizarPermiso: ${permisoId} -> ${nuevoValor}`);
       await customAxios.put(
-        `https://api.astraesystem.com/api/grupos/cambio-permiso/${numericGroupId}`,
+        `/grupos/cambio-permiso/${numericGroupId}`,
         {
           groupId: numericGroupId,
           permiso: permisoId,

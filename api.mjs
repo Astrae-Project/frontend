@@ -1,14 +1,8 @@
 import axios from "axios";
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL || 
-                (process.env.NODE_ENV === "production"
-                  ? "https://api.astraesystem.com/api"
-                  : "http://localhost:5000/api");
-
-// Crear una instancia personalizada de axios
 const customAxios = axios.create({
-  baseURL,
-  withCredentials: true, // Asegúrate de que las cookies se envíen
+  baseURL: process.env.NEXT_PUBLIC_API_URL, // cambia según el entorno
+  withCredentials: true,
 });
 
 customAxios.interceptors.response.use(
@@ -20,11 +14,10 @@ customAxios.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await generateRefreshToken(); // Refrescar el token
-        return customAxios(originalRequest); // Reintentar la solicitud original
+        await generateRefreshToken();
+        return customAxios(originalRequest);
       } catch (refreshError) {
         console.error("Error al refrescar el token:", refreshError);
-        // Aquí puedes redirigir al login si lo ves necesario
       }
     }
 
@@ -34,11 +27,10 @@ customAxios.interceptors.response.use(
 
 export const generateRefreshToken = async () => {
   try {
-    // usamos la baseURL configurada, sin hardcodear la URL
     const response = await customAxios.post("/auth/refrescar-token");
 
     if (response.data.accessToken) {
-      // aquí deberías guardar el nuevo accessToken si lo necesitas en headers
+      // Guarda el nuevo token si es necesario
     } else {
       console.error("No se recibió un nuevo access token");
     }

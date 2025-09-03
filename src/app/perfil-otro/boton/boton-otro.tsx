@@ -36,7 +36,7 @@ export function BotonesOtro({ username }) {
   // Obtener datos del usuario autenticado
   const fetchUsuarioAutenticado = async () => {
     try {
-      const response = await customAxios.get(`https://api.astraesystem.com/api/data/usuario`, { withCredentials: true });
+      const response = await customAxios.get(`/data/usuario`, { withCredentials: true });
       if (response.data) {
         const { inversor, startup } = response.data;
         const usuarioData = inversor || startup;
@@ -54,7 +54,7 @@ export function BotonesOtro({ username }) {
     if (!username) return;
 
     try {
-      const response = await customAxios.get(`https://api.astraesystem.com/api/data/usuario/${username}`, { withCredentials: true });
+      const response = await customAxios.get(`/data/usuario/${username}`, { withCredentials: true });
       if (response.data) {
         setUsuarioObservado(response.data);
       }
@@ -96,7 +96,7 @@ export function BotonesOtro({ username }) {
       // Si ya está siguiendo, eliminar el seguimiento (hacer DELETE)
       if (isFollowing) {
         const response = await customAxios.delete(
-          `https://api.astraesystem.com/api/follow/seguir`,
+          `/follow/seguir`,
           { data: { id_seguido: idSeGuido }, withCredentials: true }
         );
 
@@ -107,7 +107,7 @@ export function BotonesOtro({ username }) {
         }
       } else {
         const response = await customAxios.post(
-          `https://api.astraesystem.com/api/follow/seguir`,
+          `/follow/seguir`,
           { id_seguido: idSeGuido },
           { withCredentials: true }
         );
@@ -131,7 +131,7 @@ export function BotonesOtro({ username }) {
 
     try {
       const response = await customAxios.post(
-        `https://api.astraesystem.com/api/invest/oferta`,
+        `/invest/oferta`,
         {
           id_startup: usuarioObservado.startup.id,
           porcentaje_ofrecido: selectedPercentage,

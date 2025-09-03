@@ -31,7 +31,7 @@ const Info = () => {
 
   const fetchDatos = async () => {
     try {
-      const response = await customAxios.get(`https://api.astraesystem.com/api/data/usuario`, {
+      const response = await customAxios.get(`/data/usuario`, {
         withCredentials: true, // Asegúrate de que la configuración se mantenga
       });
       
@@ -113,7 +113,7 @@ const Info = () => {
 
     try {
       const response = await customAxios.post(
-        `https://api.astraesystem.com/api/perfil/subir-documento/${user.id}`,
+        `/perfil/subir-documento/${user.id}`,
         formData,
         {
           withCredentials: true

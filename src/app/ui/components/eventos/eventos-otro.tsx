@@ -16,7 +16,7 @@ export default function EventosOtro({ fechaSeleccionada, username }) {
   const fetchEventos = async () => {
     try {
       const response = await customAxios.get(
-        `https://api.astraesystem.com/api/data/usuario/${username}`,
+        `/data/usuario/${username}`,
         { withCredentials: true }
       );
       setEventos(response.data.eventos || []); // Asegúrate de acceder a la propiedad correcta

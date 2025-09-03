@@ -41,7 +41,7 @@ export function Placeholder() {
     try {
       setIsLoading(true);
       const response = await customAxios.get(
-        "https://api.astraesystem.com/api/data/todos-usuarios",
+        "/data/todos-usuarios",
         { withCredentials: true }
       );
       if (response.data?.usuarios instanceof Array) {

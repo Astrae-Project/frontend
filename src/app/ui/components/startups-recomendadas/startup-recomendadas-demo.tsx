@@ -20,7 +20,7 @@ export function StartupsRecomendadas() {
   const fetchStartupsData = async () => {
     try {
       const response = await customAxios.get(
-        "https://api.astraesystem.com/api/data/startup/recomendadas",
+        "/data/startup/recomendadas",
         {
           withCredentials: true,
         }

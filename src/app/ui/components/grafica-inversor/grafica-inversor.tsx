@@ -28,7 +28,7 @@ const GraficaInversor = () => {
   
   const fetchValorPortfolio = async () => {
     try {
-      const response = await customAxios.get('https://api.astraesystem.com/api/data/historicos', {
+      const response = await customAxios.get('/data/historicos', {
         withCredentials: true,
       });
   

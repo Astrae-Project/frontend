@@ -44,7 +44,7 @@ const GraficaInversorPortfolio = () => {
     const fetchHistorico = async () => {
       try {
         const response = await customAxios.get(
-          'https://api.astraesystem.com/api/data/historicos',
+          '/data/historicos',
           { withCredentials: true }
         );
         const historico = Array.isArray(response.data.historico)

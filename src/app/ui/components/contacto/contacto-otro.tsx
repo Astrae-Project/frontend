@@ -85,7 +85,7 @@ export default function ContactoOtro({ username }) {
 
       try {
         const response = await customAxios.get(
-          `https://api.astraesystem.com/api/data/usuario/${username}`,
+          `/data/usuario/${username}`,
           {
             withCredentials: true,
           }

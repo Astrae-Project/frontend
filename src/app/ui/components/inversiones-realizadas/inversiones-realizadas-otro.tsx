@@ -8,7 +8,7 @@ const InversionesRealizadasOtro = ({ username }) => { // Extraer el username de 
 
   const fetchEstadisticas = async () => {
     try {
-      const response = await customAxios.get(`https://api.astraesystem.com/api/data/usuario/${username}`, {
+      const response = await customAxios.get(`/data/usuario/${username}`, {
         withCredentials: true,
       });
       // Verifica la respuesta

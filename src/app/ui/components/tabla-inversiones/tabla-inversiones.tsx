@@ -13,7 +13,7 @@ const TablaInversiones = () => {
   useEffect(() => {
     const fetchOfertas = async () => {
       try {
-        const { data } = await customAxios.get("https://api.astraesystem.com/api/data/ofertas", {
+        const { data } = await customAxios.get("/data/ofertas", {
           withCredentials: true,
         });
         setOfertas(data);
@@ -63,7 +63,7 @@ const TablaInversiones = () => {
     try {
       const { id, inversor } = activeBubble;
       await customAxios.put(
-        `https://api.astraesystem.com/api/invest/contraoferta/${id}/aceptar/${inversor.id_usuario}`,
+        `/invest/contraoferta/${id}/aceptar/${inversor.id_usuario}`,
         {},
         { withCredentials: true }
       );
@@ -78,7 +78,7 @@ const TablaInversiones = () => {
     try {
       const { id, inversor } = activeBubble;
       await customAxios.put(
-        `https://api.astraesystem.com/api/invest/contraoferta/${id}/rechazar/${inversor.id_usuario}`,
+        `/invest/contraoferta/${id}/rechazar/${inversor.id_usuario}`,
         {},
         { withCredentials: true }
       );

@@ -10,7 +10,7 @@ export default function EventosyCalendario() {
 
   const fetchEventos = async () => {
     try {
-      const response = await customAxios.get("https://api.astraesystem.com/api/data/eventos", {
+      const response = await customAxios.get("/data/eventos", {
         withCredentials: true,
       });
       setEventos(response.data);

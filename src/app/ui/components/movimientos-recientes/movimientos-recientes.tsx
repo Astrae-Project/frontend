@@ -14,7 +14,7 @@ const MovimientosRecientes1 = () => {
 
   const fetchMovimientosRecientes = async () => {
     try {
-      const response = await customAxios.get(`https://api.astraesystem.com/api/data/movimientos-recientes`, {
+      const response = await customAxios.get(`/data/movimientos-recientes`, {
         withCredentials: true,
       });
   
