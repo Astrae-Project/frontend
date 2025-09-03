@@ -283,13 +283,14 @@
   padding-left: 4%;
   padding-right: 4%;
   border: none;
+  overflow-y: hidden;
 }
 
 #contenedor-botones-hitos {
   position: relative;
   right: 15px;
   margin-right: 60px;
-  top: -8px;
+  top: -76px;
 }
 
 .select-custom {

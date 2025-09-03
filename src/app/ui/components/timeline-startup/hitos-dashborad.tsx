@@ -281,7 +281,6 @@ export default function HitosDashboard(): JSX.Element {
         <p className="titulo-contacto">Hitos</p>
       </div>
 
-      <div className="hitos-dashboard">
         <div className="contenido-scrollable">
           <div className="listado-quarters">
             {Object.entries(gruposCompleto).map(([q, arr]) => (
@@ -328,7 +327,6 @@ export default function HitosDashboard(): JSX.Element {
             ))}
           </div>
         </div>
-      </div>
 
       <div className="contenedor-botones" id="contenedor-botones-hitos">
         <button
