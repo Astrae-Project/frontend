@@ -62,13 +62,16 @@ export function OfertasPendientes() {
   return (
     <div className="apartado-raro">
       <ScrollShadow size={1000} orientation="horizontal" className="contiene1">
-        {displayedOfertas.map((oferta) => (
+        {displayedOfertas.length === 0 ? (
+          <p className="texto-empty1">No hay ofertas pendientes</p>
+        ) : (
+        displayedOfertas.map((oferta) => (
           <CartaOferta
             key={oferta.id} // Usar "id" único de la oferta como key
             oferta={oferta}
             onClick={() => handleShowBubble(oferta)}
           />
-        ))}
+        )))}
       </ScrollShadow>
     </div>
   );

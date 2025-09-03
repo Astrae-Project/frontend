@@ -314,7 +314,7 @@ export default function HitosDashboard(): JSX.Element {
                   ) : (
                     <div className="hito-card">
                       <div className="info">
-                        <h3 className="placeholder-title">Sin hitos</h3>
+                        <p className="placeholder-title">Sin hitos</p>
                         <div className="info-footer">
                         </div>
                       </div>
