@@ -279,12 +279,10 @@
 }
 
 #hitos-dashboard {
-  flex-direction: column;
   padding-top: 10%;
   padding-left: 4%;
   padding-right: 4%;
   border: none;
-  justify-content: normal;
 }
 
 #contenedor-botones-hitos {
