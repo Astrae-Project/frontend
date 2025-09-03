@@ -312,12 +312,10 @@ export default function HitosDashboard(): JSX.Element {
                       </div>
                     ))
                   ) : (
-                    <div className="hito-card placeholder">
+                    <div className="hito-card">
                       <div className="info">
                         <h3 className="placeholder-title">Sin hitos</h3>
                         <div className="info-footer">
-                          <span className="badge placeholder-badge">—</span>
-                          <p className="info-fecha">Añade un hito para este quarter</p>
                         </div>
                       </div>
                     </div>
