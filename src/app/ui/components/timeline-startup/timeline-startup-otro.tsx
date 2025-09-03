@@ -72,7 +72,7 @@ export default function TimelineStartupOtro({ username }: { username: string }) 
   if (!hitos.length) {
     return (
       <div className="seccion">
-        <p>Esta startup no ha definido aún su roadmap.</p>
+        <p>No hay roadmap</p>
       </div>
     );
   }
