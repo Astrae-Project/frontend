@@ -169,7 +169,7 @@ const Info = () => {
         </>
       ) : (
         <>
-          <button className="rankear" onClick={() => setActiveBubble("subir-documento")}>
+          <button className="rankear morado" onClick={() => setActiveBubble("subir-documento")}>
             <IconFileDownloadFilled id="descarga" />
           </button>
           <span className="contenedor-ancho1">
