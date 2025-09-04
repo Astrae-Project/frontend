@@ -117,7 +117,7 @@ export function BentoGridPortfolio() {
                 )}
               </ul>
             </div>
-            <div className="contendor-botn-evento">
+            <div className="contenedor-botn-evento">
               <button className="botn-eventos" onClick={closeBubble}>
                 Cerrar
               </button>

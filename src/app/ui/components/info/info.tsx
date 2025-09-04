@@ -223,7 +223,7 @@ const Info = () => {
                 />
               </div>
 
-              <div className="contendor-botn-evento">
+              <div className="contenedor-botn-evento">
                 <button type="button" className="botn-eventos" onClick={closeBubble}>
                   Cancelar
                 </button>

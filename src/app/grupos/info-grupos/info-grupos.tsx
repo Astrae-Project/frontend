@@ -321,7 +321,7 @@ const InfoGrupos = ({ groupId }) => {
                         {canInviteMembers && (
                           <li className="miembro añadir-miembro" onClick={handleOpenAddMemberBubble}>
                             <div className="info-miembro">
-                              <div className="contendor-username" id="añadir-miembro">
+                              <div className="contenedor-username" id="añadir-miembro">
                                 <p>Añadir miembros</p>
                               </div>
                             </div>
@@ -333,7 +333,7 @@ const InfoGrupos = ({ groupId }) => {
                               <img src={miembro.avatar || '/default-avatar.png' } alt="Avatar del creador" />
                             </div>
                             <div className="info-miembro">
-                              <div className="contendor-username">
+                              <div className="contenedor-username">
                                 {miembro.username}
                               </div>
                             </div>
@@ -484,7 +484,7 @@ const InfoGrupos = ({ groupId }) => {
                   </label>
                 </div>
               </div>
-              <div className="contendor-botn-grupo">
+              <div className="contenedor-botn-grupo">
                 <button
                   type="button"
                   className="botn-grupos"
@@ -535,7 +535,7 @@ const InfoGrupos = ({ groupId }) => {
                 </ul>
               </div>
             )}
-            <div className="contendor-botn-evento">
+            <div className="contenedor-botn-evento">
               <button type="button" className="botn-eventos" onClick={closeBubble}>Cerrar</button>
               <button 
                 type="button" 

@@ -280,7 +280,7 @@ export default function Eventos({ fechaSeleccionada }) {
                     <p className="text-label">Privado</p>
                   </label>
                 </div>
-              <div className="contendor-botn-evento">
+              <div className="contenedor-botn-evento">
                 <button className="botn-eventos" onClick={handleBubbleClose}>Cerrar</button>
                 <button className="botn-eventos enviar" type="submit">Crear</button>
               </div>          
@@ -323,7 +323,7 @@ export default function Eventos({ fechaSeleccionada }) {
                 )}
               </ul>
             </div>
-            <div className="contendor-botn-evento">
+            <div className="contenedor-botn-evento">
               <button className="botn-eventos" onClick={handleBubbleClose}>Cerrar</button>
               <button
                 className="botn-eventos enviar"
@@ -345,7 +345,7 @@ export default function Eventos({ fechaSeleccionada }) {
             <p><strong>Descripción:</strong> {selectedEvent.descripcion || "Desconocido"}</p>
             <p><strong>Participantes:</strong> {selectedEvent.participantes || "Ninguno"}</p>
 
-            <div className="contendor-botn-evento">
+            <div className="contenedor-botn-evento">
               <button className="botn-eventos" onClick={() => setFormSubmitted(false)}>
                 Volver
               </button>

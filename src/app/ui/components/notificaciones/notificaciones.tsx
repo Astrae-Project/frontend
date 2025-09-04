@@ -160,7 +160,7 @@ const Notificaciones = () => {
               {(activeBubble === "evento" ||
                 activeBubble === "oferta" ||
                 activeBubble === "seguimiento") && (
-                <div className="contendor-botn-evento" style={{ marginBottom: 0, marginTop: 0 }}>
+                <div className="contenedor-botn-evento" style={{ marginBottom: 0, marginTop: 0 }}>
                   <button className="botn-eventos" onClick={handleMarcarLeido}>
                     Marcar Leido
                   </button>
@@ -168,7 +168,7 @@ const Notificaciones = () => {
               )}
 
               {(activeBubble === "inversion" || activeBubble === "contraoferta") && (
-                <div className="contendor-botn-evento" style={{ marginBottom: 0, marginTop: 0 }}>
+                <div className="contenedor-botn-evento" style={{ marginBottom: 0, marginTop: 0 }}>
                   <button className="botn-eventos" onClick={handleMarcarLeido}>
                     Marcar Leido
                   </button>
@@ -178,7 +178,7 @@ const Notificaciones = () => {
                 </div>
               )}
               {activeBubble === "grupo" && (
-                <div className="contendor-botn-evento" style={{ marginBottom: 0, marginTop: 0 }}>
+                <div className="contenedor-botn-evento" style={{ marginBottom: 0, marginTop: 0 }}>
                   <button className="botn-eventos" onClick={handleMarcarLeido}>
                     Marcar Leido
                   </button>

@@ -81,6 +81,38 @@
   top: 2.5px;
 }
 
+/* Contenedor de los botones de invertir */
+.contenedor-botn-invertir {
+  position: relative;
+  display: flex;
+  width: 95%;
+  justify-content: space-between;
+  margin: 0 auto;
+}
+
+/* Estilo para los botones de inversión */
+.botn-invertir {
+  position: relative;
+  width: auto;
+  height: 30px;
+  background-color: #1C1C29;
+  border: 1px solid #1E202F;
+  border-radius: 5px;
+  font-size: 13px;
+  padding-top: 4px;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+/* Estilo específico para el botón de enviar */
+.enviar {
+  background-color: #6e4ba3;
+  transition: background-color 0.3s ease;
+}
+
+.enviar:hover {
+  background-color: #7857ab;
+}
 
 .startup-lista {
   position: relative;

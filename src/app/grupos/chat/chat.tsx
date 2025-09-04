@@ -569,7 +569,7 @@ const ChatGroup: React.FC<ChatGroupProps> = ({ groupId, user }) => {
                   </label>
                 </div>
               </div>
-              <div className="contendor-botn-grupo">
+              <div className="contenedor-botn-grupo">
                 <button
                   type="button"
                   className="botn-eventos"

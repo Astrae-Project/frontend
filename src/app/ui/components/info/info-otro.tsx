@@ -412,7 +412,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
           <div>
             <p>Valora al inversor</p>
             <div className="star-rating-container">{stars}</div>
-            <div className="contendor-botn-evento">
+            <div className="contenedor-botn-evento">
               <button className="botn-eventos" onClick={closeBubble}>Cerrar</button>
               <button className="botn-eventos enviar" onClick={handleEnviarResena}>
                 Valorar
@@ -448,7 +448,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
                 ))}
               </ul>
             )}
-            <div className="contendor-botn-evento">
+            <div className="contenedor-botn-evento">
               <button className="botn-eventos" onClick={closeBubble}>
                 Cerrar
               </button>

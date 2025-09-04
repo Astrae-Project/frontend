@@ -217,7 +217,7 @@ export function BentoGridInicio({username}) {
                 )}
               </ul>
             </div>
-            <div className="contendor-botn-evento">
+            <div className="contenedor-botn-evento">
               <button className="botn-eventos" onClick={closeBubble}>
                 Cerrar
               </button>
@@ -296,7 +296,7 @@ export function BentoGridInicio({username}) {
                   </label>
                 </div>
               </div>
-              <div className="contendor-botn-grupo">
+              <div className="contenedor-botn-grupo">
                 <button
                   type="button"
                   className="botn-eventos"
@@ -400,7 +400,7 @@ export function BentoGridInicio({username}) {
                   </label>
                 </div>
               </div>
-              <div className="contendor-botn-grupo">
+              <div className="contenedor-botn-grupo">
                 <button
                   type="button"
                   className="botn-eventos"

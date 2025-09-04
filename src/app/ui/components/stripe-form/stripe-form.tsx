@@ -211,7 +211,7 @@ export default function FormularioInversion({ selectedStartup, onClose }) {
         </label>
       </div>
       {/* Botones */}
-      <div className="contendor-botn-invertir">
+      <div className="contenedor-botn-invertir">
         <button type="button" className="botn-invertir" onClick={closeBubble} disabled={loading}>
           Cancelar
         </button>

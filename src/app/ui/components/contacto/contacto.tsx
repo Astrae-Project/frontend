@@ -176,7 +176,7 @@ const InformacionContacto: React.FC<InformacionContactoProps> = ({ contacto, fet
               placeholder={`Escribe aqui...`}
               className='select-contacto'
             />
-            <div className="contendor-botn-evento">
+            <div className="contenedor-botn-evento">
               <button
                 className="botn-eventos"
                 type="button"

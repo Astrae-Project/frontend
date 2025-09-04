@@ -283,7 +283,7 @@ export const CartaOferta = ({ oferta, onClick } : CartaOfertaProps) => {
             </div>
               
             {/* Botones */}
-            <div className="contendor-botn-invertir">
+            <div className="contenedor-botn-invertir">
               <button type="button" className="botn-invertir" onClick={closeBubble} disabled={loading}>
                 Cancelar
               </button>

@@ -414,7 +414,7 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
                     <p className="text-label">Privado</p>
                   </label>
                 </div>
-              <div className="contendor-botn-evento">
+              <div className="contenedor-botn-evento">
                 <button className="botn-eventos" onClick={closeBubble}>Cerrar</button>
                 <button className="botn-eventos enviar" type="submit">Crear</button>
               </div>          
@@ -449,7 +449,7 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
                 </ul>
               )}
               </div>
-              <div className="contendor-botn-evento">
+              <div className="contenedor-botn-evento">
                 <button className="botn-eventos" onClick={closeBubble}>Cerrar</button>
                 <button
                   className="botn-eventos enviar"
@@ -491,7 +491,7 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
                   </ul>
                 )}
               </div>
-              <div className="contendor-botn-evento">
+              <div className="contenedor-botn-evento">
                 <button className="botn-eventos" onClick={closeBubble}>Cerrar</button>
                 <button 
                   className="botn-eventos enviar"
@@ -581,7 +581,7 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
                     <p className="text-label">Privado</p>
                   </label>
                 </div>
-              <div className="contendor-botn-evento">
+              <div className="contenedor-botn-evento">
                 <button
                   className="botn-eventos"
                   type="button"
@@ -633,7 +633,7 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
                 )}
               </ul>
             </div>
-            <div className="contendor-botn-evento">
+            <div className="contenedor-botn-evento">
               <button className="botn-eventos" onClick={closeBubble}>Cerrar</button>
               <button
                 className="botn-eventos enviar"
@@ -727,7 +727,7 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
               </ul>
             )}
             </div>
-            <div className="contendor-botn-evento">
+            <div className="contenedor-botn-evento">
               <button className="botn-eventos" onClick={closeBubble}>Cerrar</button>
               <button className="botn-eventos enviar" onClick={closeBubble} disabled={!selectedEvent}>Enviar</button>
             </div>

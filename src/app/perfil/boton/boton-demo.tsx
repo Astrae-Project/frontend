@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import "./boton-style.css";
 import customAxios from "@/service/api.mjs";
 import Bubble from "@/app/ui/components/bubble/bubble";
 import FormularioInversion from "@/app/ui/components/stripe-form/stripe-form";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import './boton-style.css'
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -183,7 +183,7 @@ export function Botones() {
                 )}
               </ul>
             </div>
-            <div className="contendor-botn-evento">
+            <div className="contenedor-botn-evento">
               <button className="botn-eventos" onClick={closeBubble}>
                 Cerrar
               </button>
@@ -331,7 +331,7 @@ export function Botones() {
                   </>
                 )}
 
-                <div className="contendor-botn-invertir">
+                <div className="contenedor-botn-invertir">
                   <button className="botn-invertir" onClick={closeBubble}>
                     Cancelar
                   </button>

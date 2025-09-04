@@ -395,7 +395,7 @@ export default function HitosDashboard(): JSX.Element {
                 required
               />
 
-              <div className="contendor-botn-evento">
+              <div className="contenedor-botn-evento">
                 <button className="botn-eventos" onClick={closeBubble} type="button">Cerrar</button>
                 <button className="botn-eventos enviar" type="submit">Crear</button>
               </div>
@@ -441,7 +441,7 @@ export default function HitosDashboard(): JSX.Element {
                 ) : <p>No hay resultados</p>}
               </ul>
             </div>
-            <div className="contendor-botn-evento">
+            <div className="contenedor-botn-evento">
               <button className="botn-eventos" onClick={closeBubble} type="button">Cerrar</button>
               <button className="botn-eventos enviar" onClick={handleEliminar} disabled={!selectedHito} type="button">Eliminar</button>
             </div>
@@ -486,7 +486,7 @@ export default function HitosDashboard(): JSX.Element {
                 ) : <p>No hay resultados</p>}
               </ul>
             </div>
-            <div className="contendor-botn-evento">
+            <div className="contenedor-botn-evento">
               <button className="botn-eventos" onClick={closeBubble} type="button">Cerrar</button>
               <button className="botn-eventos enviar" onClick={() => { setStep(2); prepareEdit(); }} disabled={!selectedHito} type="button">Editar</button>
             </div>
@@ -526,7 +526,7 @@ export default function HitosDashboard(): JSX.Element {
                 onChange={e => setEditFormData({ ...editFormData, fechaObjetivo: e.target.value })}
                 required
               />
-              <div className="contendor-botn-evento">
+              <div className="contenedor-botn-evento">
                 <button className="botn-eventos" onClick={closeBubble} type="button">Atrás</button>
                 <button className="botn-eventos enviar" type="submit">Guardar</button>
               </div>
@@ -562,7 +562,7 @@ export default function HitosDashboard(): JSX.Element {
                 )) : <p>No hay resultados</p>}
               </ul>
             </div>
-            <div className="contendor-botn-evento">
+            <div className="contenedor-botn-evento">
               <button className="botn-eventos" onClick={closeBubble} type="button">Cerrar</button>
               <button
                 className="botn-eventos enviar"
@@ -638,7 +638,7 @@ export default function HitosDashboard(): JSX.Element {
                 ) : <p>No hay resultados</p>}
               </ul>
             </div>
-            <div className="contendor-botn-evento">
+            <div className="contenedor-botn-evento">
               <button className="botn-eventos" onClick={closeBubble} type="button">Cerrar</button>
               <button className="botn-eventos enviar" onClick={closeBubble} disabled={!selectedHito} type="button">Enviar</button>
             </div>

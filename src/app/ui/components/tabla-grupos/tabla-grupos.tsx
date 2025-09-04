@@ -222,7 +222,7 @@ const TablaGrupos = () => {
                   </label>
                 </div>
               </div>
-              <div className="contendor-botn-grupo">
+              <div className="contenedor-botn-grupo">
                 <button
                   type="button"
                   className="botn-eventos"
@@ -269,7 +269,7 @@ const TablaGrupos = () => {
               )}
             </ul>
           </div>
-          <div className="contendor-botn-evento">
+          <div className="contenedor-botn-evento">
             <button className="botn-eventos" onClick={closeBubble}>
               Cerrar
             </button>
