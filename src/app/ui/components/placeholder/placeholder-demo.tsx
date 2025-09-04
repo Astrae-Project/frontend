@@ -144,7 +144,7 @@ export function Placeholder() {
                     <div className="portfolio-icono">
                       <img
                         src={user.avatar || "/default-avatar.png"}
-                        className="avatar-imagen"
+                        className="avatar-imagen1"
                         alt="Avatar"
                       />
                     </div>

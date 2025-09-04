@@ -3,7 +3,6 @@ import "../../../perfil/bento-perfil/bento-perfil-style.css";
 import { IconMoneybag, IconStar } from "@tabler/icons-react";
 import Bubble from "../bubble/bubble";
 import customAxios from "@/service/api.mjs";
-import PerfilOtro from "@/app/perfil-otro/page";
 import dynamic from "next/dynamic";
 import { FC } from "react";
 
