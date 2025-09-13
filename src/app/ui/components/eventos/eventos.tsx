@@ -20,6 +20,7 @@ const PerfilOtroComponent: FC<PerfilOtroProps> = dynamic(
 
 export default function Eventos({ fechaSeleccionada }) {
   const [eventos, setEventos] = useState([]);
+  const [eventosUsuario, setEventosUsuario] = useState([]);
   const [eventosFiltrados, setEventosFiltrados] = useState([]);
   const [activeBubble, setActiveBubble] = useState(null);
   const [bubbleData, setBubbleData] = useState(null);
@@ -52,9 +53,27 @@ export default function Eventos({ fechaSeleccionada }) {
     }
   };
 
+  const fetchEventosUsuario = async () => {
+    try {
+      const response = await customAxios.get(
+        "/data/usuario",
+        { withCredentials: true }
+      );
+      if (Array.isArray(response.data.eventos)) {
+        setEventosUsuario(response.data.eventos);
+      } else {
+        setEventosUsuario([]); // Si no es un array, asigna un array vacío
+      }
+    } catch (error) {
+      console.error("Error fetching eventos del usuario:", error);
+      setEventosUsuario([]); // En caso de error, asigna un array vacío
+    }
+  };
+
   // Ejecutar fetchEventos al montar el componente
   useEffect(() => {
     fetchEventos();
+    fetchEventosUsuario();
   }, []);
 
   // Filtrar eventos por búsqueda (si hay consulta) o mostrar todos
@@ -72,7 +91,7 @@ export default function Eventos({ fechaSeleccionada }) {
   // Filtrar eventos por la fecha seleccionada
   useEffect(() => {
     if (fechaSeleccionada) {
-      const eventosHoy = eventos.filter((evento) => {
+      const eventosHoy = eventosUsuario.filter((evento) => {
         const fechaEvento = new Date(evento.fecha_evento).toDateString();
         return fechaEvento === fechaSeleccionada.toDateString();
       });
