@@ -42,17 +42,26 @@ const InformacionContacto: React.FC<InformacionContactoProps> = ({ contacto, fet
 
   const handleAñadirContacto = async () => {
   try {
-    // Mezcla el contacto original con los datos modificados
-    const payload = {
-      ...contacto, // mantiene lo que ya existía en backend
-      ...formData, // aplica solo los cambios
-    };
+    // Filtramos solo los campos con valor no vacío o que hayan cambiado
+    const dataToSend: Partial<ContactData> = {};
 
-    const response = await customAxios.put(
-      '/perfil/cambiar-datos',
-      payload,
-      { withCredentials: true }
-    );
+    Object.keys(formData).forEach((key) => {
+      const k = key as keyof ContactData;
+      if (formData[k] !== (contacto?.[k] || '')) {
+        dataToSend[k] = formData[k];
+      }
+    });
+
+    if (Object.keys(dataToSend).length === 0) {
+      setConfirmationMessage('No hay cambios que guardar.');
+      setMessageType('info');
+      setFormSubmitted(true);
+      return;
+    }
+
+    const response = await customAxios.put('/perfil/cambiar-datos', dataToSend, {
+      withCredentials: true,
+    });
 
     setConfirmationMessage('¡Datos actualizados con éxito!');
     setMessageType('success');
