@@ -150,6 +150,14 @@ body {
   flex-direction: column;
 }
 
+.contenedor-botn-grupo {
+    position: relative;
+    display: flex;
+    width: 95%;
+    justify-content: space-between;
+    margin: 0 auto;
+}
+
 #hoy{
   width: 14px;
   height: 14px;
