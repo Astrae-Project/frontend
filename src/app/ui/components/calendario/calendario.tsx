@@ -70,11 +70,11 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
   const fetchEventos = async () => {
     try {
       const response = await customAxios.get(
-        "/evento/todos",
+        "/data/usuario",
         { withCredentials: true }
       );
-      if (Array.isArray(response.data)) {
-        setEventosState(response.data);
+      if (Array.isArray(response.data.eventos)) {
+        setEventosState(response.data.eventos);
       } else {
         setEventosState([]); // Si no es un array, asignamos un array vacío
       }
