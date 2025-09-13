@@ -572,12 +572,12 @@ const ChatGroup: React.FC<ChatGroupProps> = ({ groupId, user }) => {
               <div className="contenedor-botn-grupo">
                 <button
                   type="button"
-                  className="botn-eventos"
+                  className="botn-grupos"
                   onClick={closeBubble}
                 >
                   <p>Cancelar</p>
                 </button>
-                <button type="submit" className="botn-eventos enviar">
+                <button type="submit" className="botn-grupos enviar">
                   <p>Guardar</p>
                 </button>
               </div>

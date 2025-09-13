@@ -517,7 +517,7 @@ const InfoGrupos = ({ groupId }) => {
               </div>
             ) : (
               <div className="lista-usuarios-disponibles">
-                <ul className="lista-usuarios">
+                <ul className="lista-usuarios1">
                   {availableUsers.map(user => (
                     <li 
                       key={user.id} 
@@ -535,11 +535,11 @@ const InfoGrupos = ({ groupId }) => {
                 </ul>
               </div>
             )}
-            <div className="contenedor-botn-evento">
-              <button type="button" className="botn-eventos" onClick={closeBubble}>Cerrar</button>
+            <div className="contenedor-botn-grupo">
+              <button type="button" className="botn-grupos" onClick={closeBubble}>Cerrar</button>
               <button 
                 type="button" 
-                className="botn-eventos enviar" 
+                className="botn-grupos enviar" 
                 onClick={handleAddMember} 
                 disabled={!selectedUser}
               >

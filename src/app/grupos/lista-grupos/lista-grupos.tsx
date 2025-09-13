@@ -335,7 +335,7 @@ const ListaGrupos = ({ onGroupSelect }) => {
                 )}
               </ul>
             </div>
-            <div className="contenedor-botn-evento">
+            <div className="contenedor-botn-grupo">
               <button className="botn-grupos" onClick={closeBubble}>
                 Cerrar
               </button>

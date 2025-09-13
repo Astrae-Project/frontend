@@ -459,13 +459,12 @@
     padding: 20px 0;
 }
 
-.lista-usuarios {
+.lista-usuarios1 {
     display: flex;
     flex-direction: column;
     margin-bottom: 10px;
     overflow-y: auto;
     overflow-x: hidden;
-    height: 185px;
     width: 80%;
     gap: 15px;
 }
