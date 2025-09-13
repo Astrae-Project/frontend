@@ -15,6 +15,7 @@
 
 .chip-estrellas{
     padding: 10px 15px !important;
+    justify-content: center;
 }
 
 .tooltip {
