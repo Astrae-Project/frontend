@@ -41,23 +41,31 @@ const InformacionContacto: React.FC<InformacionContactoProps> = ({ contacto, fet
   };
 
   const handleAñadirContacto = async () => {
-    try {
-      const response = await customAxios.put(
-        '/perfil/cambiar-datos',
-        formData,
-        { withCredentials: true }
-      );
-      setConfirmationMessage('¡Datos actualizados con éxito!');
-      setMessageType('success');
-      setFormSubmitted(true);
-      fetchContacto(); // Refrescar datos después de actualizar
-    } catch (error) {
-      console.error('Error al actualizar los datos de contacto:', error);
-      setConfirmationMessage('Hubo un error al actualizar los datos.');
-      setMessageType('error');
-      setFormSubmitted(true);
-    }
-  };
+  try {
+    // Mezcla el contacto original con los datos modificados
+    const payload = {
+      ...contacto, // mantiene lo que ya existía en backend
+      ...formData, // aplica solo los cambios
+    };
+
+    const response = await customAxios.put(
+      '/perfil/cambiar-datos',
+      payload,
+      { withCredentials: true }
+    );
+
+    setConfirmationMessage('¡Datos actualizados con éxito!');
+    setMessageType('success');
+    setFormSubmitted(true);
+    fetchContacto(); // Refrescar datos después de actualizar
+  } catch (error) {
+    console.error('Error al actualizar los datos de contacto:', error);
+    setConfirmationMessage('Hubo un error al actualizar los datos.');
+    setMessageType('error');
+    setFormSubmitted(true);
+  }
+};
+
 
   const handleSelectContact = (contactType: keyof ContactData) => {
     setSelectedContact(contactType);
