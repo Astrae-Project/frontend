@@ -389,6 +389,19 @@
   box-sizing: border-box; /* Asegura el tamaño */
 }
 
+.portfolio-icono1 {
+  position: relative;
+  display: flex;
+  height: 40px;
+  width: 40px;
+  background-color: #1C1C29;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  box-sizing: border-box; /* Asegura el tamaño */
+}
+
 .iconos{
   width: 15px;
   height: 15px;
