@@ -131,7 +131,7 @@ const TablaPortfolioOtro = ({ username }) => {
                     </div>
                     <div className="portfolio-info">
                       <p className="startup-nombre">{inversion.startup.nombre}</p>
-                      <p className="startup-username">@{inversion.startup.usuario.username}</p>
+                      <p className="startup-username1">@{inversion.startup.usuario.username}</p>
                       <p className="mini-titulo" id="titulo-porcentaje">Porcentaje</p>
                       <p className="porcentaje">{inversion.porcentaje_adquirido}%</p>
                       <p className="mini-titulo" id="titulo-variacion">Cambio</p>

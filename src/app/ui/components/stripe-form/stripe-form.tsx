@@ -92,6 +92,7 @@ export default function FormularioInversion({ selectedStartup, onClose }) {
 
       {/* Paso 1: Monto y porcentaje */}
       {step === 1 && (
+        <>
         <div className="campos-inversion">
           <div className="campo-inversion">
             <label className="form-label" htmlFor="cantidad">Monto a invertir</label>
@@ -151,6 +152,7 @@ export default function FormularioInversion({ selectedStartup, onClose }) {
               </div>
             </div>
           </div>
+          </div>
 
           <div className="contenedor-botn-invertir">
             <button type="button" className="botn-invertir" onClick={closeBubble}>
@@ -160,11 +162,12 @@ export default function FormularioInversion({ selectedStartup, onClose }) {
               Continuar
             </button>
           </div>
-        </div>
+        </>
       )}
 
       {/* Paso 2: Información de pago */}
       {step === 2 && (
+        <>
         <div className="campos-inversion">
           <div className="campo-inversion">
             <label className="form-label" htmlFor="cardName">Nombre en la tarjeta</label>
@@ -215,6 +218,7 @@ export default function FormularioInversion({ selectedStartup, onClose }) {
               Acepto los <a href="/terminos-condiciones" target="_blank" rel="noopener noreferrer">Términos y Condiciones</a>
             </label>
           </div>
+          </div>
 
           <div className="contenedor-botn-invertir">
             <button type="button" className="botn-invertir" onClick={() => setStep(1)} disabled={loading}>
@@ -224,7 +228,7 @@ export default function FormularioInversion({ selectedStartup, onClose }) {
               {loading ? 'Procesando...' : 'Hacer Oferta'}
             </button>
           </div>
-        </div>
+        </>
       )}
 
       {formSubmitted && (
