@@ -28,16 +28,20 @@
   font-weight: 700;
   margin-bottom: 24px;
   color: #ffffff;
+  text-align: center;
 }
 
 .actualizacion {
   font-size: 0.875rem;
   color: #aaaaaa;
   margin-bottom: 32px;
+  text-align: center;
 }
 
 .section {
   margin-bottom: 32px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 24px;
 }
 
 .subtitulo {
@@ -51,6 +55,7 @@
   font-size: 1.125rem;
   font-weight: 600;
   margin-top: 16px;
+  margin-bottom: 8px;
   color: #dddddd;
 }
 
