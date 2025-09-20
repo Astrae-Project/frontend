@@ -133,9 +133,9 @@ export function BentoGridPortfolio() {
         )}
 
         {activeBubble === "crear-inversion" && step === 2 && selectedStartup && (
-          <Elements stripe={stripePromise}>
+          /*<Elements stripe={stripePromise}>*/
             <FormularioInversion selectedStartup={selectedStartup}  onClose={() => setActiveBubble(false)}/>
-          </Elements>
+          /*</Elements>*/
         )}
         </Bubble>
   </div>

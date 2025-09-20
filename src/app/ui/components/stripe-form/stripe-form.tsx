@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import customAxios from '@/service/api.mjs';
 import './stripe-form-style.css';
 import '../../../perfil/boton/boton-style.css';
 
 export default function FormularioInversion({ selectedStartup, onClose }) {
+  const [step, setStep] = useState(1); // Paso 1 = inversión, Paso 2 = pago
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [confirmationMessage, setConfirmationMessage] = useState('');
-  const [messageType, setMessageType] = useState(''); // 'success' | 'error'
+  const [messageType, setMessageType] = useState('');
   const [loading, setLoading] = useState(false);
 
   const [rawAmount, setRawAmount] = useState('');
@@ -16,18 +16,18 @@ export default function FormularioInversion({ selectedStartup, onClose }) {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [amountError, setAmountError] = useState('');
 
-
-  const stripe = useStripe();
-  const elements = useElements();
+  // Campos simulados de pago
+  const [cardName, setCardName] = useState('');
+  const [cardNumber, setCardNumber] = useState('');
+  const [expiry, setExpiry] = useState('');
+  const [cvc, setCvc] = useState('');
 
   const formatInversion = (monto) => {
-  if (monto === null) return 'N/A';
-  // Formato europeo: separador de miles es punto, decimal es coma
-  return monto.toLocaleString('de-DE') + ' €';
+    if (monto === null) return 'N/A';
+    return monto.toLocaleString('de-DE') + ' €';
   };
 
   const closeBubble = () => {
-    // Reset local
     setFormSubmitted(false);
     setConfirmationMessage('');
     setMessageType('');
@@ -36,83 +36,41 @@ export default function FormularioInversion({ selectedStartup, onClose }) {
     setSelectedAmount(0);
     setSelectedPercentage(0);
     setTermsAccepted(false);
+    setStep(1);
 
-    // Cerrar desde el padre
     onClose?.();
   };
 
-  const cardElementOptions = {
-    style: {
-      base: {
-        color: '#fff',
-        fontFamily: 'Arial, sans-serif',
-        fontSmoothing: 'antialiased',
-        fontSize: '15px',
-        '::placeholder': { color: '#fff' },
-      },
-      invalid: { color: '#fa755a', iconColor: '#fa755a' },
-    },
+  const handleFirstStep = (e) => {
+    e.preventDefault();
+    if (!amountError && selectedAmount >= 500 && selectedAmount <= 1000000) {
+      setStep(2);
+    } else {
+      setAmountError('Debes introducir un monto válido');
+    }
   };
 
-  const handleInvestClick = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!stripe || !elements) {
-      console.error('Stripe o Elements no están listos');
-      return;
-    }
+    if (!termsAccepted) return;
+
     setLoading(true);
-
     try {
-      // 1. Crear PaymentMethod sin guardar tarjeta en el sistema
-      const cardElement = elements.getElement(CardElement);
-      if (!cardElement) throw new Error('CardElement no encontrado');
-      const { paymentMethod, error: pmError } = await stripe.createPaymentMethod({
-        type: 'card',
-        card: cardElement,
-      });
-      if (pmError) {
-        setConfirmationMessage(pmError.message || 'Error al crear método de pago');
-        setMessageType('error');
-        setFormSubmitted(true);
-        return;
-      }
-      const paymentMethodId = paymentMethod.id;
-
-      // 2. Enviar paymentMethodId al backend antes de crear la oferta
+      // Aquí simplemente guardamos en backend
       await customAxios.post(
-        '/stripe/metodo-pago',
-        { paymentMethodId },
-        { withCredentials: true }
-      );
-
-      // 3. Crear la oferta para obtener clientSecret
-      const { data } = await customAxios.post(
         '/invest/oferta',
         {
           id_startup: selectedStartup.id,
           porcentaje_ofrecido: selectedPercentage,
           monto_ofrecido: selectedAmount,
+          datos_pago: { cardName, cardNumber, expiry, cvc }, // <- datos ficticios
           termsAccepted,
         },
         { withCredentials: true }
       );
-      const clientSecret = data.clientSecret;
 
-      // 4. Confirmar el pago en frontend (3DS, Link, etc.)
-      const result = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: { card: cardElement },
-      });
-
-      if (result.error) {
-        setConfirmationMessage(result.error.message || 'Error al confirmar pago');
-        setMessageType('error');
-      } else if (result.paymentIntent?.status === 'succeeded') {
-        setConfirmationMessage('Oferta realizada con éxito!');
-        setMessageType('success');
-      } else {
-        setConfirmationMessage('Error desconocido al confirmar pago');
-        setMessageType('error');
-      }
+      setConfirmationMessage('Oferta registrada con éxito!');
+      setMessageType('success');
     } catch (err) {
       console.error('Error en oferta:', err);
       setConfirmationMessage('Hubo un error procesando la oferta');
@@ -124,102 +82,151 @@ export default function FormularioInversion({ selectedStartup, onClose }) {
   };
 
   return (
-    <form onSubmit={handleInvestClick} className="formulario-inversion">
+    <form
+      onSubmit={step === 1 ? handleFirstStep : handleSubmit}
+      className="formulario-inversion"
+    >
       <p className="titulo">
         Haciendo oferta a {selectedStartup?.usuario?.username || 'Startup Desconocida'}
       </p>
-    <div className="campos-inversion">
-      {/* Monto */}
-      <div className="campo-inversion">
-        <label className="form-label" htmlFor="cantidad">Monto a invertir</label>
-        <input
-          id="cantidad"
-          className={`select-inversion ${amountError ? 'input-error' : ''}`}
-          value={rawAmount}
-          onChange={e => {
-            const v = e.target.value.replace(/[^0-9]/g, '');
-            setRawAmount(v);
-            setSelectedAmount(Number(v));
-            if (v === '') {
-              setAmountError('');
-              return;
-            }
-            const num = Number(v);
-            if (num < 500) setAmountError('Monto mínimo 500 €');
-            else if (num > 1000000) setAmountError('Monto máximo 1.000.000 €');
-            else setAmountError('');
-          }}
-          onBlur={() => {
-            if (selectedAmount < 500) setAmountError('Monto mínimo 500 €');
-            else if (selectedAmount > 1000000) setAmountError('Monto máximo 1.000.000 €');
-            else setAmountError('');
-            setRawAmount(formatInversion(selectedAmount));
-          }}
-          onFocus={() => setRawAmount(selectedAmount === 0 ? '' : selectedAmount.toString())}
-        />
-        {amountError && <p className="error-text">{amountError}</p>}
-      </div>
 
-      {/* Porcentaje: mínimo 0, máximo 100 */}
-      <div className="campo-inversion">
-        <label className="form-label" htmlFor="porcentaje">Porcentaje</label>
-        <div className="campo-porcentaje">
-          <div className="porcentaje-wrapper">
-            <button
-              type="button"
-              className="selector-btn izquierda"
-              onClick={() => setSelectedPercentage(p => Math.max(0, p - 1))}
-            >-</button>
-            
+      {/* Paso 1: Monto y porcentaje */}
+      {step === 1 && (
+        <div className="campos-inversion">
+          <div className="campo-inversion">
+            <label className="form-label" htmlFor="cantidad">Monto a invertir</label>
             <input
-              id="porcentaje"
-              className="input-porcentaje"
-              value={selectedPercentage}
+              id="cantidad"
+              className={`select-inversion ${amountError ? 'input-error' : ''}`}
+              value={rawAmount}
               onChange={e => {
-                let val = Number(e.target.value);
-                if (val < 0) val = 0;
-                if (val > 100) val = 100;
-                setSelectedPercentage(val);
+                const v = e.target.value.replace(/[^0-9]/g, '');
+                setRawAmount(v);
+                setSelectedAmount(Number(v));
+                if (v === '') {
+                  setAmountError('');
+                  return;
+                }
+                const num = Number(v);
+                if (num < 500) setAmountError('Monto mínimo 500 €');
+                else if (num > 1000000) setAmountError('Monto máximo 1.000.000 €');
+                else setAmountError('');
               }}
+              onBlur={() => {
+                if (selectedAmount < 500) setAmountError('Monto mínimo 500 €');
+                else if (selectedAmount > 1000000) setAmountError('Monto máximo 1.000.000 €');
+                else setAmountError('');
+                setRawAmount(formatInversion(selectedAmount));
+              }}
+              onFocus={() => setRawAmount(selectedAmount === 0 ? '' : selectedAmount.toString())}
             />
+            {amountError && <p className="error-text">{amountError}</p>}
+          </div>
 
-            <button
-              type="button"
-              className="selector-btn derecha"
-              onClick={() => setSelectedPercentage(p => Math.min(100, p + 1))}
-            >+</button>
+          <div className="campo-inversion">
+            <label className="form-label" htmlFor="porcentaje">Porcentaje</label>
+            <div className="campo-porcentaje">
+              <div className="porcentaje-wrapper">
+                <button
+                  type="button"
+                  className="selector-btn izquierda"
+                  onClick={() => setSelectedPercentage(p => Math.max(0, p - 1))}
+                >-</button>
+                <input
+                  id="porcentaje"
+                  className="input-porcentaje"
+                  value={selectedPercentage}
+                  onChange={e => {
+                    let val = Number(e.target.value);
+                    if (val < 0) val = 0;
+                    if (val > 100) val = 100;
+                    setSelectedPercentage(val);
+                  }}
+                />
+                <button
+                  type="button"
+                  className="selector-btn derecha"
+                  onClick={() => setSelectedPercentage(p => Math.min(100, p + 1))}
+                >+</button>
+              </div>
+            </div>
+          </div>
+
+          <div className="contenedor-botn-invertir">
+            <button type="button" className="botn-invertir" onClick={closeBubble}>
+              Cancelar
+            </button>
+            <button type="submit" className="botn-invertir enviar">
+              Continuar
+            </button>
           </div>
         </div>
-      </div>
-    </div>
+      )}
 
-      {/* CardElement */}
-      <div className="campo-inversion">
-        <label className="form-label" htmlFor="card-element">Información de pago</label>
-        <CardElement id="card-element" options={cardElementOptions} />
-      </div>
-      {/* Términos */}
-      <div className="campo-inversion terms">
-        <input
-          type="checkbox"
-          id="terms"
-          checked={termsAccepted}
-          onChange={e => setTermsAccepted(e.target.checked)}
-        />
-        <label htmlFor="terms">
-          Acepto los <a href="/terminos-condiciones" target="_blank" rel="noopener noreferrer">Términos y Condiciones</a>
-        </label>
-      </div>
-      {/* Botones */}
-      <div className="contenedor-botn-invertir">
-        <button type="button" className="botn-invertir" onClick={closeBubble} disabled={loading}>
-          Cancelar
-        </button>
-        <button type="submit" className="botn-invertir enviar" disabled={!termsAccepted || loading}>
-          {loading ? 'Procesando...' : 'Hacer Oferta'}
-        </button>
-      </div>
-      {/* Mensaje */}
+      {/* Paso 2: Información de pago */}
+      {step === 2 && (
+        <>
+          <div className="campo-inversion">
+            <label className="form-label" htmlFor="cardName">Nombre en la tarjeta</label>
+            <input
+              id="cardName"
+              value={cardName}
+              onChange={e => setCardName(e.target.value)}
+              required
+            />
+          </div>
+          <div className="campo-inversion">
+            <label className="form-label" htmlFor="cardNumber">Número de tarjeta</label>
+            <input
+              id="cardNumber"
+              value={cardNumber}
+              onChange={e => setCardNumber(e.target.value)}
+              required
+            />
+          </div>
+          <div className="campo-inversion">
+            <label className="form-label" htmlFor="expiry">Fecha de expiración</label>
+            <input
+              id="expiry"
+              value={expiry}
+              onChange={e => setExpiry(e.target.value)}
+              placeholder="MM/AA"
+              required
+            />
+          </div>
+          <div className="campo-inversion">
+            <label className="form-label" htmlFor="cvc">CVC</label>
+            <input
+              id="cvc"
+              value={cvc}
+              onChange={e => setCvc(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="campo-inversion terms">
+            <input
+              type="checkbox"
+              id="terms"
+              checked={termsAccepted}
+              onChange={e => setTermsAccepted(e.target.checked)}
+            />
+            <label htmlFor="terms">
+              Acepto los <a href="/terminos-condiciones" target="_blank" rel="noopener noreferrer">Términos y Condiciones</a>
+            </label>
+          </div>
+
+          <div className="contenedor-botn-invertir">
+            <button type="button" className="botn-invertir" onClick={() => setStep(1)} disabled={loading}>
+              Atrás
+            </button>
+            <button type="submit" className="botn-invertir enviar" disabled={!termsAccepted || loading}>
+              {loading ? 'Procesando...' : 'Hacer Oferta'}
+            </button>
+          </div>
+        </>
+      )}
+
       {formSubmitted && (
         <div className={messageType === 'error' ? 'error-message' : 'success-message'}>
           {confirmationMessage}

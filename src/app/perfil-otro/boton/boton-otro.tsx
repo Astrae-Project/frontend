@@ -179,9 +179,9 @@ export function BotonesOtro({ username }) {
         type={messageType}
       >
         {activeBubble === "crear-inversion" && !formSubmitted && (
-          <Elements stripe={stripePromise}>
+          /*<Elements stripe={stripePromise}>*/
             <FormularioInversion selectedStartup={usuarioObservado?.startup} onClose={() => setActiveBubble(false)}/>
-          </Elements>
+          /*</Elements>*/
         )}
       </Bubble>
     </span>
