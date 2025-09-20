@@ -165,7 +165,7 @@ export default function FormularioInversion({ selectedStartup, onClose }) {
 
       {/* Paso 2: Información de pago */}
       {step === 2 && (
-        <>
+        <div className="campos-inversion">
           <div className="campo-inversion">
             <label className="form-label" htmlFor="cardName">Nombre en la tarjeta</label>
             <input
@@ -224,7 +224,7 @@ export default function FormularioInversion({ selectedStartup, onClose }) {
               {loading ? 'Procesando...' : 'Hacer Oferta'}
             </button>
           </div>
-        </>
+        </div>
       )}
 
       {formSubmitted && (
