@@ -175,6 +175,7 @@ export default function FormularioInversion({ selectedStartup, onClose }) {
               id="cardName"
               value={cardName}
               onChange={e => setCardName(e.target.value)}
+              className='select-inversion'
               required
             />
           </div>
@@ -184,6 +185,7 @@ export default function FormularioInversion({ selectedStartup, onClose }) {
               id="cardNumber"
               value={cardNumber}
               onChange={e => setCardNumber(e.target.value)}
+              className='select-inversion'
               required
             />
           </div>
@@ -194,6 +196,7 @@ export default function FormularioInversion({ selectedStartup, onClose }) {
               value={expiry}
               onChange={e => setExpiry(e.target.value)}
               placeholder="MM/AA"
+              className='select-inversion'
               required
             />
           </div>
@@ -203,6 +206,8 @@ export default function FormularioInversion({ selectedStartup, onClose }) {
               id="cvc"
               value={cvc}
               onChange={e => setCvc(e.target.value)}
+              className='select-inversion'
+              placeholder='###'
               required
             />
           </div>

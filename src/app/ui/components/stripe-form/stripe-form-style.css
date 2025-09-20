@@ -40,6 +40,10 @@
   gap: 15px;
 }
 
+.campos-inversion:last-child {
+  margin-bottom: 13px;
+}
+
 /* Campos del formulario */
 .campo-inversion {
   display: flex;
