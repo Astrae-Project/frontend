@@ -49,12 +49,15 @@
   flex-direction: column;
   justify-content: center;
   align-self: end;
+  width: 124px;
 }
 
 .carta-nombre {
   text-align: left;
   font-size: 17px;
   color: #FFF;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .carta-username-oferta {

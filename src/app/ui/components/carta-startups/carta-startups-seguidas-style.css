@@ -57,6 +57,8 @@
   margin: 0;
   font-size: 16px;
   color: #FFF;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .carta-username {

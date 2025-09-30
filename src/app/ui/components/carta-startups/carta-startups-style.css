@@ -51,12 +51,15 @@
   flex-direction: column;
   justify-content: center;
   align-self: end;
+  width: 124px;
 }
 
 .carta-nombre1 {
   text-align: left;
   font-size: 17px;
-  color: #FFF;
+  color: #FFF;  
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .carta-username1 {
