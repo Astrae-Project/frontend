@@ -21,6 +21,7 @@ export function BotonesOtro({ username }) {
   const [messageType, setMessageType] = useState(""); // Tipo de mensaje ("success" o "error")
   const [selectedPercentage, setSelectedPercentage] = useState(10); // Porcentaje seleccionado
   const [selectedAmount, setSelectedAmount] = useState(1000); // Cantidad seleccionada
+  const [usuarioAutentuicado, setUsuarioAutentuicado] = useState(null); // Datos del usuario autenticado
   const [rawAmount, setRawAmount] = useState(""); // Estado para el valor sin formato
 
   
@@ -41,6 +42,7 @@ export function BotonesOtro({ username }) {
         const { inversor, startup } = response.data;
         const usuarioData = inversor || startup;
         if (usuarioData) {
+          setUsuarioAutentuicado(response.data);
           setIdUsuarioAutenticado(usuarioData.id_usuario);
         }
       }
@@ -152,25 +154,42 @@ export function BotonesOtro({ username }) {
     }
   };
 
+  const esStartupViendoStartup = usuarioAutentuicado?.startup && usuarioObservado?.startup;
+
   return (
     <span className="contenedor-botones1">
-      <button
-        className={`custom-button ${isFollowing ? "following" : "not-following"}`}
-        id="seguir"
-        onClick={handleFollowClick}
-        disabled={loading || !usuarioObservado} // Desactiva el botón si no hay usuario o está cargando
-      >
-        <p className="text">{isFollowing ? "Siguiendo" : "Seguir"}</p>
-      </button>
-  
-      <button
-        className="custom-button boton-morado"
-        id="suscribir"
-        onClick={usuarioObservado?.startup ? () => setActiveBubble("crear-inversion") : undefined} // Solo ejecuta la función si es startup
-        disabled={loading || !usuarioObservado?.startup} // Desactiva el botón si no es startup o está cargando
-      >
-        <p className="text">{usuarioObservado?.startup ? "Invertir" : "Suscribir"}</p>
-      </button>
+      {esStartupViendoStartup ? (
+        // Si una startup ve a otra startup, solo mostrar el botón de seguir al 100%
+        <button
+          className={`custom-button ${isFollowing ? "following" : "not-following"}`}
+          id="seguir"
+          onClick={handleFollowClick}
+          disabled={loading || !usuarioObservado}
+          style={{ width: '100%' }}
+        >
+          <p className="text">{isFollowing ? "Siguiendo" : "Seguir"}</p>
+        </button>
+      ) : (
+        // En cualquier otro caso, mostrar ambos botones
+        <>
+          <button
+            className={`custom-button ${isFollowing ? "following" : "not-following"}`}
+            id="seguir"
+            onClick={handleFollowClick}
+            disabled={loading || !usuarioObservado}
+          >
+            <p className="text">{isFollowing ? "Siguiendo" : "Seguir"}</p>
+          </button>
+          <button
+            className="custom-button boton-morado"
+            id="suscribir"
+            onClick={usuarioObservado?.startup ? () => setActiveBubble("crear-inversion") : undefined}
+            disabled={loading || !usuarioObservado?.startup}
+          >
+            <p className="text">{usuarioObservado?.startup ? "Invertir" : "Suscribir"}</p>
+          </button>
+        </>
+      )}
   
       <Bubble
         show={!!activeBubble}

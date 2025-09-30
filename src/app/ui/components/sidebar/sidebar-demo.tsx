@@ -28,12 +28,12 @@ export function SidebarDemo() {
         { label: "Inicio", href: "/", icon: <IconHome className="icon-style" /> },
         { label: "Portfolio", href: "/portfolio", icon: <IconWallet className="icon-style" /> },
         { label: "Grupos", href: "/grupos", icon: <IconMessage className="icon-style" /> },
-        { label: "Ajustes", href: "/ajustes", icon: <IconSettings className="icon-style" /> },
+        /*{ label: "Ajustes", href: "/ajustes", icon: <IconSettings className="icon-style" /> },*/
       ],
       startup: [
         { label: "Inicio", href: "/", icon: <IconHome className="icon-style" /> },
         { label: "Grupos", href: "/grupos", icon: <IconMessage className="icon-style" /> },
-        { label: "Ajustes", href: "/ajustes", icon: <IconSettings className="icon-style" /> },
+        /*{ label: "Ajustes", href: "/ajustes", icon: <IconSettings className="icon-style" /> },*/
       ],
     };
     return rolesLinks[role] || [];
