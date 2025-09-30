@@ -261,7 +261,7 @@ const InfoOtro = ({ username }: InfoOtroProps) => {
           { withCredentials: true } // Incluir credenciales
         );
     
-        setConfirmationMessage("¡Reseña relaizada con éxito!"); // Mensaje de éxito
+        setConfirmationMessage("¡Reseña realizada con éxito!"); // Mensaje de éxito
         setMessageType("success"); // Tipo de mensaje de éxito
         setFormSubmitted(true); // Ocultar el formulario
         setPuntuacion(0); // Reiniciar puntuación

@@ -320,13 +320,14 @@ export default function Calendario({ eventos = [], onFechaSeleccionada }) {
         >
           <IconSearch className="iconos-calendar" />
         </button>
+        {/* Botón para compartir un evento 
         <button
           className="apartado botones"
           id="pequeño7"
           onClick={() => setActiveBubble("compartir-evento")}
         >
           <IconShare3 className="iconos-calendar" />
-        </button>
+        </button> */}
       </div>
 
       {/* Componente Bubble */}

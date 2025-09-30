@@ -138,15 +138,27 @@ export function Botones() {
   };
 
   return (
-    <span className="contenedor-botones1">
-      <button className="custom-button" id="editar-perfil" disabled={loading}
-        onClick={() => setActiveBubble("editar-perfil")}
-      >
-        <p className="text">{"Editar Perfil"}</p>
-      </button>
-
-      {renderBotonAccion()}
-
+    <div className="contenedor-botones1">
+      {user && user.startup ? (
+        // Si el usuario es una startup, solo se muestra el botón de editar perfil al 100%
+        <button
+          className="custom-button"
+          id="editar-perfil"
+          disabled={loading}
+          onClick={() => setActiveBubble("editar-perfil")}
+          style={{ width: '100%' }} // Estilo en línea para el ancho
+        >
+          <p className="text">{"Editar Perfil"}</p>
+        </button>
+      ) : (
+        // Si es inversor u otro, se muestran ambos botones
+        <>
+          <button className="custom-button" id="editar-perfil" disabled={loading} onClick={() => setActiveBubble("editar-perfil")}>
+            <p className="text">{"Editar Perfil"}</p>
+          </button>
+          {renderBotonAccion()}
+        </>
+      )}
       <Bubble
         show={!!activeBubble}
         onClose={closeBubble}
@@ -348,6 +360,6 @@ export function Botones() {
           </div>
         )}
       </Bubble>
-    </span>
+    </div>
   );
 }
